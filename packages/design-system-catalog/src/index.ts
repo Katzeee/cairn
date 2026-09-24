@@ -104,7 +104,7 @@ export const catalogSections: readonly CatalogSection[] = [
         "theming",
         "foundations/theming",
         "Theming",
-        "One semantic vocabulary, two resolutions; any region flips wholesale.",
+        "Application-wide forest and slate themes in light and dark modes.",
       ),
       page("typography", "foundations/typography", "Typography", "HarmonyOS Sans SC and the eight-step type scale."),
       page("content", "foundations/content", "Content", "Sentence patterns and naming rules for clear interface copy."),

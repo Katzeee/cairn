@@ -1,0 +1,26 @@
+{
+  "name": "@cairn/showcase",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "lint": "eslint src",
+    "preview": "node scripts/serve.mjs",
+    "test": "node --test tests/showcase.test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cairn/ui": "file:../../packages/ui",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "electron": "41.10.7",
+    "esbuild": "0.28.2",
+    "playwright-core": "1.62.1",
+    "typescript": "^6.0.3"
+  }
+}

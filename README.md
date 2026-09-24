@@ -8,13 +8,9 @@ Install Node.js 22 or later, run `npm install`, then run `npm run showcase` from
 
 The UI build exports a ready-to-use stylesheet at `@cairn/ui/styles.css`, together with both default fonts. Applications import that stylesheet once in their renderer and import React components from `@cairn/ui`. No provider or theme configuration is required for the default forest theme, system light or dark mode, HarmonyOS Sans SC interface font, and JetBrains Mono code font. A reusable component is implemented in `packages/ui/src/components`, exported through `packages/ui/src/index.ts`, and demonstrated in the catalog; `npm run verify:catalog` checks that every public visual component is rendered there.
 
-Applications that need configuration wrap their React tree in `CairnTheme`. The same component works at the application root, around a nested region, or around one component with `asChild`. It accepts `appearance` (`inherit`, `light`, or `dark`), `theme` (`forest` or `slate`), `fontFamily`, `hasBackground`, and `tokens`. The `tokens` object overrides documented semantic CSS variables, including the code font at `--cairn-font-mono`. Explicit light and dark scopes provide their own background unless `hasBackground` is false. With `appearance="inherit"`, the root follows the system preference and nested scopes inherit their parent's appearance.
+Applications that need a different overall style wrap their React tree once in `CairnTheme`. Its `theme` selects the built-in `forest` or `slate` palette, while `appearance` selects `light`, `dark`, or `inherit` (the system preference at the application root). `fontFamily` changes the interface font globally; `tokens` overrides individual documented semantic variables at that same root, including the code font at `--cairn-font-mono`. A replacement font needs its own font file and `@font-face` rule unless the browser already has it. These settings are rendered as DOM attributes and CSS variables, and Cairn carries them into its portaled dialogs, menus, popovers, tooltips, and selectors.
 
-Nested scopes inherit settings unless they specify another value. Component props such as `variant`, `size`, and `tone` still express each component's action hierarchy and state. Cairn re-establishes the nearest theme inside portaled dialogs, menus, popovers, tooltips, and selectors using the same `CairnTheme` implementation. A custom portal can do the same with `<CairnTheme asChild hasBackground={false}>` around its portaled root. Themes render their settings as DOM attributes and CSS variables, so server-rendered applications can render the same initial appearance before hydration without a separate global DOM mutation.
-
-An `asChild` target must forward its received DOM props and ref to its rendered element. Cairn's leaf components do this where they expose DOM props; a custom application component used as the target must do the same. A replacement font specified with `fontFamily` also needs its own font file and `@font-face` rule unless that font is already available to the browser.
-
-This composition follows the root theme, nested theme, and `asChild` pattern used by [Radix Themes](https://www.radix-ui.com/themes/docs/components/theme). Cairn keeps its own visual tokens and component contracts; `@radix-ui/react-slot` supplies the prop and ref merging needed by `asChild`.
+`CairnTheme` is the application-level configuration surface. Component props such as `variant`, `size`, and `tone` express the options each component is designed to support. The `tokens` prop is an escape for an exceptional application-wide adjustment; custom colors need their own contrast review. The catalog uses the same theme renderer internally to show built-in styles side by side. This follows the useful global-theme ideas in [Radix Themes](https://www.radix-ui.com/themes/docs/components/theme) while keeping Cairn's configuration limited to the needs of the applications that share its visual language.
 
 ```tsx
 import "@cairn/ui/styles.css";
@@ -28,17 +24,10 @@ import { CairnTheme, Button } from "@cairn/ui";
   fontFamily='"Inter", system-ui, sans-serif'
   tokens={{ "--cairn-color-primary": "#8fb8e8" }}
 >
-  <Button>Uses application settings</Button>
-</CairnTheme>;
-
-<CairnTheme appearance="light" theme="forest">
-  <Button>Only this region uses Forest Light</Button>
-  <CairnTheme asChild tokens={{ "--cairn-radius-sm": "var(--cairn-radius-xl)" }}>
-    <Button size="sm">This button alone has a larger radius</Button>
-  </CairnTheme>
+  <Button>Uses application-wide settings</Button>
 </CairnTheme>;
 ```
 
-The catalog's Theming page lists the supported variables and previews custom values. Built-in themes pass Cairn's contrast checks; an application's custom colors need their own contrast review. The underlying `data-mode`, `data-theme`, and `--cairn-*` CSS contract also works without React configuration code.
+The catalog's Theming page previews the built-in theme and mode combinations and lists their semantic variables. Built-in themes pass Cairn's contrast checks.
 
 HarmonyOS Sans SC and JetBrains Mono are retained unmodified with their licenses in `packages/design-tokens/assets`. Applications distributing them keep the corresponding notices and license text in their legal surface.

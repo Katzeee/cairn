@@ -83,9 +83,8 @@ if (!sourceOnly) {
   await writeFile(resolve(distDirectory, "theme.css"), themeCss(), "utf8");
 }
 
-// Every theme block restates the full geometry surface (own value or the
-// base default) so a nested theme scope never inherits an ancestor theme's
-// geometry.
+// Every built-in theme block resolves the complete geometry surface so its
+// catalog preview and application root use the same values.
 function geometryDeclarations(theme) {
   const lines = Object.entries(resolved.radius).map(
     ([name, base]) => `  --cairn-radius-${name}: ${theme.radius?.[name] ?? base}px;`,
@@ -103,8 +102,8 @@ function runtimeCss() {
       ...Object.entries(shadows[mode]).map(([name, value]) => `  --cairn-shadow-${name}: ${value};`),
       `  color-scheme: ${mode};`,
     ].join("\n");
-  // The non-color surface a theme (built-in or user CSS) may redefine:
-  // radii, the spacing unit every spacing utility multiplies, fonts, motion.
+  // The non-color surface that built-in themes and application root token
+  // settings may redefine: radii, spacing, fonts, and motion.
   const baseGeometry = [
     ...Object.entries(resolved.layout.outline).map(([name, value]) => `  --cairn-outline-${name}: ${value}px;`),
     ...Object.entries(resolved.radius).map(([name, value]) => `  --cairn-radius-${name}: ${value}px;`),

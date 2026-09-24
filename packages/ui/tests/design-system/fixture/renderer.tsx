@@ -51,44 +51,25 @@ function SharedProductPreview() {
   );
 }
 
-function ScopedThemeFixture() {
+function ConfiguredPortalFixture() {
   const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <CairnTheme appearance="light" theme="forest">
-      <span data-ui="outer-copy">Outer plain text</span>
-      <Button>Outer action</Button>
-      <CairnTheme
-        appearance="dark"
-        fontFamily='"Georgia", serif'
-        theme="slate"
-        tokens={{ "--cairn-color-primary": "#123456" }}
-      >
-        <span data-ui="scoped-copy">Scoped plain text</span>
-        <Button>Inner action</Button>
-        <Button onClick={() => setDialogOpen(true)} variant="outline">
-          Open scoped dialog
-        </Button>
-        <Dialog
-          actions={[{ label: "Confirm", variant: "primary" }]}
-          onOpenChange={setDialogOpen}
-          open={dialogOpen}
-          title="Scoped dialog"
-        />
-        <CairnTheme appearance="light" asChild theme="forest" tokens={{ "--cairn-color-primary": "#654321" }}>
-          <Button>Innermost action</Button>
-        </CairnTheme>
-      </CairnTheme>
+    <CairnTheme
+      appearance="dark"
+      fontFamily='"Georgia", serif'
+      theme="slate"
+      tokens={{ "--cairn-color-primary": "#123456" }}
+    >
+      <Button onClick={() => setDialogOpen(true)} variant="outline">
+        Open configured dialog
+      </Button>
+      <Dialog
+        actions={[{ label: "Confirm", variant: "primary" }]}
+        onOpenChange={setDialogOpen}
+        open={dialogOpen}
+        title="Configured dialog"
+      />
     </CairnTheme>
-  );
-}
-
-function RawThemeFixture() {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <Button onClick={() => setOpen(true)}>Open raw-theme dialog</Button>
-      <Dialog onOpenChange={setOpen} open={open} title="Raw-theme dialog" />
-    </>
   );
 }
 
@@ -119,11 +100,8 @@ function TestSurface() {
   if (hash === "#/empty-fixture") {
     return <p>Empty fixture</p>;
   }
-  if (hash === "#/scoped-theme-fixture") {
-    return <ScopedThemeFixture />;
-  }
-  if (hash === "#/raw-theme-fixture") {
-    return <RawThemeFixture />;
+  if (hash === "#/configured-portal-fixture") {
+    return <ConfiguredPortalFixture />;
   }
   if (hash === "#/outline-suggestion-fixture") {
     return <OutlineSuggestionFixture />;

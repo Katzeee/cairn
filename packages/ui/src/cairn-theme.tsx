@@ -1,14 +1,5 @@
 import { themeVariableGroups, type tokens } from "@cairn/design-tokens";
-import { Slot } from "@radix-ui/react-slot";
-import {
-  createContext,
-  forwardRef,
-  useContext,
-  useMemo,
-  type ComponentPropsWithoutRef,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useMemo, type CSSProperties, type ReactNode } from "react";
 
 import { cn } from "./components/cn.js";
 
@@ -17,21 +8,21 @@ export type CairnThemeName = keyof typeof tokens.theme;
 export type CairnTokenName = (typeof themeVariableGroups)[number]["variables"][number]["name"];
 export type CairnTokenOverrides = Readonly<Partial<Record<CairnTokenName, string>>>;
 
-export type CairnThemeProps = ComponentPropsWithoutRef<"div"> &
-  Readonly<{
-    appearance?: CairnAppearance;
-    asChild?: boolean;
-    fontFamily?: string;
-    hasBackground?: boolean;
-    theme?: CairnThemeName;
-    tokens?: CairnTokenOverrides;
-  }>;
+export type CairnThemeProps = Readonly<{
+  appearance?: CairnAppearance;
+  children?: ReactNode;
+  fontFamily?: string;
+  theme?: CairnThemeName;
+  tokens?: CairnTokenOverrides;
+}>;
 
 type ThemeContextValue = Readonly<{
   appearance: CairnAppearance;
   theme: CairnThemeName;
   variables: ReadonlyMap<string, string>;
 }>;
+
+type ThemeScopeProps = CairnThemeProps & Readonly<{ className?: string; hasBackground: boolean }>;
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 const configurableVariables = new Set<string>(
@@ -54,22 +45,15 @@ function themeVariables(overrides: CairnTokenOverrides | undefined, fontFamily: 
   return variables;
 }
 
-/** One theme mechanism for the application root, nested regions, and individual components. */
-export const CairnTheme = forwardRef<HTMLDivElement, CairnThemeProps>(function CairnTheme(
-  {
-    appearance = "inherit",
-    asChild = false,
-    children,
-    className,
-    fontFamily,
-    hasBackground,
-    style,
-    theme,
-    tokens: overrides,
-    ...properties
-  },
-  forwardedRef,
-) {
+function ThemeScope({
+  appearance = "inherit",
+  children,
+  className,
+  fontFamily,
+  hasBackground,
+  theme,
+  tokens: overrides,
+}: ThemeScopeProps) {
   const parent = useContext(ThemeContext);
   const resolvedAppearance = appearance === "inherit" ? (parent?.appearance ?? "inherit") : appearance;
   const resolvedTheme = theme ?? parent?.theme ?? "forest";
@@ -78,33 +62,40 @@ export const CairnTheme = forwardRef<HTMLDivElement, CairnThemeProps>(function C
     () => new Map([...(parent?.variables ?? []), ...localVariables]),
     [parent?.variables, localVariables],
   );
-  const background = hasBackground ?? (parent === null || appearance === "light" || appearance === "dark");
   const context = useMemo<ThemeContextValue>(
     () => ({ appearance: resolvedAppearance, theme: resolvedTheme, variables }),
     [resolvedAppearance, resolvedTheme, variables],
   );
-  const themeStyle = {
-    ...style,
-    ...Object.fromEntries(variables),
-  } as CSSProperties;
-  const attributes = {
-    ...properties,
-    "data-cairn-theme": "",
-    "data-is-root-theme": parent === null ? "true" : "false",
-    "data-has-background": background ? "true" : "false",
-    "data-mode": resolvedAppearance === "inherit" ? undefined : resolvedAppearance,
-    "data-theme": resolvedTheme,
-  };
 
-  const Component = asChild ? Slot : "div";
   return (
     <ThemeContext.Provider value={context}>
-      <Component {...attributes} className={cn("cairn-theme", className)} ref={forwardedRef} style={themeStyle}>
+      <div
+        className={cn("cairn-theme", className)}
+        data-cairn-theme=""
+        data-has-background={hasBackground ? "true" : "false"}
+        data-is-root-theme={parent === null ? "true" : "false"}
+        data-mode={resolvedAppearance === "inherit" ? undefined : resolvedAppearance}
+        data-theme={resolvedTheme}
+        style={Object.fromEntries(variables) as CSSProperties}
+      >
         {children}
-      </Component>
+      </div>
     </ThemeContext.Provider>
   );
-});
+}
+
+/** Configures the shared visual language for an application. */
+export function CairnTheme(props: CairnThemeProps) {
+  if (useContext(ThemeContext) !== null) {
+    throw new Error("CairnTheme configures the application root; use component props within it.");
+  }
+  return <ThemeScope {...props} hasBackground />;
+}
+
+/** Internal catalog preview; uses the same theme renderer as the application root. */
+export function CairnPreviewTheme(props: Omit<ThemeScopeProps, "hasBackground">) {
+  return <ThemeScope {...props} hasBackground />;
+}
 
 /** Re-establishes the nearest theme after content moves into document.body. */
 export function CairnPortalTheme({ children }: Readonly<{ children: ReactNode }>) {
@@ -113,8 +104,8 @@ export function CairnPortalTheme({ children }: Readonly<{ children: ReactNode }>
     return <>{children}</>;
   }
   return (
-    <CairnTheme asChild hasBackground={false}>
-      <div className="contents">{children}</div>
-    </CairnTheme>
+    <ThemeScope className="contents" hasBackground={false}>
+      {children}
+    </ThemeScope>
   );
 }

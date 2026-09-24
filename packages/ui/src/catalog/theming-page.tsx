@@ -1,21 +1,11 @@
 import { themeVariableGroups } from "@cairn/design-tokens";
-import { useEffect, useState } from "react";
 
-import { CairnTheme } from "../cairn-theme.js";
-import { Alert } from "../components/alert.js";
+import { CairnPreviewTheme } from "../cairn-theme.js";
 import { Badge, BadgeDot } from "../components/badge.js";
 import { Button } from "../components/button.js";
 import { Field, FieldLabel } from "../components/field.js";
 import { Input } from "../components/input.js";
-import { Textarea } from "../components/textarea.js";
-import {
-  applyUserTheme,
-  clearUserTheme,
-  observeThemeVariableChanges,
-  themeNames,
-  type ThemeName,
-  useCatalogMode,
-} from "./catalog-theme.js";
+import { themeNames, type ThemeName, useCatalogMode } from "./catalog-theme.js";
 import { PageIntro, Specimen } from "./specimen.js";
 
 export function ThemingPage({
@@ -25,12 +15,12 @@ export function ThemingPage({
   return (
     <>
       <PageIntro
-        description="Color has two independent axes. The mode axis (light, dark) is a system preference; the theme axis is a complete resolution of every semantic color role. Components speak the vocabulary and never a literal value, so switching a theme re-skins every surface — this catalog included — without touching layout, spacing, or type."
+        description="Cairn provides one visual language with two built-in color themes and light and dark modes. Choose a theme for the whole application; components continue to use the same semantic roles and layouts."
         title="Theming"
       />
       <Specimen
         className="gap-2.5"
-        description="Themes ship with the product and work on every platform. Switch one, then browse any page — the whole catalog renders under it."
+        description="Switch the application theme, then browse any page to see the same components in that style."
         title="Built-in themes"
       >
         {themeNames.map((name) => (
@@ -47,7 +37,7 @@ export function ThemingPage({
       </Specimen>
       <Specimen
         className="grid grid-cols-1 items-stretch gap-4 @3xl:grid-cols-2"
-        description="Each theme resolves both modes and passes the same contrast gates in CI. Nothing inside these frames knows which theme it lives in."
+        description="Each built-in theme supports both modes and passes the same contrast checks in CI. These frames are catalog previews of the application-wide settings."
         title="Theme × mode"
       >
         {themeNames.map((name) => (
@@ -57,64 +47,17 @@ export function ThemingPage({
           </div>
         ))}
       </Specimen>
-      <Specimen
-        description="A nested CairnTheme changes one region while the rest of the page keeps its theme. Component variants remain available inside the region."
-        title="Nested theme"
-      >
-        <Button size="sm">Page theme</Button>
-        <CairnTheme appearance="dark" theme="slate">
-          <span className="inline-flex items-center gap-2 rounded-md bg-card p-3">
-            <Button size="sm">Nested theme</Button>
-            <Badge tone="success">Ready</Badge>
-          </span>
-        </CairnTheme>
-      </Specimen>
-      <Specimen
-        description="Wrap one component to override its semantic token without changing siblings. Use the component's variant and size props for its own behavior and hierarchy."
-        title="Component-level override"
-      >
-        <Button size="sm">Default action</Button>
-        <CairnTheme asChild tokens={{ "--cairn-radius-sm": "var(--cairn-radius-xl)" }}>
-          <Button size="sm">Scoped radius</Button>
-        </CairnTheme>
-      </Specimen>
       <ThemeVariablesSpecimen theme={theme} />
-      <CustomThemeSpecimen />
     </>
   );
 }
 
 function ThemeVariablesSpecimen({ theme }: Readonly<{ theme: ThemeName }>) {
   const mode = useCatalogMode();
-  const [values, setValues] = useState<Record<string, string>>(() => fallbackVariableValues(theme, mode));
-
-  useEffect(() => {
-    const update = () => {
-      const surface = document.querySelector('[data-ui="design-system"]');
-      if (surface === null) {
-        return;
-      }
-      const computed = getComputedStyle(surface);
-      setValues(
-        Object.fromEntries(
-          themeVariableGroups.flatMap(({ variables }) =>
-            variables.map(({ name }) => [name, computed.getPropertyValue(name).trim()]),
-          ),
-        ),
-      );
-    };
-    const frame = window.requestAnimationFrame(update);
-    const stopObserving = observeThemeVariableChanges(update);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      stopObserving();
-    };
-  }, [mode, theme]);
-
   return (
     <Specimen
       className="flex-col flex-nowrap items-stretch gap-6"
-      description="This generated list is the complete custom-theme API. Values are read from the catalog root, so they reflect the active theme, mode, and custom CSS."
+      description="These semantic variables define Cairn's built-in themes. Applications can override a specific variable at the application root when a global adjustment is needed."
       title="Variables"
     >
       {themeVariableGroups.map((group) => (
@@ -122,7 +65,7 @@ function ThemeVariablesSpecimen({ theme }: Readonly<{ theme: ThemeName }>) {
           <h3 className="text-label font-semibold">{group.title}</h3>
           <div className="overflow-hidden rounded-md border border-border">
             {group.variables.map((variable) => {
-              const value = values[variable.name] ?? variable.values[theme][mode];
+              const value = variable.values[theme][mode];
               return (
                 <div
                   className="grid grid-cols-1 gap-1 border-b border-border px-3 py-2 last:border-b-0 @xl:grid-cols-2 @xl:items-center"
@@ -149,17 +92,9 @@ function ThemeVariablesSpecimen({ theme }: Readonly<{ theme: ThemeName }>) {
   );
 }
 
-function fallbackVariableValues(theme: ThemeName, mode: "light" | "dark"): Record<string, string> {
-  return Object.fromEntries(
-    themeVariableGroups.flatMap(({ variables }) =>
-      variables.map((variable) => [variable.name, variable.values[theme][mode]]),
-    ),
-  );
-}
-
 function ThemeFrame({ mode, theme }: Readonly<{ mode: "light" | "dark"; theme: ThemeName }>) {
   return (
-    <CairnTheme
+    <CairnPreviewTheme
       appearance={mode}
       className="min-w-0 flex-1 rounded-xl border border-border bg-background p-4"
       theme={theme}
@@ -183,72 +118,6 @@ function ThemeFrame({ mode, theme }: Readonly<{ mode: "light" | "dark"; theme: T
           Cancel
         </Button>
       </div>
-    </CairnTheme>
-  );
-}
-
-// The example teaches users to write literal colors — that is exactly the
-// custom-theme contract, so the token-discipline rule is deliberately waived.
-/* eslint-disable design/no-raw-visual-values */
-const customThemePlaceholder = `/* Override Cairn theme variables; scope dark values with [data-mode="dark"]. */
-[data-cairn-theme] {
-  --cairn-color-background: #FBF7EF;
-  --cairn-color-primary: #7C4A1E;
-  --cairn-radius-md: 2px;
-  --cairn-spacing: 5px;
-}
-[data-cairn-theme][data-mode="dark"] {
-  --cairn-color-background: #191512;
-  --cairn-color-primary: #E8B583;
-}`;
-/* eslint-enable design/no-raw-visual-values */
-
-function CustomThemeSpecimen() {
-  const [css, setCss] = useState("");
-  const [active, setActive] = useState(false);
-  return (
-    <Specimen
-      className="flex-col flex-nowrap items-stretch gap-3"
-      description="Cairn accepts any CSS as a user theme, loaded after the token stylesheet. Overriding the documented --cairn-color-* variables is the whole contract; the built-in contrast guarantees do not apply to what you write here."
-      title="Custom theme (CSS)"
-    >
-      <Textarea
-        aria-label="Custom theme CSS"
-        className="min-h-40 font-mono text-caption/relaxed"
-        onChange={(event) => setCss(event.target.value)}
-        placeholder={customThemePlaceholder}
-        rows={8}
-        spellCheck={false}
-        value={css}
-      />
-      <div className="flex flex-wrap items-center gap-2">
-        <Button
-          onClick={() => {
-            applyUserTheme(css);
-            setActive(true);
-          }}
-          size="sm"
-        >
-          Apply custom theme
-        </Button>
-        <Button
-          disabled={!active}
-          onClick={() => {
-            clearUserTheme();
-            setActive(false);
-          }}
-          size="sm"
-          variant="outline"
-        >
-          Remove
-        </Button>
-      </div>
-      {active ? (
-        <Alert tone="warning">
-          A custom theme is active. It stays applied while this window is open, across the catalog and the product
-          shell.
-        </Alert>
-      ) : null}
-    </Specimen>
+    </CairnPreviewTheme>
   );
 }

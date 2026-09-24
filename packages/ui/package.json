@@ -30,7 +30,6 @@
     "@base-ui/react": "^1.7.0",
     "@cairn/design-system-catalog": "file:../design-system-catalog",
     "@cairn/design-tokens": "file:../design-tokens",
-    "@radix-ui/react-slot": "^1.3.3",
     "@tiptap/core": "^3.31.1",
     "@tiptap/extension-document": "^3.31.1",
     "@tiptap/extension-paragraph": "^3.31.1",

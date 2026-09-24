@@ -2,8 +2,7 @@
 // each behavioral guarantee independently.
 import "./accessibility.acceptance.mjs";
 import "./configuration.acceptance.mjs";
-import "./custom-theme.acceptance.mjs";
-import "./scoped-theme.acceptance.mjs";
+import "./theme-portal.acceptance.mjs";
 import "./coarse-pointer.acceptance.mjs";
 import "./navigation.acceptance.mjs";
 import "./outline.acceptance.mjs";

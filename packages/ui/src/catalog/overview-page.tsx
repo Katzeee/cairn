@@ -17,7 +17,7 @@ const principles = [
   {
     title: "Modes, themes, one vocabulary",
     detail:
-      "Light and dark modes, built-in themes, and user CSS all resolve the same semantic roles. A region scoped with data-mode or data-theme switches wholesale — no per-component theming.",
+      "Light and dark modes, forest and slate themes, and application-wide token settings all resolve the same semantic roles. Component props express their own intended variants and sizes.",
   },
 ] as const;
 

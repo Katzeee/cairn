@@ -3,6 +3,7 @@ import type { IconName } from "@cairn/design-system-catalog";
 import { tokens } from "@cairn/design-tokens";
 import { useState, type ReactNode } from "react";
 
+import { useCairnPortalContainer } from "../cairn-provider.js";
 import { Button } from "./button.js";
 import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
@@ -128,6 +129,7 @@ function CompactBottomBar({ activeItemId, items }: Readonly<{ activeItemId: stri
 
 function CompactDrawerBar({ activeItemId, brand, sections, utilities, navigation }: TierProperties) {
   const [open, setOpen] = useState(false);
+  const portalContainer = useCairnPortalContainer();
   return (
     <header
       className="flex items-center gap-2.5 border-b border-border bg-card px-2 py-2 @shell-medium/app-shell:hidden"
@@ -137,7 +139,7 @@ function CompactDrawerBar({ activeItemId, brand, sections, utilities, navigation
         <BaseDialog.Trigger render={<Button aria-label="Open navigation" size="icon" variant="ghost" />}>
           <Icon name="menu" />
         </BaseDialog.Trigger>
-        <BaseDialog.Portal>
+        <BaseDialog.Portal container={portalContainer}>
           <BaseDialog.Backdrop className="cairn-overlay-backdrop fixed inset-0 min-h-dvh bg-foreground/35" />
           <BaseDialog.Popup
             aria-label={`${brand} navigation`}

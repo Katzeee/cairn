@@ -1,6 +1,7 @@
 import { Menu } from "@base-ui/react/menu";
 import type { IconName } from "@cairn/design-system-catalog";
 
+import { useCairnPortalContainer } from "../cairn-provider.js";
 import { Button } from "./button.js";
 import { Icon } from "./icon.js";
 
@@ -23,13 +24,14 @@ export function menuItemClassName(tone: DropdownMenuItem["tone"]): string {
 }
 
 export function DropdownMenu({ items, label }: Readonly<{ items: readonly DropdownMenuItem[]; label: string }>) {
+  const portalContainer = useCairnPortalContainer();
   return (
     <Menu.Root>
       <Menu.Trigger render={<Button size="sm" variant="outline" />}>
         {label}
         <Icon name="chevron-down" size="sm" />
       </Menu.Trigger>
-      <Menu.Portal>
+      <Menu.Portal container={portalContainer}>
         <Menu.Positioner align="start" className="z-50 outline-none" sideOffset={8}>
           <Menu.Popup className={menuPopupClassName}>
             {items.map((item) => (

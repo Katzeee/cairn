@@ -1,8 +1,11 @@
 export { Alert, AlertTitle } from "./components/alert.js";
 export {
   CairnProvider,
+  CairnTheme,
   type CairnMode,
-  type CairnTheme,
+  type CairnProviderProps,
+  type CairnThemeName,
+  type CairnThemeProps,
   type CairnTokenName,
   type CairnTokenOverrides,
 } from "./cairn-provider.js";

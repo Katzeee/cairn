@@ -1,5 +1,6 @@
 import { Select as BaseSelect } from "@base-ui/react/select";
 
+import { useCairnPortalContainer } from "../cairn-provider.js";
 import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
 
@@ -28,6 +29,7 @@ export function Select({
   placeholder?: string;
   value?: string;
 }>) {
+  const portalContainer = useCairnPortalContainer();
   return (
     <BaseSelect.Root
       defaultValue={defaultValue}
@@ -48,7 +50,7 @@ export function Select({
           <Icon name="chevron-down" size="sm" />
         </BaseSelect.Icon>
       </BaseSelect.Trigger>
-      <BaseSelect.Portal>
+      <BaseSelect.Portal container={portalContainer}>
         {/* Drop below the trigger like every other anchored popup; the
             macOS-style overlay default would cover the control it came from. */}
         <BaseSelect.Positioner alignItemWithTrigger={false} className="z-50 outline-none" sideOffset={6}>

@@ -1,6 +1,7 @@
 import { ContextMenu as BaseContextMenu } from "@base-ui/react/context-menu";
 import type { ReactNode } from "react";
 
+import { useCairnPortalContainer } from "../cairn-provider.js";
 import { menuItemClassName, menuPopupClassName, type DropdownMenuItem } from "./dropdown-menu.js";
 import { Icon } from "./icon.js";
 
@@ -11,10 +12,11 @@ export function ContextMenu({
   children: ReactNode;
   items: readonly DropdownMenuItem[];
 }>) {
+  const portalContainer = useCairnPortalContainer();
   return (
     <BaseContextMenu.Root>
       <BaseContextMenu.Trigger className="block min-w-0">{children}</BaseContextMenu.Trigger>
-      <BaseContextMenu.Portal>
+      <BaseContextMenu.Portal container={portalContainer}>
         <BaseContextMenu.Positioner className="z-50 outline-none">
           <BaseContextMenu.Popup className={menuPopupClassName}>
             {items.map((item) => (

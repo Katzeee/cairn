@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 
-import { AppShell, Button, CairnProvider, ToastProvider, TooltipProvider, type AppShellSection } from "../../../dist/index.js";
+import { AppShell, Button, CairnProvider, CairnTheme, Dialog, ToastProvider, TooltipProvider, type AppShellSection } from "../../../dist/index.js";
 import { DesignSystemPage } from "../../../dist/catalog/index.js";
 import { OutlineExtensionFixture } from "./outline-extension-fixture.js";
 import { OutlineSuggestionFixture } from "./outline-suggestion-fixture.js";
@@ -38,6 +38,30 @@ function SharedProductPreview() {
   );
 }
 
+function ScopedThemeFixture() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  return (
+    <CairnProvider mode="light" theme="forest">
+      <span data-ui="outer-copy">Outer plain text</span>
+      <Button>Outer action</Button>
+      <CairnTheme fontFamily='"Georgia", serif' mode="dark" theme="slate" tokens={{ "--cairn-color-primary": "#123456" }}>
+        <span data-ui="scoped-copy">Scoped plain text</span>
+        <Button>Inner action</Button>
+        <Button onClick={() => setDialogOpen(true)} variant="outline">Open scoped dialog</Button>
+        <Dialog
+          actions={[{ label: "Confirm", variant: "primary" }]}
+          onOpenChange={setDialogOpen}
+          open={dialogOpen}
+          title="Scoped dialog"
+        />
+        <CairnTheme mode="light" theme="forest" tokens={{ "--cairn-color-primary": "#654321" }}>
+          <Button>Innermost action</Button>
+        </CairnTheme>
+      </CairnTheme>
+    </CairnProvider>
+  );
+}
+
 const root = document.querySelector("#root");
 if (root === null) {
   throw new Error("The design-system test root is missing");
@@ -64,6 +88,9 @@ function TestSurface() {
   }
   if (hash === "#/empty-fixture") {
     return <p>Empty fixture</p>;
+  }
+  if (hash === "#/scoped-theme-fixture") {
+    return <ScopedThemeFixture />;
   }
   if (hash === "#/outline-suggestion-fixture") {
     return <OutlineSuggestionFixture />;

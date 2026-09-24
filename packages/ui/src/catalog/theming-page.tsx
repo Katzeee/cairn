@@ -1,6 +1,7 @@
 import { themeVariableGroups } from "@cairn/design-tokens";
 import { useEffect, useState } from "react";
 
+import { CairnTheme } from "../cairn-provider.js";
 import { Alert } from "../components/alert.js";
 import { Badge, BadgeDot } from "../components/badge.js";
 import { Button } from "../components/button.js";
@@ -55,6 +56,27 @@ export function ThemingPage({
             <ThemeFrame mode="dark" theme={name} />
           </div>
         ))}
+      </Specimen>
+      <Specimen
+        description="A nested CairnTheme changes one region while the rest of the page keeps its theme. Component variants remain available inside the region."
+        title="Nested theme"
+      >
+        <Button size="sm">Page theme</Button>
+        <CairnTheme mode="dark" theme="slate">
+          <span className="inline-flex items-center gap-2 rounded-md bg-card p-3">
+            <Button size="sm">Nested theme</Button>
+            <Badge tone="success">Ready</Badge>
+          </span>
+        </CairnTheme>
+      </Specimen>
+      <Specimen
+        description="Wrap one component to override its semantic token without changing siblings. Use the component's variant and size props for its own behavior and hierarchy."
+        title="Component-level override"
+      >
+        <Button size="sm">Default action</Button>
+        <CairnTheme tokens={{ "--cairn-radius-sm": "var(--cairn-radius-xl)" }}>
+          <Button size="sm">Scoped radius</Button>
+        </CairnTheme>
       </Specimen>
       <ThemeVariablesSpecimen theme={theme} />
       <CustomThemeSpecimen />

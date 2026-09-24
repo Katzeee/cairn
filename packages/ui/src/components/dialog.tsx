@@ -3,6 +3,7 @@ import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import type { ButtonVariant } from "@cairn/design-system-catalog";
 import type { ReactNode } from "react";
 
+import { useCairnPortalContainer } from "../cairn-provider.js";
 import { Button } from "./button.js";
 
 export type DialogAction = Readonly<{
@@ -26,9 +27,10 @@ export function Dialog({
   open: boolean;
   title: string;
 }>) {
+  const portalContainer = useCairnPortalContainer();
   return (
     <BaseDialog.Root onOpenChange={onOpenChange} open={open}>
-      <BaseDialog.Portal>
+      <BaseDialog.Portal container={portalContainer}>
         <BaseDialog.Backdrop className="cairn-overlay-backdrop fixed inset-0 min-h-dvh bg-foreground/35" />
         <BaseDialog.Viewport className="fixed inset-0 grid min-h-dvh place-items-center overflow-y-auto p-4">
           <BaseDialog.Popup className="cairn-overlay-popup w-full max-w-120 rounded-lg border border-border bg-card p-6 text-card-foreground shadow-lg outline-none">
@@ -77,9 +79,10 @@ export function AlertDialog({
   open: boolean;
   title: string;
 }>) {
+  const portalContainer = useCairnPortalContainer();
   return (
     <BaseAlertDialog.Root onOpenChange={onOpenChange} open={open}>
-      <BaseAlertDialog.Portal>
+      <BaseAlertDialog.Portal container={portalContainer}>
         <BaseAlertDialog.Backdrop className="cairn-overlay-backdrop fixed inset-0 min-h-dvh bg-foreground/35" />
         <BaseAlertDialog.Viewport className="fixed inset-0 grid min-h-dvh place-items-center overflow-y-auto p-4">
           <BaseAlertDialog.Popup className="cairn-overlay-popup w-full max-w-120 rounded-lg border border-border bg-card p-6 text-card-foreground shadow-lg outline-none">

@@ -7,6 +7,7 @@ import {
 } from "@cairn/design-system-catalog";
 import { useEffect, useState, type ReactNode } from "react";
 
+import { CairnProvider } from "../cairn-provider.js";
 import { AppShell, type AppShellSection, type AppShellUtility } from "../components/app-shell.js";
 import { CatalogModeContext, type CatalogMode, type ThemeName } from "./catalog-theme.js";
 import { ButtonsPage, FormsPage, StatusPage, SurfacesPage } from "./component-pages.js";
@@ -73,15 +74,6 @@ export function DesignSystemPage({ productPreview }: Readonly<{ productPreview?:
     };
   }, []);
 
-  useEffect(() => {
-    document.documentElement.dataset.mode = mode;
-    document.documentElement.dataset.theme = theme;
-    return () => {
-      document.documentElement.dataset.mode = "light";
-      delete document.documentElement.dataset.theme;
-    };
-  }, [mode, theme]);
-
   const utilities: readonly AppShellUtility[] = [
     {
       icon: mode === "light" ? "moon" : "sun",
@@ -92,18 +84,20 @@ export function DesignSystemPage({ productPreview }: Readonly<{ productPreview?:
   ];
 
   return (
-    <CatalogModeContext.Provider value={mode}>
-      <div data-ui="design-system">
-        <AppShell activeItemId={page.id} brand="Cairn Design System" sections={shellSections} utilities={utilities}>
-          <main className="mx-auto w-full max-w-280 px-4 py-6 @shell-medium/app-shell:px-10 @shell-medium/app-shell:py-10">
-            <PageContent onThemeChange={setTheme} page={page} productPreview={productPreview} theme={theme} />
-            <footer className="mt-16 border-t border-border pt-6 text-caption text-muted-foreground">
-              Cairn Design System — one token source, one component layer.
-            </footer>
-          </main>
-        </AppShell>
-      </div>
-    </CatalogModeContext.Provider>
+    <CairnProvider mode={mode} theme={theme}>
+      <CatalogModeContext.Provider value={mode}>
+        <div data-ui="design-system">
+          <AppShell activeItemId={page.id} brand="Cairn Design System" sections={shellSections} utilities={utilities}>
+            <main className="mx-auto w-full max-w-280 px-4 py-6 @shell-medium/app-shell:px-10 @shell-medium/app-shell:py-10">
+              <PageContent onThemeChange={setTheme} page={page} productPreview={productPreview} theme={theme} />
+              <footer className="mt-16 border-t border-border pt-6 text-caption text-muted-foreground">
+                Cairn Design System — one token source, one component layer.
+              </footer>
+            </main>
+          </AppShell>
+        </div>
+      </CatalogModeContext.Provider>
+    </CairnProvider>
   );
 }
 

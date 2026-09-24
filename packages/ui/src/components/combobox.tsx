@@ -1,5 +1,6 @@
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 
+import { useCairnPortalContainer } from "../cairn-provider.js";
 import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
 import { inputClassName } from "./input.js";
@@ -26,6 +27,7 @@ export function Combobox({
   options: readonly ComboboxOption[];
   placeholder?: string;
 }>) {
+  const portalContainer = useCairnPortalContainer();
   return (
     <BaseCombobox.Root
       defaultValue={defaultValue}
@@ -46,7 +48,7 @@ export function Combobox({
           <Icon name="chevron-down" size="sm" />
         </BaseCombobox.Trigger>
       </div>
-      <BaseCombobox.Portal>
+      <BaseCombobox.Portal container={portalContainer}>
         <BaseCombobox.Positioner className="z-50 outline-none" sideOffset={6}>
           <BaseCombobox.Popup
             className="cairn-overlay-popup max-h-72 overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none"

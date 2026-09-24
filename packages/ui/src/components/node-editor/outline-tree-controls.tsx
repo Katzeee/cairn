@@ -2,6 +2,7 @@ import { OutlineBulletStateProvider } from "./outline-bullet.js";
 import { useLayoutEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 
 import { Menu } from "@base-ui/react/menu";
+import { useCairnPortalContainer } from "../../cairn-provider.js";
 import { menuItemClassName, menuPopupClassName } from "../dropdown-menu.js";
 import { cn } from "../cn.js";
 import { Icon } from "../icon.js";
@@ -29,6 +30,7 @@ export function OutlineSelectionToolbar({
   onMove?: (operation: "indent" | "outdent" | "reorder-down" | "reorder-up") => void;
 }>) {
   const toolbarRef = useRef<HTMLDivElement>(null);
+  const portalContainer = useCairnPortalContainer();
   useLayoutEffect(() => {
     const container = containerRef.current;
     const toolbar = toolbarRef.current;
@@ -101,7 +103,7 @@ export function OutlineSelectionToolbar({
           <Menu.Trigger className={actionClass} aria-label="More commands">
             <Icon name="ellipsis" size="sm" />
           </Menu.Trigger>
-          <Menu.Portal>
+          <Menu.Portal container={portalContainer}>
             <Menu.Positioner sideOffset={4} className="z-50">
               <Menu.Popup
                 data-outline-owner={containerRef.current?.id}

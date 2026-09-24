@@ -1,6 +1,7 @@
 import { useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 
+import { useCairnPortalContainer } from "../../cairn-provider.js";
 import { menuItemClassName, menuPopupClassName } from "../dropdown-menu.js";
 import { cn } from "../cn.js";
 import {
@@ -145,6 +146,7 @@ export function SuggestionList<Item extends SuggestionItem>({
   panelRef: RefObject<HTMLDivElement | null>;
   renderItem?: (item: Item, active: boolean) => ReactNode;
 }>) {
+  const portalContainer = useCairnPortalContainer();
   return createPortal(
     <div
       className={`${menuPopupClassName} fixed z-50 flex max-h-64 w-72 max-w-full flex-col`}
@@ -206,6 +208,6 @@ export function SuggestionList<Item extends SuggestionItem>({
         )}
       </div>
     </div>,
-    document.body,
+    portalContainer ?? document.body,
   );
 }

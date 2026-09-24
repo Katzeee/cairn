@@ -2,6 +2,7 @@ import { Toast as BaseToast } from "@base-ui/react/toast";
 import type { AlertTone, IconName } from "@cairn/design-system-catalog";
 import type { ReactNode } from "react";
 
+import { useCairnPortalContainer } from "../cairn-provider.js";
 import { Button } from "./button.js";
 import { Icon } from "./icon.js";
 
@@ -31,10 +32,11 @@ export function toast({ action, description, title, tone = "neutral" }: ToastOpt
 }
 
 export function ToastProvider({ children }: Readonly<{ children: ReactNode }>) {
+  const portalContainer = useCairnPortalContainer();
   return (
     <BaseToast.Provider limit={4} toastManager={manager}>
       {children}
-      <BaseToast.Portal>
+      <BaseToast.Portal container={portalContainer}>
         <BaseToast.Viewport className="pointer-events-none fixed inset-x-4 top-4 z-50 flex flex-col items-end gap-2 outline-none">
           <ToastList />
         </BaseToast.Viewport>

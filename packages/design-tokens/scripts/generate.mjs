@@ -106,6 +106,9 @@ function runtimeCss() {
   // settings may redefine: radii, spacing, fonts, and motion.
   const baseGeometry = [
     ...Object.entries(resolved.layout.outline).map(([name, value]) => `  --cairn-outline-${name}: ${value}px;`),
+    `  --cairn-content-width-standard: ${resolved.layout.content.standard}px;`,
+    `  --cairn-content-width-document: ${resolved.layout.content.document}px;`,
+    `  --cairn-content-inset: ${resolved.layout["safe-area"].minimum}px;`,
     ...Object.entries(resolved.radius).map(([name, value]) => `  --cairn-radius-${name}: ${value}px;`),
     "  --cairn-spacing: 4px;",
     `  --cairn-font-sans: ${cssValue(resolveValue(tokens.get("font.family.interface").value, []), "fontFamily")};`,
@@ -122,11 +125,8 @@ function runtimeCss() {
       ),
       ...geometryDeclarations(theme),
     ].join("\n");
-  // Theme blocks are mode-aware so a theme scope composes with any nested
-  // data-mode boundary. Descendant matches are wrapped in :where() so an
-  // element carrying its own data-theme always beats an ancestor's theme.
-  // A user theme stylesheet loads after this file and overrides the same
-  // --cairn-* variables; that is the entire user-theming contract.
+  // Theme blocks resolve each built-in palette for both appearance modes.
+  // Descendant matches use :where() so a catalog preview's own theme wins.
   const themeBlocks = Object.entries(namedThemes).map(
     ([name, theme]) =>
       `[data-theme="${name}"][data-mode="light"],\n[data-mode="light"] [data-theme="${name}"]:not([data-mode]),\n[data-theme="${name}"] :where([data-mode="light"]),\n[data-theme="${name}"]:not([data-mode]) {\n${themeDeclarations(theme, "light")}\n}\n\n[data-theme="${name}"][data-mode="dark"],\n[data-mode="dark"] [data-theme="${name}"]:not([data-mode]),\n[data-theme="${name}"] :where([data-mode="dark"]) {\n${themeDeclarations(theme, "dark")}\n}`,
@@ -135,9 +135,8 @@ function runtimeCss() {
     ([name, theme]) =>
       `  [data-theme="${name}"]:not([data-mode]) {\n${indent(themeDeclarations(theme, "dark"), 2)}\n  }`,
   );
-  // Everything ships inside a cascade layer so an unlayered user stylesheet
-  // (the custom-theme contract) beats built-in declarations regardless of the
-  // selector specificity the mode/theme scoping needs internally.
+  // Keep built-in declarations in one cascade layer so application root token
+  // overrides have a predictable place in the cascade.
   const systemDark = `@media (prefers-color-scheme: dark) {\n  :root:not([data-mode]) {\n${indent(declarations("dark"), 2)}\n  }\n\n${systemDarkThemeBlocks.join("\n\n")}\n}`;
   const body = `:root {\n${baseGeometry}\n}\n\n:root,\n[data-mode="light"] {\n${declarations("light")}\n}\n\n[data-mode="dark"] {\n${declarations("dark")}\n}\n\n${themeBlocks.join("\n\n")}\n\n${systemDark}`;
   return `@layer cairn-tokens {\n${body}\n}\n`;
@@ -197,6 +196,15 @@ function themeVariableGroups() {
           kind: "value",
           values: valuesByTheme(() => `${resolved.control.height.comfortable}px`),
         },
+        ...[
+          ["--cairn-content-width-standard", resolved.layout.content.standard],
+          ["--cairn-content-width-document", resolved.layout.content.document],
+          ["--cairn-content-inset", resolved.layout["safe-area"].minimum],
+        ].map(([name, value]) => ({
+          name,
+          kind: "value",
+          values: valuesByTheme(() => `${value}px`),
+        })),
         ...Object.entries(resolved.layout.outline).map(([name, value]) => ({
           name: `--cairn-outline-${name}`,
           kind: "value",

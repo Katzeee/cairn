@@ -1,4 +1,3 @@
-import { tokens } from "@cairn/design-tokens";
 import type { ReactNode } from "react";
 
 export function PageScaffold({
@@ -29,11 +28,7 @@ export function PageScaffold({
         </div>
       )}
       <main
-        className="mx-auto w-full py-8 @3xl/app-shell:py-12"
-        style={{
-          maxWidth: layout === "document" ? tokens.layout.content.document : tokens.layout.content.standard,
-          paddingInline: tokens.layout["safe-area"].minimum,
-        }}
+        className={`cairn-page-scaffold mx-auto w-full py-8 @3xl/app-shell:py-12 ${layout === "document" ? "cairn-page-scaffold--document" : ""}`}
       >
         <header
           className={`flex flex-wrap items-end justify-between gap-5 ${layout === "document" ? "" : "border-b border-border pb-7"}`}

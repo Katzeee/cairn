@@ -72,6 +72,15 @@
 }
 
 @layer components {
+  .cairn-page-scaffold {
+    max-width: var(--cairn-content-width-standard);
+    padding-inline: var(--cairn-content-inset);
+  }
+
+  .cairn-page-scaffold--document {
+    max-width: var(--cairn-content-width-document);
+  }
+
   /* Selection covers the subtree once; only its selected root receives a name frame. */
   [data-ui="outline-node"][data-selection-root="true"]::before {
     @apply pointer-events-none absolute inset-y-1 -left-[1.5px] right-0 rounded-selection bg-primary/12;

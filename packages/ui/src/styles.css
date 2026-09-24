@@ -11,6 +11,14 @@
   src: url("./assets/fonts/HarmonyOS_Sans_SC.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("./assets/fonts/JetBrainsMono-Variable.ttf") format("truetype");
+}
+
 :root {
   --cairn-safe-area-top: env(safe-area-inset-top, 0px);
   --cairn-safe-area-right: env(safe-area-inset-right, 0px);

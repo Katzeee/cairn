@@ -15,6 +15,13 @@ test("the built showcase opens directly and navigates to a component page", asyn
     const page = await application.firstWindow();
     await page.getByRole("heading", { level: 1, name: "Cairn Design System" }).waitFor();
     assert.match(await page.locator("body").evaluate((body) => getComputedStyle(body).fontFamily), /HarmonyOS Sans/u);
+    const bundledFonts = await page.evaluate(async () => {
+      const interfaceFaces = await document.fonts.load('400 14px "HarmonyOS Sans SC"');
+      const codeFaces = await document.fonts.load('400 14px "JetBrains Mono"');
+      return [interfaceFaces.length, codeFaces.length];
+    });
+    assert.ok(bundledFonts[0] > 0, "the default interface font loads from the showcase bundle");
+    assert.ok(bundledFonts[1] > 0, "the default code font loads from the showcase bundle");
 
     await page.evaluate(() => {
       window.location.hash = "#/design-system/components/buttons";

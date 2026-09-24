@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 
-import { AppShell, ToastProvider, TooltipProvider, type AppShellSection } from "../../../dist/index.js";
+import { AppShell, Button, CairnProvider, ToastProvider, TooltipProvider, type AppShellSection } from "../../../dist/index.js";
 import { DesignSystemPage } from "../../../dist/catalog/index.js";
 import { OutlineExtensionFixture } from "./outline-extension-fixture.js";
 import { OutlineSuggestionFixture } from "./outline-suggestion-fixture.js";
@@ -50,6 +50,21 @@ function TestSurface() {
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);
   }, []);
+  if (hash === "#/configuration-fixture") {
+    return (
+      <CairnProvider
+        fontFamily='"Georgia", serif'
+        mode="dark"
+        theme="slate"
+        tokens={{ "--cairn-color-primary": "#123456" }}
+      >
+        <Button>Configured action</Button>
+      </CairnProvider>
+    );
+  }
+  if (hash === "#/empty-fixture") {
+    return <p>Empty fixture</p>;
+  }
   if (hash === "#/outline-suggestion-fixture") {
     return <OutlineSuggestionFixture />;
   }

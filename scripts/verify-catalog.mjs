@@ -13,7 +13,7 @@ for (const statement of entry.statements) {
   }
   for (const element of statement.exportClause.elements) {
     const name = element.name.text;
-    if (!element.isTypeOnly && /^[A-Z]/u.test(name)) {
+    if (!element.isTypeOnly && /^[A-Z]/u.test(name) && !name.endsWith("Provider")) {
       components.add(name);
     }
   }

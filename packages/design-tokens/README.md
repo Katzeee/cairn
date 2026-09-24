@@ -4,4 +4,4 @@ This package owns the visual decisions shared by Cairn's React components and an
 
 [`tokens/cairn.tokens.json`](tokens/cairn.tokens.json) is the source of truth in DTCG JSON format. The build validates references, light and dark role parity, and core WCAG AA contrast before generating typed JavaScript and standalone CSS artifacts. It also owns the shared layout, typography, focus, shape, opacity, and motion values. Generated files are not edited directly.
 
-The package includes the unmodified HarmonyOS Sans SC font and its complete license. Applications that bundle it display the generated attribution and license text in their legal surface.
+The package includes the unmodified HarmonyOS Sans SC and JetBrains Mono fonts and their complete licenses. The interface and document font defaults to HarmonyOS Sans SC; code uses JetBrains Mono. Applications that bundle the fonts display the generated notices and license text in their legal surface.

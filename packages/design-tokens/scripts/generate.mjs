@@ -7,14 +7,22 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = resolve(packageRoot, "tokens/cairn.tokens.json");
 const harmonyFontPath = resolve(packageRoot, "assets/fonts/HarmonyOS_Sans_SC.ttf");
 const harmonyLicensePath = resolve(packageRoot, "assets/legal/HarmonyOS Sans/LICENSE-update.txt");
+const jetBrainsFontPath = resolve(packageRoot, "assets/fonts/JetBrainsMono-Variable.ttf");
+const jetBrainsLicensePath = resolve(packageRoot, "assets/legal/JetBrains Mono/OFL.txt");
 const generatedPath = resolve(packageRoot, "src/generated.ts");
 const sourceOnly = process.argv.includes("--source-only");
 const document = JSON.parse(await readFile(sourcePath, "utf8"));
 const harmonyFont = await readFile(harmonyFontPath);
 const harmonyLicense = await readFile(harmonyLicensePath, "utf8");
+const jetBrainsFont = await readFile(jetBrainsFontPath);
+const jetBrainsLicense = await readFile(jetBrainsLicensePath, "utf8");
 const harmonyFontHash = createHash("sha256").update(harmonyFont).digest("hex").toUpperCase();
 if (harmonyFontHash !== "8978E05044E7089AD6A9DE38C505C8148305607983487435A916D2610700A7CA") {
   throw new Error("HarmonyOS Sans SC must remain byte-identical to the pinned official v2.040 asset");
+}
+const jetBrainsFontHash = createHash("sha256").update(jetBrainsFont).digest("hex").toUpperCase();
+if (jetBrainsFontHash !== "3CFAFA86E28B87184D592FEF82846E8C10CB48653C62EFCDA34F082DA225EC34") {
+  throw new Error("JetBrains Mono must remain byte-identical to the pinned upstream asset");
 }
 const tokens = new Map();
 
@@ -59,6 +67,10 @@ const generated = `// Generated from tokens and licensed design assets. Do not e
     harmonyOsSans: {
       attribution: "This product uses HarmonyOS Sans. Copyright 2021 Huawei Device Co., Ltd.",
       license: harmonyLicense,
+    },
+    jetBrainsMono: {
+      attribution: "JetBrains Mono. Copyright 2020 The JetBrains Mono Project Authors.",
+      license: jetBrainsLicense,
     },
   },
 )} as const;\nexport const themeVariableGroups = ${JSON.stringify(variableGroups)} as const;\n`;

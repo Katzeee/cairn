@@ -1,4 +1,11 @@
 export { Alert, AlertTitle } from "./components/alert.js";
+export {
+  CairnProvider,
+  type CairnMode,
+  type CairnTheme,
+  type CairnTokenName,
+  type CairnTokenOverrides,
+} from "./cairn-provider.js";
 export { AppShell, type AppShellItem, type AppShellSection, type AppShellUtility } from "./components/app-shell.js";
 export { Badge, BadgeDot } from "./components/badge.js";
 export { Breadcrumbs, type BreadcrumbItem } from "./components/breadcrumbs.js";

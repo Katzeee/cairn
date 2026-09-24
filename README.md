@@ -6,6 +6,26 @@ The repository is an npm workspace with three library packages and a standalone 
 
 Install Node.js 22 or later, run `npm install`, then run `npm run showcase` from the repository root. This builds the packages and serves a local preview at `http://127.0.0.1:4173`. The generated [showcase page](apps/showcase/dist/index.html) also opens directly as a local file after `npm run build`. The gallery demonstrates the components, their states and variants, the responsive shell, theme changes, and the outline editor. Run `npm run typecheck`, `npm run lint`, and `npm test` to verify a change.
 
-The UI build exports a ready-to-use stylesheet at `@cairn/ui/styles.css`, together with the font asset it references. Applications import that stylesheet once in their renderer and import React components from `@cairn/ui`. A reusable component is implemented in `packages/ui/src/components`, exported through `packages/ui/src/index.ts`, and demonstrated in the catalog; `npm run verify:catalog` checks that every public visual component is rendered there. Visual roles and built-in themes belong to `packages/design-tokens`; a host can select light or dark mode with `data-mode`, select a built-in theme with `data-theme`, and override documented `--cairn-*` CSS variables for its own theme. The catalog's Theming page demonstrates these configuration points.
+The UI build exports a ready-to-use stylesheet at `@cairn/ui/styles.css`, together with both default fonts. Applications import that stylesheet once in their renderer and import React components from `@cairn/ui`. No provider or theme configuration is required for the default forest theme, system light or dark mode, HarmonyOS Sans SC interface font, and JetBrains Mono code font. A reusable component is implemented in `packages/ui/src/components`, exported through `packages/ui/src/index.ts`, and demonstrated in the catalog; `npm run verify:catalog` checks that every public visual component is rendered there.
 
-The HarmonyOS Sans SC font is retained unmodified with its license in `packages/design-tokens/assets`. Applications distributing the font must retain its notice and display the attribution in their legal surface.
+Applications that need global changes can wrap their React tree in the optional `CairnProvider`. It accepts `mode` (`system`, `light`, or `dark`), `theme` (`forest` or `slate`), `fontFamily`, and `tokens`. The `tokens` object overrides documented semantic CSS variables, including the code font at `--cairn-font-mono`. The provider applies settings to the document root so overlays rendered in portals receive the same theme, and restores earlier values when it unmounts. Use one provider at the application root.
+
+```tsx
+import "@cairn/ui/styles.css";
+import { CairnProvider, Button } from "@cairn/ui";
+
+<Button>Uses Cairn defaults</Button>;
+
+<CairnProvider
+  mode="dark"
+  theme="slate"
+  fontFamily='"Inter", system-ui, sans-serif'
+  tokens={{ "--cairn-color-primary": "#8fb8e8" }}
+>
+  <Button>Uses application settings</Button>
+</CairnProvider>;
+```
+
+The catalog's Theming page lists the supported variables and previews custom values. Built-in themes pass Cairn's contrast checks; an application's custom colors need their own contrast review. The underlying `data-mode`, `data-theme`, and `--cairn-*` CSS contract also works without React configuration code.
+
+HarmonyOS Sans SC and JetBrains Mono are retained unmodified with their licenses in `packages/design-tokens/assets`. Applications distributing them keep the corresponding notices and license text in their legal surface.

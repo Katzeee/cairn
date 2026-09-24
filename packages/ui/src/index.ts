@@ -11,7 +11,7 @@ export { AppShell, type AppShellItem, type AppShellSection, type AppShellUtility
 export { Badge, BadgeDot } from "./components/badge.js";
 export { Breadcrumbs, type BreadcrumbItem } from "./components/breadcrumbs.js";
 export { Button } from "./components/button.js";
-export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./components/card.js";
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, type CardVariant } from "./components/card.js";
 export { Checkbox } from "./components/checkbox.js";
 export { Combobox, type ComboboxOption } from "./components/combobox.js";
 export { ContextMenu } from "./components/context-menu.js";
@@ -83,6 +83,7 @@ export { Textarea } from "./components/textarea.js";
 export { toast, ToastProvider } from "./components/toast.js";
 export { Tooltip, TooltipProvider } from "./components/tooltip.js";
 export { LegalPage } from "./legal-page.js";
+export { Link } from "./components/link.js";
 export {
   SuggestionList,
   useSuggestionList,

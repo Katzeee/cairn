@@ -12,7 +12,7 @@ export function Switch({ className, ...properties }: ComponentPropsWithoutRef<ty
         className,
       )}
     >
-      <BaseSwitch.Thumb className="size-5 rounded-full bg-card shadow-xs transition-transform data-checked:translate-x-4" />
+      <BaseSwitch.Thumb className="size-5 rounded-full bg-card transition-transform data-checked:translate-x-4" />
     </BaseSwitch.Root>
   );
 }

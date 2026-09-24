@@ -50,6 +50,8 @@ export function App() {
 
 `CairnTheme` configures the application root; components expose their own designed choices through props such as `variant`, `size`, and `tone`. Cairn carries root settings into its portaled overlays. The catalog's side-by-side theme previews use the same internal theme renderer.
 
+`Card` defaults to `variant="surface"`; use `variant="muted"` for supporting content. Both are flat surfaces. Floating overlays use elevation where they need separation from the page.
+
 ## Develop Cairn
 
 The [repository guidance](AGENTS.md) records the design boundaries and completion criteria for changes. Run the root `typecheck`, `lint`, and `test` scripts before finishing implementation work; `test` builds the standalone showcase and checks catalog coverage as well as unit and browser behavior.

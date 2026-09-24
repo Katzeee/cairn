@@ -181,7 +181,7 @@ export function GeometryPage() {
       <Specimen
         className="gap-5"
         title="Elevation"
-        description="Shadows are theme-resolved; dark surfaces rely more on borders."
+        description="Shadows are reserved for floating layers; cards and controls use color and borders. Dark layers rely more on borders."
       >
         {["xs", "sm", "md", "lg"].map((step) => (
           <div className="flex flex-col flex-nowrap items-center gap-2" key={step}>

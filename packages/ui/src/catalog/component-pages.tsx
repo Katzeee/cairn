@@ -18,7 +18,6 @@ import { Skeleton } from "../components/skeleton.js";
 import { Spinner } from "../components/spinner.js";
 import { Switch } from "../components/switch.js";
 import { Textarea } from "../components/textarea.js";
-import { useCatalogMode } from "./catalog-theme.js";
 import { PageIntro, Specimen } from "./specimen.js";
 
 export function ButtonsPage() {
@@ -292,18 +291,20 @@ const alertCopy = {
 } as const;
 
 export function SurfacesPage() {
-  const mode = useCatalogMode();
-  const opposite = mode === "light" ? "dark" : "light";
   return (
     <>
       <PageIntro
-        description="Cards structure a page; a data-mode boundary flips a whole region between paper and night without new components."
+        description="Cards organize content with semantic surfaces. The default surface has a border and no elevation; muted is a quieter choice within the same theme."
         title="Surfaces"
       />
-      <Specimen className="items-stretch" title="Card">
+      <Specimen
+        className="items-stretch"
+        description="Surface is the default Card variant. Both variants use color and borders rather than a drop shadow."
+        title="Card variants"
+      >
         <Card className="max-w-105 flex-1">
           <CardHeader>
-            <CardTitle>Actors and Workspaces</CardTitle>
+            <CardTitle>Surface · default</CardTitle>
             <CardDescription>Everything this Home owns, kept on hardware you control.</CardDescription>
           </CardHeader>
           <CardContent className="text-body text-muted-foreground">
@@ -318,26 +319,15 @@ export function SurfacesPage() {
             </Button>
           </CardFooter>
         </Card>
-      </Specimen>
-      <Specimen
-        description={`The same components, scoped with data-mode="${opposite}" inside the ${mode} catalog.`}
-        title="Theme boundary"
-      >
-        <div
-          className="max-w-105 flex-1 rounded-xl border border-border bg-card p-6 text-card-foreground shadow-md"
-          data-mode={opposite}
-        >
-          <p className="mb-2 text-caption font-semibold tracking-widest text-primary uppercase">Engine online</p>
-          <h3 className="text-title-small font-medium">Create another Workspace</h3>
-          <p className="mt-1 mb-4 text-body text-muted-foreground">Rendered by the exact same Button and Badge.</p>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button size="sm">Create Workspace</Button>
-            <Badge tone="success">
-              <BadgeDot />
-              Ready
-            </Badge>
-          </div>
-        </div>
+        <Card className="max-w-105 flex-1" variant="muted">
+          <CardHeader>
+            <CardTitle>Muted</CardTitle>
+            <CardDescription>Secondary information stays grouped without demanding attention.</CardDescription>
+          </CardHeader>
+          <CardContent className="text-body text-muted-foreground">
+            Use this surface for supporting context within a page.
+          </CardContent>
+        </Card>
       </Specimen>
       <Specimen className="flex-col flex-nowrap items-stretch" title="Separator">
         <p className="text-body">Overview</p>

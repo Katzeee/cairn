@@ -2,11 +2,22 @@ import type { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "./cn.js";
 
-export function Card({ className, ...properties }: ComponentPropsWithoutRef<"article">) {
+export type CardVariant = "surface" | "muted";
+
+const variants: Readonly<Record<CardVariant, string>> = {
+  surface: "border-border bg-card text-card-foreground",
+  muted: "border-transparent bg-muted text-foreground",
+};
+
+export function Card({
+  className,
+  variant = "surface",
+  ...properties
+}: ComponentPropsWithoutRef<"article"> & Readonly<{ variant?: CardVariant }>) {
   return (
     <article
       {...properties}
-      className={cn("rounded-lg border border-border bg-card text-card-foreground shadow-sm", className)}
+      className={cn("rounded-lg border", variants[variant], className)}
     />
   );
 }

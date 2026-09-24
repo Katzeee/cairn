@@ -43,7 +43,7 @@ export function Select({
     >
       <BaseSelect.Trigger
         className={cn(
-          "flex h-10 w-full items-center justify-between gap-2 rounded-sm border border-input bg-card px-3 text-body text-foreground shadow-xs outline-none transition-[border-color,box-shadow] focus:border-ring focus:ring-2 focus:ring-ring/25 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-placeholder:text-muted-foreground",
+          "flex h-10 w-full items-center justify-between gap-2 rounded-sm border border-input bg-card px-3 text-body text-foreground outline-none transition-[border-color,box-shadow] focus:border-ring focus:ring-2 focus:ring-ring/25 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-placeholder:text-muted-foreground",
           className,
         )}
       >

@@ -8,6 +8,8 @@ The default stylesheet and components work without configuration. `CairnTheme` c
 
 Visual values come from semantic tokens. Change the token source when a shared color, typography, spacing, radius, or motion decision changes, then regenerate through the package build. Keep both built-in themes and both appearance modes complete and legible. For interaction primitives, follow the existing Base UI composition in neighboring components; preserve keyboard behavior, focus, and accessible names while applying Cairn's visual language.
 
+Cards and stationary controls use color and borders to express their surface. Reserve shadows for floating layers such as dialogs, menus, and tooltips.
+
 ## Complete a change
 
 For a public visual component, update its implementation and export, demonstrate its meaningful states in the standalone catalog, and add behavioral tests where the contract could regress. Completion means the catalog coverage check finds the export and the relevant unit or browser tests pass. For a token or theme change, completion also means generated outputs build and the contrast and mode checks pass. Run the root typecheck, lint, and test scripts for implementation changes. Keep documentation claims aligned with the current public API and build setup.

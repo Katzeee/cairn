@@ -1,4 +1,5 @@
 import { Breadcrumbs } from "../components/breadcrumbs.js";
+import { Link } from "../components/link.js";
 import { NavItem, NavRailItem, NavSectionLabel } from "../components/nav.js";
 import { Tab, TabPanel, Tabs, TabsList } from "../components/tabs.js";
 import { PageIntro, Specimen } from "./specimen.js";
@@ -45,6 +46,9 @@ export function NavigationPage() {
             { label: "Design system roadmap" },
           ]}
         />
+      </Specimen>
+      <Specimen description="Use a text link for navigation within prose or supporting actions." title="Link">
+        <Link href="#/design-system/components/navigation">Read the navigation guide</Link>
       </Specimen>
       <Specimen className="flex-col flex-nowrap items-start" title="Navigation items">
         <NavSectionLabel>Workspace</NavSectionLabel>

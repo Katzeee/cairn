@@ -1,5 +1,6 @@
 import { tokens } from "@cairn/design-tokens";
 
+import { LegalPage } from "../legal-page.js";
 import { PageIntro, Specimen } from "./specimen.js";
 
 const colorGroups = [
@@ -77,6 +78,12 @@ export function TypographyPage() {
           Cairn 将你的知识保存在本地 — every fact, decision, and revision stays on hardware you own.
         </p>
         <p className="font-mono text-body text-muted-foreground">workspace_9f3a…c21b · JetBrains Mono fallback</p>
+      </Specimen>
+      <Specimen className="block" title="Font notice and license">
+        <details className="text-body">
+          <summary className="cursor-pointer text-primary">Read the included font notice</summary>
+          <LegalPage backHref="#/design-system/foundations/typography" backLabel="Back to typography" embedded />
+        </details>
       </Specimen>
     </>
   );

@@ -8,11 +8,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Checkbox } from "../components/checkbox.js";
 import { Combobox } from "../components/combobox.js";
 import { EmptyState } from "../components/empty-state.js";
-import { Field, FieldDescription, FieldLabel } from "../components/field.js";
+import { Field, FieldDescription, FieldError, FieldLabel } from "../components/field.js";
 import { Input } from "../components/input.js";
 import { Progress } from "../components/progress.js";
 import { Radio, RadioGroup } from "../components/radio-group.js";
 import { Select } from "../components/select.js";
+import { Separator } from "../components/separator.js";
 import { Skeleton } from "../components/skeleton.js";
 import { Spinner } from "../components/spinner.js";
 import { Switch } from "../components/switch.js";
@@ -81,7 +82,7 @@ export function FormsPage() {
         <Field>
           <FieldLabel>Invalid value</FieldLabel>
           <Input aria-invalid defaultValue="not-an-identity" name="identity" />
-          <p className="text-caption font-medium text-destructive">The Workspace identity is not recognized.</p>
+          <FieldError>The Workspace identity is not recognized.</FieldError>
         </Field>
         <Field>
           <FieldLabel>Read-only</FieldLabel>
@@ -337,6 +338,11 @@ export function SurfacesPage() {
             </Badge>
           </div>
         </div>
+      </Specimen>
+      <Specimen className="flex-col flex-nowrap items-stretch" title="Separator">
+        <p className="text-body">Overview</p>
+        <Separator />
+        <p className="text-body text-muted-foreground">Secondary information follows a quiet boundary.</p>
       </Specimen>
     </>
   );

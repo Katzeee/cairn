@@ -16,7 +16,7 @@ export function NodeTable({
   footer?: ReactNode;
 }>) {
   return (
-    <div className="max-w-full overflow-x-auto" data-ui="node-table">
+    <div className="max-w-full overflow-x-auto" data-ui="node-table" tabIndex={0}>
       <table aria-label={label} className="w-full border-collapse text-left text-document-body">
         <thead>
           <tr>

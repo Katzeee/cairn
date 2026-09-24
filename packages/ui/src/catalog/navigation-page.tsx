@@ -1,6 +1,8 @@
 import { Breadcrumbs } from "../components/breadcrumbs.js";
+import { NavItem, NavRailItem, NavSectionLabel } from "../components/nav.js";
 import { Tab, TabPanel, Tabs, TabsList } from "../components/tabs.js";
 import { PageIntro, Specimen } from "./specimen.js";
+import { SuggestionDemo } from "./suggestion-demo.js";
 
 export function NavigationPage() {
   return (
@@ -43,6 +45,18 @@ export function NavigationPage() {
             { label: "Design system roadmap" },
           ]}
         />
+      </Specimen>
+      <Specimen className="flex-col flex-nowrap items-start" title="Navigation items">
+        <NavSectionLabel>Workspace</NavSectionLabel>
+        <nav aria-label="Example navigation" className="flex flex-wrap items-center gap-3">
+          <NavItem active href="#/design-system/components/navigation" icon="house">Overview</NavItem>
+          <NavItem href="#/design-system/components/navigation" icon="layers">Projects</NavItem>
+          <NavRailItem active href="#/design-system/components/navigation" icon="house" label="Overview in compact rail" />
+          <NavRailItem href="#/design-system/components/navigation" icon="layers" label="Projects in compact rail" />
+        </nav>
+      </Specimen>
+      <Specimen description="The same keyboard-driven suggestion surface used by rich editors can serve any host-owned search." title="Suggestion list">
+        <SuggestionDemo />
       </Specimen>
     </>
   );

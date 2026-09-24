@@ -1,11 +1,16 @@
 import { fontNotices } from "@cairn/design-tokens";
 
-export function LegalPage() {
+export function LegalPage({
+  backHref = "#/",
+  backLabel = "Return to application",
+  embedded = false,
+}: Readonly<{ backHref?: string; backLabel?: string; embedded?: boolean }>) {
+  const Container = embedded ? "div" : "main";
   return (
-    <main className="mx-auto w-full max-w-240 px-6 pt-14 pb-20">
+    <Container className="mx-auto w-full max-w-240 px-6 pt-14 pb-20">
       <header className="border-b border-border pb-10">
-        <a className="text-label font-medium text-primary hover:underline" href="#/">
-          ← Return to Cairn
+        <a className="text-label font-medium text-primary hover:underline" href={backHref}>
+          ← {backLabel}
         </a>
         <p className="mt-12 mb-3 text-caption font-semibold tracking-widest text-muted-foreground uppercase">
           Legal & acknowledgements
@@ -19,6 +24,6 @@ export function LegalPage() {
           {fontNotices.harmonyOsSans.license}
         </pre>
       </section>
-    </main>
+    </Container>
   );
 }

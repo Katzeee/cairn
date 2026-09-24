@@ -52,7 +52,7 @@ const shellSections: readonly AppShellSection[] = [
   })),
 ];
 
-export function DesignSystemPage({ productPreview }: Readonly<{ productPreview: ReactNode }>) {
+export function DesignSystemPage({ productPreview }: Readonly<{ productPreview?: ReactNode }>) {
   const [initialAppearance] = useState(initialCatalogAppearance);
   const [page, setPage] = useState(() => findCatalogPage(currentCatalogPath()) ?? overviewPage);
   const [mode, setMode] = useState<CatalogMode>(initialAppearance.mode);
@@ -89,7 +89,6 @@ export function DesignSystemPage({ productPreview }: Readonly<{ productPreview: 
       label: mode === "light" ? "Switch to dark mode" : "Switch to light mode",
       onSelect: () => setMode(mode === "light" ? "dark" : "light"),
     },
-    { icon: "arrow-left", id: "return", label: "Return to Cairn", target: "#/" },
   ];
 
   return (
@@ -116,7 +115,7 @@ function PageContent({
 }: Readonly<{
   onThemeChange(theme: ThemeName): void;
   page: CatalogPage;
-  productPreview: ReactNode;
+  productPreview?: ReactNode;
   theme: ThemeName;
 }>) {
   switch (page.id) {

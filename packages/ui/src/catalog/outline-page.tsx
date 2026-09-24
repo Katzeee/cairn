@@ -33,6 +33,7 @@ import { demoInlineExtensions } from "./outline-demo-inline-presentation.js";
 import { createDemoTaskCommands } from "./outline-demo-task-commands.js";
 import { demoOutlineCommands } from "./outline-demo-commands.js";
 import { PageIntro, Specimen } from "./specimen.js";
+import { EditorParts } from "./editor-parts.js";
 
 function insertExistingOccurrence(
   graph: DemoGraph,
@@ -402,6 +403,7 @@ export function OutlinePage() {
           showGuides
         />
       </Specimen>
+      <EditorParts />
     </>
   );
 }

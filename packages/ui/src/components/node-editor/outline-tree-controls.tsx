@@ -2,7 +2,7 @@ import { OutlineBulletStateProvider } from "./outline-bullet.js";
 import { useLayoutEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 
 import { Menu } from "@base-ui/react/menu";
-import { useCairnPortalContainer } from "../../cairn-provider.js";
+import { CairnPortalTheme } from "../../cairn-theme.js";
 import { menuItemClassName, menuPopupClassName } from "../dropdown-menu.js";
 import { cn } from "../cn.js";
 import { Icon } from "../icon.js";
@@ -30,7 +30,6 @@ export function OutlineSelectionToolbar({
   onMove?: (operation: "indent" | "outdent" | "reorder-down" | "reorder-up") => void;
 }>) {
   const toolbarRef = useRef<HTMLDivElement>(null);
-  const portalContainer = useCairnPortalContainer();
   useLayoutEffect(() => {
     const container = containerRef.current;
     const toolbar = toolbarRef.current;
@@ -103,38 +102,40 @@ export function OutlineSelectionToolbar({
           <Menu.Trigger className={actionClass} aria-label="More commands">
             <Icon name="ellipsis" size="sm" />
           </Menu.Trigger>
-          <Menu.Portal container={portalContainer}>
-            <Menu.Positioner sideOffset={4} className="z-50">
-              <Menu.Popup
-                data-outline-owner={containerRef.current?.id}
-                className={menuPopupClassName}
-                finalFocus={containerRef}
-              >
-                {onMove === undefined
-                  ? null
-                  : (
-                      [
-                        ["indent", "Indent"],
-                        ["outdent", "Outdent"],
-                        ["reorder-up", "Move up"],
-                        ["reorder-down", "Move down"],
-                      ] as const
-                    ).map(([operation, label]) => (
-                      <Menu.Item
-                        key={operation}
-                        className={menuItemClassName("default")}
-                        onClick={() => onMove(operation)}
-                      >
-                        {label}
-                      </Menu.Item>
-                    ))}
-                {onDelete === undefined ? null : (
-                  <Menu.Item className={menuItemClassName("destructive")} onClick={onDelete}>
-                    Delete
-                  </Menu.Item>
-                )}
-              </Menu.Popup>
-            </Menu.Positioner>
+          <Menu.Portal>
+            <CairnPortalTheme>
+              <Menu.Positioner sideOffset={4} className="z-50">
+                <Menu.Popup
+                  data-outline-owner={containerRef.current?.id}
+                  className={menuPopupClassName}
+                  finalFocus={containerRef}
+                >
+                  {onMove === undefined
+                    ? null
+                    : (
+                        [
+                          ["indent", "Indent"],
+                          ["outdent", "Outdent"],
+                          ["reorder-up", "Move up"],
+                          ["reorder-down", "Move down"],
+                        ] as const
+                      ).map(([operation, label]) => (
+                        <Menu.Item
+                          key={operation}
+                          className={menuItemClassName("default")}
+                          onClick={() => onMove(operation)}
+                        >
+                          {label}
+                        </Menu.Item>
+                      ))}
+                  {onDelete === undefined ? null : (
+                    <Menu.Item className={menuItemClassName("destructive")} onClick={onDelete}>
+                      Delete
+                    </Menu.Item>
+                  )}
+                </Menu.Popup>
+              </Menu.Positioner>
+            </CairnPortalTheme>
           </Menu.Portal>
         </Menu.Root>
       )}
@@ -183,7 +184,10 @@ export function OutlineRowControls({
           type="button"
         >
           <Icon
-            className={cn("size-3.5 transition-transform duration-(--cairn-duration-fast)", row.expanded && "rotate-90")}
+            className={cn(
+              "size-3.5 transition-transform duration-(--cairn-duration-fast)",
+              row.expanded && "rotate-90",
+            )}
             name="chevron-right"
           />
         </button>

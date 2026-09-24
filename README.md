@@ -8,29 +8,33 @@ Install Node.js 22 or later, run `npm install`, then run `npm run showcase` from
 
 The UI build exports a ready-to-use stylesheet at `@cairn/ui/styles.css`, together with both default fonts. Applications import that stylesheet once in their renderer and import React components from `@cairn/ui`. No provider or theme configuration is required for the default forest theme, system light or dark mode, HarmonyOS Sans SC interface font, and JetBrains Mono code font. A reusable component is implemented in `packages/ui/src/components`, exported through `packages/ui/src/index.ts`, and demonstrated in the catalog; `npm run verify:catalog` checks that every public visual component is rendered there.
 
-Applications that need global changes can wrap their React tree in the optional `CairnProvider`. It accepts `mode` (`system`, `light`, or `dark`), `theme` (`forest` or `slate`), `fontFamily`, and `tokens`. The `tokens` object overrides documented semantic CSS variables, including the code font at `--cairn-font-mono`. The provider applies settings to the document root so overlays rendered in portals receive the same theme, and restores earlier values when it unmounts. Use one provider at the application root.
+Applications that need configuration wrap their React tree in `CairnTheme`. The same component works at the application root, around a nested region, or around one component with `asChild`. It accepts `appearance` (`inherit`, `light`, or `dark`), `theme` (`forest` or `slate`), `fontFamily`, `hasBackground`, and `tokens`. The `tokens` object overrides documented semantic CSS variables, including the code font at `--cairn-font-mono`. Explicit light and dark scopes provide their own background unless `hasBackground` is false. With `appearance="inherit"`, the root follows the system preference and nested scopes inherit their parent's appearance.
 
-`CairnTheme` applies the same options to a subtree. Nested scopes inherit their parent's settings unless they specify another theme, mode, font, or token value. Wrap a single component to change just that component's semantic values; its own `variant`, `size`, or `tone` props still express its action hierarchy and state. Cairn places portaled dialogs, menus, popovers, tooltips, and selectors into a matching theme container so their appearance follows the nearest scope. New portaled components use `useCairnPortalContainer` internally for the same reason. Custom CSS scoped only by an application's own wrapper class does not automatically move with a portal; use the theme and token API, or target the shared `data-theme` and `data-mode` attributes, for values that must reach overlays.
+Nested scopes inherit settings unless they specify another value. Component props such as `variant`, `size`, and `tone` still express each component's action hierarchy and state. Cairn re-establishes the nearest theme inside portaled dialogs, menus, popovers, tooltips, and selectors using the same `CairnTheme` implementation. A custom portal can do the same with `<CairnTheme asChild hasBackground={false}>` around its portaled root. Themes render their settings as DOM attributes and CSS variables, so server-rendered applications can render the same initial appearance before hydration without a separate global DOM mutation.
+
+An `asChild` target must forward its received DOM props and ref to its rendered element. Cairn's leaf components do this where they expose DOM props; a custom application component used as the target must do the same. A replacement font specified with `fontFamily` also needs its own font file and `@font-face` rule unless that font is already available to the browser.
+
+This composition follows the root theme, nested theme, and `asChild` pattern used by [Radix Themes](https://www.radix-ui.com/themes/docs/components/theme). Cairn keeps its own visual tokens and component contracts; `@radix-ui/react-slot` supplies the prop and ref merging needed by `asChild`.
 
 ```tsx
 import "@cairn/ui/styles.css";
-import { CairnProvider, CairnTheme, Button } from "@cairn/ui";
+import { CairnTheme, Button } from "@cairn/ui";
 
 <Button>Uses Cairn defaults</Button>;
 
-<CairnProvider
-  mode="dark"
+<CairnTheme
+  appearance="dark"
   theme="slate"
   fontFamily='"Inter", system-ui, sans-serif'
   tokens={{ "--cairn-color-primary": "#8fb8e8" }}
 >
   <Button>Uses application settings</Button>
-</CairnProvider>;
+</CairnTheme>;
 
-<CairnTheme mode="dark" theme="slate">
-  <Button>Only this region uses Slate Dark</Button>
-  <CairnTheme tokens={{ "--cairn-radius-sm": "var(--cairn-radius-xl)" }}>
-    <Button size="sm">Only this button has a larger radius</Button>
+<CairnTheme appearance="light" theme="forest">
+  <Button>Only this region uses Forest Light</Button>
+  <CairnTheme asChild tokens={{ "--cairn-radius-sm": "var(--cairn-radius-xl)" }}>
+    <Button size="sm">This button alone has a larger radius</Button>
   </CairnTheme>
 </CairnTheme>;
 ```

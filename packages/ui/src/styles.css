@@ -32,6 +32,15 @@
     box-sizing: border-box;
   }
 
+  [data-cairn-theme] {
+    color: var(--cairn-color-foreground);
+    font-family: var(--cairn-font-sans);
+  }
+
+  [data-cairn-theme][data-has-background="true"] {
+    background-color: var(--cairn-color-background);
+  }
+
   /* Reserve the scrollbar track so page changes never shift centered content. */
   html {
     scrollbar-gutter: stable;

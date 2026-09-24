@@ -3,7 +3,7 @@ import type { IconName } from "@cairn/design-system-catalog";
 import { tokens } from "@cairn/design-tokens";
 import { useState, type ReactNode } from "react";
 
-import { useCairnPortalContainer } from "../cairn-provider.js";
+import { CairnPortalTheme } from "../cairn-theme.js";
 import { Button } from "./button.js";
 import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
@@ -129,7 +129,6 @@ function CompactBottomBar({ activeItemId, items }: Readonly<{ activeItemId: stri
 
 function CompactDrawerBar({ activeItemId, brand, sections, utilities, navigation }: TierProperties) {
   const [open, setOpen] = useState(false);
-  const portalContainer = useCairnPortalContainer();
   return (
     <header
       className="flex items-center gap-2.5 border-b border-border bg-card px-2 py-2 @shell-medium/app-shell:hidden"
@@ -139,24 +138,26 @@ function CompactDrawerBar({ activeItemId, brand, sections, utilities, navigation
         <BaseDialog.Trigger render={<Button aria-label="Open navigation" size="icon" variant="ghost" />}>
           <Icon name="menu" />
         </BaseDialog.Trigger>
-        <BaseDialog.Portal container={portalContainer}>
-          <BaseDialog.Backdrop className="cairn-overlay-backdrop fixed inset-0 min-h-dvh bg-foreground/35" />
-          <BaseDialog.Popup
-            aria-label={`${brand} navigation`}
-            className="cairn-overlay-drawer fixed inset-y-0 left-0 flex min-h-dvh w-72 max-w-full flex-col overflow-y-auto border-r border-border bg-card px-4 py-5 shadow-lg outline-none"
-          >
-            <span className="flex items-center gap-2.5 font-bold tracking-tight">
-              <BrandMark label={brand} />
-              <span className="min-w-0 truncate">{brand}</span>
-            </span>
-            <SectionedNav
-              activeItemId={activeItemId}
-              navigation={navigation}
-              onNavigate={() => setOpen(false)}
-              sections={sections}
-              utilities={utilities}
-            />
-          </BaseDialog.Popup>
+        <BaseDialog.Portal>
+          <CairnPortalTheme>
+            <BaseDialog.Backdrop className="cairn-overlay-backdrop fixed inset-0 min-h-dvh bg-foreground/35" />
+            <BaseDialog.Popup
+              aria-label={`${brand} navigation`}
+              className="cairn-overlay-drawer fixed inset-y-0 left-0 flex min-h-dvh w-72 max-w-full flex-col overflow-y-auto border-r border-border bg-card px-4 py-5 shadow-lg outline-none"
+            >
+              <span className="flex items-center gap-2.5 font-bold tracking-tight">
+                <BrandMark label={brand} />
+                <span className="min-w-0 truncate">{brand}</span>
+              </span>
+              <SectionedNav
+                activeItemId={activeItemId}
+                navigation={navigation}
+                onNavigate={() => setOpen(false)}
+                sections={sections}
+                utilities={utilities}
+              />
+            </BaseDialog.Popup>
+          </CairnPortalTheme>
         </BaseDialog.Portal>
       </BaseDialog.Root>
       <span className="flex min-w-0 items-center gap-2 font-bold tracking-tight">

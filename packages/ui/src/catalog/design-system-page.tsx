@@ -7,7 +7,7 @@ import {
 } from "@cairn/design-system-catalog";
 import { useEffect, useState, type ReactNode } from "react";
 
-import { CairnProvider } from "../cairn-provider.js";
+import { CairnTheme } from "../cairn-theme.js";
 import { AppShell, type AppShellSection, type AppShellUtility } from "../components/app-shell.js";
 import { CatalogModeContext, type CatalogMode, type ThemeName } from "./catalog-theme.js";
 import { ButtonsPage, FormsPage, StatusPage, SurfacesPage } from "./component-pages.js";
@@ -26,7 +26,10 @@ function currentCatalogPath(): string {
   return route.replace(/^\/+|\/+$/g, "");
 }
 
-function initialCatalogAppearance(): Readonly<{ mode: CatalogMode; theme: ThemeName }> {
+function initialCatalogAppearance(): Readonly<{
+  mode: CatalogMode;
+  theme: ThemeName;
+}> {
   const query = window.location.hash.split("?")[1] ?? "";
   const parameters = new URLSearchParams(query);
   return {
@@ -84,7 +87,7 @@ export function DesignSystemPage({ productPreview }: Readonly<{ productPreview?:
   ];
 
   return (
-    <CairnProvider mode={mode} theme={theme}>
+    <CairnTheme appearance={mode} theme={theme}>
       <CatalogModeContext.Provider value={mode}>
         <div data-ui="design-system">
           <AppShell activeItemId={page.id} brand="Cairn Design System" sections={shellSections} utilities={utilities}>
@@ -97,7 +100,7 @@ export function DesignSystemPage({ productPreview }: Readonly<{ productPreview?:
           </AppShell>
         </div>
       </CatalogModeContext.Provider>
-    </CairnProvider>
+    </CairnTheme>
   );
 }
 

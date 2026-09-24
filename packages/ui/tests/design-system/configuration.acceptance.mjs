@@ -9,15 +9,21 @@ designSystemTest("an application can override the global theme, font, and semant
   const button = page.getByRole("button", { name: "Configured action" });
   await button.waitFor();
 
-  const actual = await page.evaluate(() => ({
-    mode: document.documentElement.dataset.mode,
-    theme: document.documentElement.dataset.theme,
-    font: getComputedStyle(document.body).fontFamily,
-    token: document.documentElement.style.getPropertyValue("--cairn-color-primary"),
-  }));
+  const actual = await page.evaluate(() => {
+    const scope = document.querySelector("[data-cairn-theme]");
+    if (scope === null) {
+      throw new Error("Configured theme is missing");
+    }
+    return {
+      mode: scope.getAttribute("data-mode"),
+      theme: scope.getAttribute("data-theme"),
+      font: getComputedStyle(document.body).fontFamily,
+      token: getComputedStyle(scope).getPropertyValue("--cairn-color-primary").trim(),
+    };
+  });
   assert.equal(actual.mode, "dark");
   assert.equal(actual.theme, "slate");
-  assert.equal(actual.font, 'Georgia, serif');
+  assert.equal(await button.evaluate((element) => getComputedStyle(element).fontFamily), "Georgia, serif");
   assert.equal(actual.token, "#123456");
   assert.equal(await button.evaluate((element) => getComputedStyle(element).backgroundColor), "rgb(18, 52, 86)");
 
@@ -26,10 +32,8 @@ designSystemTest("an application can override the global theme, font, and semant
   });
   await page.getByText("Empty fixture").waitFor();
   const restored = await page.evaluate(() => ({
-    mode: document.documentElement.dataset.mode,
-    theme: document.documentElement.dataset.theme,
-    token: document.documentElement.style.getPropertyValue("--cairn-color-primary"),
-    font: document.documentElement.style.getPropertyValue("--cairn-font-sans"),
+    themeCount: document.querySelectorAll("#root [data-cairn-theme]").length,
+    rootMode: document.documentElement.dataset.mode,
   }));
-  assert.deepEqual(restored, { mode: "light", theme: undefined, token: "", font: "" });
+  assert.deepEqual(restored, { themeCount: 0, rootMode: "light" });
 });

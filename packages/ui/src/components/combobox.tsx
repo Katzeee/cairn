@@ -1,6 +1,6 @@
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 
-import { useCairnPortalContainer } from "../cairn-provider.js";
+import { CairnPortalTheme } from "../cairn-theme.js";
 import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
 import { inputClassName } from "./input.js";
@@ -27,7 +27,6 @@ export function Combobox({
   options: readonly ComboboxOption[];
   placeholder?: string;
 }>) {
-  const portalContainer = useCairnPortalContainer();
   return (
     <BaseCombobox.Root
       defaultValue={defaultValue}
@@ -48,33 +47,35 @@ export function Combobox({
           <Icon name="chevron-down" size="sm" />
         </BaseCombobox.Trigger>
       </div>
-      <BaseCombobox.Portal container={portalContainer}>
-        <BaseCombobox.Positioner className="z-50 outline-none" sideOffset={6}>
-          <BaseCombobox.Popup
-            className="cairn-overlay-popup max-h-72 overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none"
-            style={{ minWidth: "var(--anchor-width)" }}
-          >
-            {/* The element stays mounted while results exist; only its
+      <BaseCombobox.Portal>
+        <CairnPortalTheme>
+          <BaseCombobox.Positioner className="z-50 outline-none" sideOffset={6}>
+            <BaseCombobox.Popup
+              className="cairn-overlay-popup max-h-72 overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none"
+              style={{ minWidth: "var(--anchor-width)" }}
+            >
+              {/* The element stays mounted while results exist; only its
                 no-match state may occupy space. */}
-            <BaseCombobox.Empty className="px-2.5 py-2 text-label text-muted-foreground empty:hidden">
-              No matches found.
-            </BaseCombobox.Empty>
-            <BaseCombobox.List>
-              {(option: ComboboxOption) => (
-                <BaseCombobox.Item
-                  className="grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 rounded-sm px-2.5 py-2 text-label outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground"
-                  key={option.value}
-                  value={option}
-                >
-                  <BaseCombobox.ItemIndicator className="col-start-1">
-                    <Icon name="check" size="sm" />
-                  </BaseCombobox.ItemIndicator>
-                  <span className="col-start-2 truncate">{option.label}</span>
-                </BaseCombobox.Item>
-              )}
-            </BaseCombobox.List>
-          </BaseCombobox.Popup>
-        </BaseCombobox.Positioner>
+              <BaseCombobox.Empty className="px-2.5 py-2 text-label text-muted-foreground empty:hidden">
+                No matches found.
+              </BaseCombobox.Empty>
+              <BaseCombobox.List>
+                {(option: ComboboxOption) => (
+                  <BaseCombobox.Item
+                    className="grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 rounded-sm px-2.5 py-2 text-label outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground"
+                    key={option.value}
+                    value={option}
+                  >
+                    <BaseCombobox.ItemIndicator className="col-start-1">
+                      <Icon name="check" size="sm" />
+                    </BaseCombobox.ItemIndicator>
+                    <span className="col-start-2 truncate">{option.label}</span>
+                  </BaseCombobox.Item>
+                )}
+              </BaseCombobox.List>
+            </BaseCombobox.Popup>
+          </BaseCombobox.Positioner>
+        </CairnPortalTheme>
       </BaseCombobox.Portal>
     </BaseCombobox.Root>
   );

@@ -1,7 +1,7 @@
 import { themeVariableGroups } from "@cairn/design-tokens";
 import { useEffect, useState } from "react";
 
-import { CairnTheme } from "../cairn-provider.js";
+import { CairnTheme } from "../cairn-theme.js";
 import { Alert } from "../components/alert.js";
 import { Badge, BadgeDot } from "../components/badge.js";
 import { Button } from "../components/button.js";
@@ -62,7 +62,7 @@ export function ThemingPage({
         title="Nested theme"
       >
         <Button size="sm">Page theme</Button>
-        <CairnTheme mode="dark" theme="slate">
+        <CairnTheme appearance="dark" theme="slate">
           <span className="inline-flex items-center gap-2 rounded-md bg-card p-3">
             <Button size="sm">Nested theme</Button>
             <Badge tone="success">Ready</Badge>
@@ -74,7 +74,7 @@ export function ThemingPage({
         title="Component-level override"
       >
         <Button size="sm">Default action</Button>
-        <CairnTheme tokens={{ "--cairn-radius-sm": "var(--cairn-radius-xl)" }}>
+        <CairnTheme asChild tokens={{ "--cairn-radius-sm": "var(--cairn-radius-xl)" }}>
           <Button size="sm">Scoped radius</Button>
         </CairnTheme>
       </Specimen>
@@ -90,7 +90,11 @@ function ThemeVariablesSpecimen({ theme }: Readonly<{ theme: ThemeName }>) {
 
   useEffect(() => {
     const update = () => {
-      const computed = getComputedStyle(document.documentElement);
+      const surface = document.querySelector('[data-ui="design-system"]');
+      if (surface === null) {
+        return;
+      }
+      const computed = getComputedStyle(surface);
       setValues(
         Object.fromEntries(
           themeVariableGroups.flatMap(({ variables }) =>
@@ -155,10 +159,10 @@ function fallbackVariableValues(theme: ThemeName, mode: "light" | "dark"): Recor
 
 function ThemeFrame({ mode, theme }: Readonly<{ mode: "light" | "dark"; theme: ThemeName }>) {
   return (
-    <div
+    <CairnTheme
+      appearance={mode}
       className="min-w-0 flex-1 rounded-xl border border-border bg-background p-4"
-      data-mode={mode}
-      data-theme={theme}
+      theme={theme}
     >
       <div className="mb-3 flex items-center justify-between gap-2">
         <p className="text-caption font-semibold tracking-widest text-muted-foreground uppercase">
@@ -179,21 +183,21 @@ function ThemeFrame({ mode, theme }: Readonly<{ mode: "light" | "dark"; theme: T
           Cancel
         </Button>
       </div>
-    </div>
+    </CairnTheme>
   );
 }
 
 // The example teaches users to write literal colors — that is exactly the
 // custom-theme contract, so the token-discipline rule is deliberately waived.
 /* eslint-disable design/no-raw-visual-values */
-const customThemePlaceholder = `/* Override any --cairn-* variable; scope dark values with [data-mode="dark"]. */
-:root {
+const customThemePlaceholder = `/* Override Cairn theme variables; scope dark values with [data-mode="dark"]. */
+[data-cairn-theme] {
   --cairn-color-background: #FBF7EF;
   --cairn-color-primary: #7C4A1E;
   --cairn-radius-md: 2px;
   --cairn-spacing: 5px;
 }
-[data-mode="dark"] {
+[data-cairn-theme][data-mode="dark"] {
   --cairn-color-background: #191512;
   --cairn-color-primary: #E8B583;
 }`;

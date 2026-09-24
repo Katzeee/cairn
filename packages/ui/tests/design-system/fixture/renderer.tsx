@@ -1,7 +1,15 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 
-import { AppShell, Button, CairnProvider, CairnTheme, Dialog, ToastProvider, TooltipProvider, type AppShellSection } from "../../../dist/index.js";
+import {
+  AppShell,
+  Button,
+  CairnTheme,
+  Dialog,
+  ToastProvider,
+  TooltipProvider,
+  type AppShellSection,
+} from "../../../dist/index.js";
 import { DesignSystemPage } from "../../../dist/catalog/index.js";
 import { OutlineExtensionFixture } from "./outline-extension-fixture.js";
 import { OutlineSuggestionFixture } from "./outline-suggestion-fixture.js";
@@ -20,7 +28,12 @@ const previewSections: readonly AppShellSection[] = [
     items: [
       { icon: "house", id: "home", label: "Home", target: "#/" },
       { icon: "list-tree", id: "notes", label: "Notes", target: "#/notes" },
-      { icon: "messages-square", id: "inbox", label: "Inbox", target: "#/inbox" },
+      {
+        icon: "messages-square",
+        id: "inbox",
+        label: "Inbox",
+        target: "#/inbox",
+      },
     ],
   },
 ];
@@ -41,24 +54,41 @@ function SharedProductPreview() {
 function ScopedThemeFixture() {
   const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <CairnProvider mode="light" theme="forest">
+    <CairnTheme appearance="light" theme="forest">
       <span data-ui="outer-copy">Outer plain text</span>
       <Button>Outer action</Button>
-      <CairnTheme fontFamily='"Georgia", serif' mode="dark" theme="slate" tokens={{ "--cairn-color-primary": "#123456" }}>
+      <CairnTheme
+        appearance="dark"
+        fontFamily='"Georgia", serif'
+        theme="slate"
+        tokens={{ "--cairn-color-primary": "#123456" }}
+      >
         <span data-ui="scoped-copy">Scoped plain text</span>
         <Button>Inner action</Button>
-        <Button onClick={() => setDialogOpen(true)} variant="outline">Open scoped dialog</Button>
+        <Button onClick={() => setDialogOpen(true)} variant="outline">
+          Open scoped dialog
+        </Button>
         <Dialog
           actions={[{ label: "Confirm", variant: "primary" }]}
           onOpenChange={setDialogOpen}
           open={dialogOpen}
           title="Scoped dialog"
         />
-        <CairnTheme mode="light" theme="forest" tokens={{ "--cairn-color-primary": "#654321" }}>
+        <CairnTheme appearance="light" asChild theme="forest" tokens={{ "--cairn-color-primary": "#654321" }}>
           <Button>Innermost action</Button>
         </CairnTheme>
       </CairnTheme>
-    </CairnProvider>
+    </CairnTheme>
+  );
+}
+
+function RawThemeFixture() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open raw-theme dialog</Button>
+      <Dialog onOpenChange={setOpen} open={open} title="Raw-theme dialog" />
+    </>
   );
 }
 
@@ -76,14 +106,14 @@ function TestSurface() {
   }, []);
   if (hash === "#/configuration-fixture") {
     return (
-      <CairnProvider
+      <CairnTheme
         fontFamily='"Georgia", serif'
-        mode="dark"
+        appearance="dark"
         theme="slate"
         tokens={{ "--cairn-color-primary": "#123456" }}
       >
         <Button>Configured action</Button>
-      </CairnProvider>
+      </CairnTheme>
     );
   }
   if (hash === "#/empty-fixture") {
@@ -91,6 +121,9 @@ function TestSurface() {
   }
   if (hash === "#/scoped-theme-fixture") {
     return <ScopedThemeFixture />;
+  }
+  if (hash === "#/raw-theme-fixture") {
+    return <RawThemeFixture />;
   }
   if (hash === "#/outline-suggestion-fixture") {
     return <OutlineSuggestionFixture />;

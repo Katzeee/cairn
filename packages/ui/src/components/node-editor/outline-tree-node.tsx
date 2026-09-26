@@ -1,6 +1,6 @@
 import { createContext, Fragment, useContext, type MouseEvent, type PointerEvent, type ReactNode } from "react";
 
-import { cn } from "../cn.js";
+import { cn } from "./foundation.js";
 import { OutlineEmptyChild } from "./outline-empty-child.js";
 import type { ResolvedOutlineRowPresentation } from "./outline-presentation.js";
 import type { OutlineEditorBinding, OutlineTreeEditing } from "./outline-tree-edit-contract.js";

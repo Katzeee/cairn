@@ -3,6 +3,18 @@
 @import "@cairn/design-tokens/theme.css";
 @source "./";
 
+/* Layout primitives compose these classes at runtime from components/layout.tsx. */
+@source inline("{,md:,lg:,xl:,2xl:}{p,px,py,pt,pr,pb,pl,gap,gap-x,gap-y}-{0,1,2,3,4,6,8,10,12,16}");
+@source inline("{,md:,lg:,xl:,2xl:}{hidden,block,inline,inline-block,contents,flex,inline-flex,grid,inline-grid}");
+@source inline("{,md:,lg:,xl:,2xl:}flex-{row,col,row-reverse,col-reverse,nowrap,wrap,wrap-reverse}");
+@source inline("{,md:,lg:,xl:,2xl:}items-{start,center,end,baseline,stretch}");
+@source inline("{,md:,lg:,xl:,2xl:}justify-{start,center,end,between}");
+@source inline("{,md:,lg:,xl:,2xl:}grid-{cols,rows}-{1,2,3,4,5,6,7,8,9}");
+@source inline("{,md:,lg:,xl:,2xl:}grid-flow-{row,col,dense,row-dense,col-dense}");
+@source inline("{,md:,lg:,xl:,2xl:}{grow,grow-0,shrink,shrink-0,min-w-0}");
+@source inline("{,md:,lg:,xl:,2xl:}max-w-(--cairn-content-width-{reading,document,standard,wide})");
+@source inline("{,md:,lg:,xl:,2xl:}py-{6,10,20,40}");
+
 @font-face {
   font-family: "HarmonyOS Sans SC";
   font-style: normal;
@@ -80,7 +92,6 @@
   .cairn-page-scaffold--document {
     max-width: var(--cairn-content-width-document);
   }
-
   /* Selection covers the subtree once; only its selected root receives a name frame. */
   [data-ui="outline-node"][data-selection-root="true"]::before {
     @apply pointer-events-none absolute inset-y-1 -left-[1.5px] right-0 rounded-selection bg-primary/12;

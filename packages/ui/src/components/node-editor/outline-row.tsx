@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { cn } from "../cn.js";
+import { cn } from "./foundation.js";
 
 export function OutlineRowContent({
   children,

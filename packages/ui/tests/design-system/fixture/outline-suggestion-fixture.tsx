@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { Icon, OutlineTree, type OutlineContent, type OutlineCompletionItem } from "../../../dist/index.js";
+import { Icon } from "../../../dist/index.js";
+import { OutlineTree, type OutlineContent, type OutlineCompletionItem } from "../../../dist/editor.js";
 
 const candidates: readonly OutlineCompletionItem[] = Array.from({ length: 16 }, (_value, index) => ({
   id: `choice-${index}`,

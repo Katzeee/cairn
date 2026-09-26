@@ -4,7 +4,7 @@ import { tokens } from "@cairn/design-tokens";
 import { useState, type ReactNode } from "react";
 
 import { CairnPortalTheme } from "../cairn-theme.js";
-import { Button } from "./button.js";
+import { Button, StyledButton } from "./button.js";
 import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
 import { NavItem, NavRailItem, NavSectionLabel } from "./nav.js";
@@ -185,7 +185,7 @@ function MediumRail({
     >
       <BrandMark label={brand} />
       <Tooltip content="Expand navigation">
-        <Button
+        <StyledButton
           aria-label="Expand navigation"
           className="hidden @shell-expanded/app-shell:inline-flex"
           onClick={onExpand}
@@ -193,7 +193,7 @@ function MediumRail({
           variant="ghost"
         >
           <Icon name="panel-left-open" />
-        </Button>
+        </StyledButton>
       </Tooltip>
       <nav aria-label="Primary" className="mt-3 flex w-full flex-col items-center gap-1">
         {sections.map((section, index) => (
@@ -203,7 +203,11 @@ function MediumRail({
             key={section.id}
             role={section.label === undefined ? undefined : "group"}
           >
-            {index === 0 ? null : <Separator className="mx-auto my-2 w-8" />}
+            {index === 0 ? null : (
+              <div className="mx-auto my-2 w-8">
+                <Separator />
+              </div>
+            )}
             {section.items.map((item) => (
               <NavRailItem
                 active={item.id === activeItemId}
@@ -260,9 +264,9 @@ function ExpandedSidebar({
           <span className="min-w-0 truncate">{brand}</span>
         </a>
         <Tooltip content="Collapse navigation">
-          <Button aria-label="Collapse navigation" className="size-8" onClick={onCollapse} size="icon" variant="ghost">
+          <StyledButton aria-label="Collapse navigation" className="size-8" onClick={onCollapse} size="icon" variant="ghost">
             <Icon name="panel-left-close" size="sm" />
-          </Button>
+          </StyledButton>
         </Tooltip>
       </div>
       <SectionedNav activeItemId={activeItemId} sections={sections} utilities={utilities} navigation={navigation} />
@@ -312,7 +316,7 @@ function SectionedNav({
         <div className="mt-auto flex flex-col gap-0.5 pt-6">
           {utilities.map((utility) =>
             utility.target === undefined ? (
-              <Button
+              <StyledButton
                 className="justify-start px-2.5 font-medium"
                 key={utility.id}
                 onClick={() => {
@@ -324,7 +328,7 @@ function SectionedNav({
               >
                 <Icon name={utility.icon} size="sm" />
                 {utility.label}
-              </Button>
+              </StyledButton>
             ) : (
               <NavItem href={utility.target} icon={utility.icon} key={utility.id} onClick={onNavigate}>
                 {utility.label}

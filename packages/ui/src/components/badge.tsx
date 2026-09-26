@@ -1,7 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import type { ComponentPropsWithoutRef } from "react";
 
-import { cn } from "./cn.js";
+import type { ElementProps } from "./element-props.js";
 
 const badgeVariants = cva("inline-flex items-center gap-1.5 rounded-full border font-medium whitespace-nowrap", {
   variants: {
@@ -22,12 +21,12 @@ const badgeVariants = cva("inline-flex items-center gap-1.5 rounded-full border 
   defaultVariants: { size: "md", tone: "neutral" },
 });
 
-type BadgeProperties = ComponentPropsWithoutRef<"span"> & VariantProps<typeof badgeVariants>;
+export type BadgeProps = ElementProps<"span"> & VariantProps<typeof badgeVariants>;
 
-export function Badge({ className, size, tone, ...properties }: BadgeProperties) {
-  return <span {...properties} className={cn(badgeVariants({ size, tone }), className)} />;
+export function Badge({ size, tone, ...properties }: BadgeProps) {
+  return <span {...properties} className={badgeVariants({ size, tone })} />;
 }
 
-export function BadgeDot({ className }: Readonly<{ className?: string }>) {
-  return <span aria-hidden="true" className={cn("size-1.5 rounded-full bg-current", className)} />;
+export function BadgeDot() {
+  return <span aria-hidden="true" className="size-1.5 rounded-full bg-current" />;
 }

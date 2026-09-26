@@ -8,6 +8,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./editor": {
+      "types": "./dist/editor.d.ts",
+      "import": "./dist/editor.js"
+    },
     "./catalog": {
       "types": "./dist/catalog/index.d.ts",
       "import": "./dist/catalog/index.js"
@@ -47,17 +51,11 @@
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
-    "@types/node": "^20.19.43",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
-    "axe-core": "^4.13.0",
-    "electron": "41.10.7",
-    "esbuild": "0.28.2",
-    "playwright-core": "1.62.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.11"
+    "typescript": "^6.0.3"
   }
 }

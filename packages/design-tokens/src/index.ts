@@ -1,1 +1,1 @@
-export { fontNotices, themeVariableGroups, tokens } from "./generated.js";
+export { contrastRequirements, fontNotices, themeVariableGroups, tokens } from "./generated.js";

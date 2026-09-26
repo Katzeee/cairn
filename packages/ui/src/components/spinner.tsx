@@ -1,12 +1,15 @@
 import { cn } from "./cn.js";
 
-export function Spinner({ className, label }: Readonly<{ className?: string; label?: string }>) {
+export type SpinnerProps = Readonly<{ label?: string; size?: "sm" | "md"; tone?: "current" | "primary" }>;
+
+export function Spinner({ label, size = "md", tone = "current" }: SpinnerProps) {
   return (
     <span
       aria-label={label}
       className={cn(
-        "inline-block size-5 animate-spin rounded-full border-2 border-current border-t-transparent",
-        className,
+        "inline-block animate-spin rounded-full border-2 border-current border-t-transparent",
+        size === "sm" ? "size-4" : "size-5",
+        tone === "primary" && "text-primary",
       )}
       role={label === undefined ? "presentation" : "status"}
     />

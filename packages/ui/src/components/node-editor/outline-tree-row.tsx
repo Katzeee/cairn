@@ -1,6 +1,6 @@
 import type { MouseEvent, PointerEvent } from "react";
 
-import { cn } from "../cn.js";
+import { cn } from "./foundation.js";
 import type { ResolvedOutlineRowPresentation } from "./outline-presentation.js";
 import type { OutlineEditorBinding, OutlineTreeEditing } from "./outline-tree-edit-contract.js";
 import { OutlineInlineEditorProvider, OutlineInlineContent } from "./outline-tree-editor.js";

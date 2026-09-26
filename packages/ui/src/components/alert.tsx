@@ -1,7 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import type { ComponentPropsWithoutRef } from "react";
 
-import { cn } from "./cn.js";
+import type { ElementProps } from "./element-props.js";
 
 const alertVariants = cva("w-full rounded-md border px-4 py-3 text-body", {
   variants: {
@@ -15,18 +14,18 @@ const alertVariants = cva("w-full rounded-md border px-4 py-3 text-body", {
   defaultVariants: { tone: "neutral" },
 });
 
-type AlertProperties = ComponentPropsWithoutRef<"div"> & VariantProps<typeof alertVariants>;
+export type AlertProps = ElementProps<"div"> & VariantProps<typeof alertVariants>;
 
-export function Alert({ className, tone, ...properties }: AlertProperties) {
+export function Alert({ tone, ...properties }: AlertProps) {
   return (
     <div
       {...properties}
-      className={cn(alertVariants({ tone }), className)}
+      className={alertVariants({ tone })}
       role={tone === "destructive" ? "alert" : (properties.role ?? "status")}
     />
   );
 }
 
-export function AlertTitle({ className, ...properties }: ComponentPropsWithoutRef<"p">) {
-  return <p {...properties} className={cn("mb-1 font-semibold", className)} />;
+export function AlertTitle(properties: ElementProps<"p">) {
+  return <p {...properties} className="mb-1 font-semibold" />;
 }

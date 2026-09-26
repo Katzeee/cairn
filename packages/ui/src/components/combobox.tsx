@@ -11,7 +11,6 @@ export type ComboboxOption = Readonly<{
 }>;
 
 export function Combobox({
-  className,
   defaultValue,
   disabled,
   name,
@@ -19,7 +18,6 @@ export function Combobox({
   options,
   placeholder,
 }: Readonly<{
-  className?: string;
   defaultValue?: ComboboxOption;
   disabled?: boolean;
   name?: string;
@@ -38,7 +36,7 @@ export function Combobox({
       onValueChange={onValueChange}
     >
       <div className="cairn-input-hit-area relative flex w-full items-center" data-ui="input-hit-area">
-        <BaseCombobox.Input className={cn(inputClassName, "pr-9", className)} placeholder={placeholder} />
+        <BaseCombobox.Input className={cn(inputClassName, "pr-9")} placeholder={placeholder} />
         <BaseCombobox.Trigger
           aria-label="Open options"
           className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50"

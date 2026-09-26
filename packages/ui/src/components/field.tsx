@@ -1,20 +1,21 @@
 import { Field as BaseField } from "@base-ui/react/field";
-import type { ComponentPropsWithoutRef } from "react";
 
-import { cn } from "./cn.js";
+import type { ElementProps } from "./element-props.js";
 
-export function Field({ className, ...properties }: ComponentPropsWithoutRef<typeof BaseField.Root>) {
-  return <BaseField.Root {...properties} className={cn("flex flex-col gap-1.5", className)} />;
+export type FieldProps = ElementProps<"div"> & Readonly<{ disabled?: boolean; invalid?: boolean; name?: string }>;
+
+export function Field(properties: FieldProps) {
+  return <BaseField.Root {...properties} className="flex flex-col gap-1.5" />;
 }
 
-export function FieldLabel({ className, ...properties }: ComponentPropsWithoutRef<typeof BaseField.Label>) {
-  return <BaseField.Label {...properties} className={cn("text-label font-medium text-foreground", className)} />;
+export function FieldLabel(properties: ElementProps<"label">) {
+  return <BaseField.Label {...properties} className="text-label font-medium text-foreground" />;
 }
 
-export function FieldDescription({ className, ...properties }: ComponentPropsWithoutRef<typeof BaseField.Description>) {
-  return <BaseField.Description {...properties} className={cn("text-caption text-muted-foreground", className)} />;
+export function FieldDescription(properties: ElementProps<"p">) {
+  return <BaseField.Description {...properties} className="text-caption text-muted-foreground" />;
 }
 
-export function FieldError({ className, ...properties }: ComponentPropsWithoutRef<typeof BaseField.Error>) {
-  return <BaseField.Error {...properties} className={cn("text-caption font-medium text-destructive", className)} />;
+export function FieldError(properties: ElementProps<"div"> & Readonly<{ match?: boolean }>) {
+  return <BaseField.Error {...properties} className="text-caption font-medium text-destructive" />;
 }

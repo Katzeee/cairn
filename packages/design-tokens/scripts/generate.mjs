@@ -49,6 +49,31 @@ const shadows = {
   },
 };
 
+// Every theme, built in or user-defined, must meet these in both modes.
+const contrastRequirements = [
+  ...[
+    ["foreground", "background"],
+    ["foreground", "card"],
+    ["card-foreground", "card"],
+    ["popover-foreground", "popover"],
+    ["muted-foreground", "background"],
+    ["muted-foreground", "card"],
+    ["muted-foreground", "muted"],
+    ["primary-foreground", "primary"],
+    ["secondary-foreground", "secondary"],
+    ["accent-foreground", "accent"],
+    ["destructive-foreground", "destructive"],
+    ["destructive-strong", "destructive-subtle"],
+    ["success-strong", "success-subtle"],
+    ["warning-strong", "warning-subtle"],
+  ].map(([foreground, background]) => ({ foreground, background, minimum: 4.5 })),
+  ...[
+    ["primary", "background"],
+    ["destructive", "background"],
+    ["ring", "background"],
+  ].map(([foreground, background]) => ({ foreground, background, minimum: 3 })),
+];
+
 const modes = systemModes(resolved);
 const namedThemes = requiredRecord(resolved, "theme");
 for (const [name, theme] of Object.entries(namedThemes)) {
@@ -73,7 +98,7 @@ const generated = `// Generated from tokens and licensed design assets. Do not e
       license: jetBrainsLicense,
     },
   },
-)} as const;\nexport const themeVariableGroups = ${JSON.stringify(variableGroups)} as const;\n`;
+)} as const;\nexport const themeVariableGroups = ${JSON.stringify(variableGroups)} as const;\nexport const contrastRequirements = ${JSON.stringify(contrastRequirements)} as const;\n`;
 await writeFile(generatedPath, generated, "utf8");
 
 if (!sourceOnly) {
@@ -106,8 +131,7 @@ function runtimeCss() {
   // settings may redefine: radii, spacing, fonts, and motion.
   const baseGeometry = [
     ...Object.entries(resolved.layout.outline).map(([name, value]) => `  --cairn-outline-${name}: ${value}px;`),
-    `  --cairn-content-width-standard: ${resolved.layout.content.standard}px;`,
-    `  --cairn-content-width-document: ${resolved.layout.content.document}px;`,
+    ...Object.entries(resolved.layout.content).map(([name, value]) => `  --cairn-content-width-${name}: ${value}px;`),
     `  --cairn-content-inset: ${resolved.layout["safe-area"].minimum}px;`,
     ...Object.entries(resolved.radius).map(([name, value]) => `  --cairn-radius-${name}: ${value}px;`),
     "  --cairn-spacing: 4px;",
@@ -197,8 +221,7 @@ function themeVariableGroups() {
           values: valuesByTheme(() => `${resolved.control.height.comfortable}px`),
         },
         ...[
-          ["--cairn-content-width-standard", resolved.layout.content.standard],
-          ["--cairn-content-width-document", resolved.layout.content.document],
+          ...Object.entries(resolved.layout.content).map(([name, value]) => [`--cairn-content-width-${name}`, value]),
           ["--cairn-content-inset", resolved.layout["safe-area"].minimum],
         ].map(([name, value]) => ({
           name,
@@ -331,42 +354,13 @@ function validateModes(candidate, themeName = "default") {
   if (JSON.stringify(lightRoles) !== JSON.stringify(darkRoles)) {
     throw new Error("Light and dark themes must define the same semantic color roles");
   }
-  const textPairs = [
-    ["foreground", "background"],
-    ["foreground", "card"],
-    ["card-foreground", "card"],
-    ["popover-foreground", "popover"],
-    ["muted-foreground", "background"],
-    ["muted-foreground", "card"],
-    ["muted-foreground", "muted"],
-    ["primary-foreground", "primary"],
-    ["secondary-foreground", "secondary"],
-    ["accent-foreground", "accent"],
-    ["destructive-foreground", "destructive"],
-    ["destructive-strong", "destructive-subtle"],
-    ["success-strong", "success-subtle"],
-    ["warning-strong", "warning-subtle"],
-  ];
-  const componentPairs = [
-    ["primary", "background"],
-    ["destructive", "background"],
-    ["ring", "background"],
-  ];
   for (const mode of ["light", "dark"]) {
     const theme = candidate[mode];
-    for (const [foreground, background] of textPairs) {
+    for (const { foreground, background, minimum } of contrastRequirements) {
       const ratio = contrastRatio(theme[foreground], theme[background]);
-      if (ratio < 4.5) {
+      if (ratio < minimum) {
         throw new Error(
           `${themeName} accent, ${mode} theme: ${foreground} on ${background} has insufficient contrast ${ratio.toFixed(2)}`,
-        );
-      }
-    }
-    for (const [subject, background] of componentPairs) {
-      const ratio = contrastRatio(theme[subject], theme[background]);
-      if (ratio < 3) {
-        throw new Error(
-          `${themeName} accent, ${mode} theme: ${subject} on ${background} has insufficient contrast ${ratio.toFixed(2)}`,
         );
       }
     }

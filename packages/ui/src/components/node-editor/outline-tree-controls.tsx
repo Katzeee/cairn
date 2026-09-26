@@ -2,10 +2,7 @@ import { OutlineBulletStateProvider } from "./outline-bullet.js";
 import { useLayoutEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 
 import { Menu } from "@base-ui/react/menu";
-import { CairnPortalTheme } from "../../cairn-theme.js";
-import { menuItemClassName, menuPopupClassName } from "../dropdown-menu.js";
-import { cn } from "../cn.js";
-import { Icon } from "../icon.js";
+import { CairnPortalTheme, cn, Icon, menuItemClassName, menuPopupClassName } from "./foundation.js";
 import type { OutlineHostCommand } from "./outline-commands.js";
 import type { ResolvedOutlineBulletPresentation } from "./outline-presentation.js";
 import type { OutlineRowViewModel } from "./outline-tree-view-model.js";
@@ -183,13 +180,14 @@ export function OutlineRowControls({
           tabIndex={-1}
           type="button"
         >
-          <Icon
+          <span
             className={cn(
-              "size-3.5 transition-transform duration-(--cairn-duration-fast)",
+              "inline-flex transition-transform duration-(--cairn-duration-fast)",
               row.expanded && "rotate-90",
             )}
-            name="chevron-right"
-          />
+          >
+            <Icon name="chevron-right" size="xs" />
+          </span>
         </button>
         {bullet.onActivate === undefined ? (
           <span

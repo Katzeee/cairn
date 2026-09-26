@@ -6,7 +6,7 @@ import {
   type OutlineContent,
   type OutlineEditHistory,
   type OutlineTreeEditing,
-} from "../../../dist/index.js";
+} from "../../../dist/editor.js";
 
 const text = (value: string): OutlineContent => [{ type: "text", text: value }];
 

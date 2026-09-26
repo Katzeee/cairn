@@ -1,84 +1,82 @@
-export { Alert, AlertTitle } from "./components/alert.js";
+export { Alert, AlertTitle, type AlertProps } from "./components/alert.js";
 export {
-  CairnTheme,
-  type CairnAppearance,
+  Box,
+  Container,
+  Flex,
+  Grid,
+  Section,
+  type BoxProps,
+  type Breakpoint,
+  type ContainerProps,
+  type FlexProps,
+  type GridProps,
+  type LayoutElement,
+  type Responsive,
+  type SectionProps,
+  type Space,
+} from "./components/layout.js";
+export { CairnTheme, type CairnAppearance, type CairnThemeProps } from "./cairn-theme.js";
+export {
+  resolveTheme,
+  type CairnColorToken,
+  type CairnMode,
+  type CairnThemeDefinition,
+  type CairnThemeIssue,
   type CairnThemeName,
-  type CairnThemeProps,
   type CairnTokenName,
-  type CairnTokenOverrides,
-} from "./cairn-theme.js";
+  type CairnValueToken,
+  type ResolvedCairnTheme,
+} from "./theme-definition.js";
 export { AppShell, type AppShellItem, type AppShellSection, type AppShellUtility } from "./components/app-shell.js";
-export { Badge, BadgeDot } from "./components/badge.js";
+export { Badge, BadgeDot, type BadgeProps } from "./components/badge.js";
 export { Breadcrumbs, type BreadcrumbItem } from "./components/breadcrumbs.js";
-export { Button } from "./components/button.js";
-export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, type CardVariant } from "./components/card.js";
-export { Checkbox } from "./components/checkbox.js";
+export { Button, type ButtonProps } from "./components/button.js";
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  type CardTitleProps,
+  type CardVariant,
+} from "./components/card.js";
+export { Checkbox, type CheckboxProps } from "./components/checkbox.js";
 export { Combobox, type ComboboxOption } from "./components/combobox.js";
 export { ContextMenu } from "./components/context-menu.js";
 export { Dialog, AlertDialog, type DialogAction } from "./components/dialog.js";
 export { DropdownMenu, type DropdownMenuItem } from "./components/dropdown-menu.js";
 export { EmptyState } from "./components/empty-state.js";
-export { Field, FieldDescription, FieldError, FieldLabel } from "./components/field.js";
+export { Field, FieldDescription, FieldError, FieldLabel, type FieldProps } from "./components/field.js";
 export { Icon } from "./components/icon.js";
-export { Input } from "./components/input.js";
+export { Input, type InputProps } from "./components/input.js";
 export { ListDetail } from "./components/list-detail.js";
-export { NavItem, NavRailItem, NavSectionLabel } from "./components/nav.js";
 export {
-  OutlineBullet,
-  OutlineBulletDot,
-  OutlineInlineContent,
-  OutlineRowProgress,
-  OutlineTree,
-  flattenOutline,
-  resolveOutlineMove,
-  type OutlineMoveDestination,
-  type OutlineBulletPresentation,
-  type OutlineChildrenLayout,
-  type OutlineContent,
-  type OutlineHostCommand,
-  type OutlineCommandContext,
-  type OutlineCommandKeyBinding,
-  type OutlineContentStyle,
-  type OutlineCompletionContext,
-  type OutlineCompletionItem,
-  type OutlineCompletionMatch,
-  type OutlineCompletionProvider,
-  type OutlineInline,
-  type OutlineItemViewModel,
-  type OutlineToken,
-  type OutlineInlineExtension,
-  type OutlineSourceEdit,
-  type OutlineSyntaxMatch,
-  outlineFormatting,
-  sliceContent,
-  contentToSource,
-  parseOutlineContent,
-  type OutlineSourceSpan,
-  type OutlineMerge,
-  type OutlineMove,
-  type OutlineMoveResult,
-  type OutlinePresentationContext,
-  type OutlinePresentationRegistry,
-  type OutlinePresentationRowState,
-  type OutlineRowPresentation,
-  type OutlineRowViewModel,
-  type OutlineSelection,
-  type OutlineTreeEditing,
-  type OutlineClipboardItem,
-  type OutlinePaste,
-  type OutlineEditHistory,
-  type OutlineEditPosition,
-} from "./components/node-editor/outline-tree.js";
+  NavItem,
+  NavRailItem,
+  NavSectionLabel,
+  type NavItemProps,
+  type NavRailItemProps,
+} from "./components/nav.js";
 export { PageScaffold } from "./components/page-scaffold.js";
 export { Popover } from "./components/popover.js";
 export { Progress } from "./components/progress.js";
-export { Radio, RadioGroup } from "./components/radio-group.js";
+export { Radio, RadioGroup, type RadioGroupProps, type RadioProps } from "./components/radio-group.js";
 export { Select, type SelectOption } from "./components/select.js";
 export { Separator } from "./components/separator.js";
-export { Skeleton } from "./components/skeleton.js";
-export { Spinner } from "./components/spinner.js";
-export { Switch } from "./components/switch.js";
-export { Tab, TabPanel, Tabs, TabsList } from "./components/tabs.js";
+export { Skeleton, type SkeletonProps } from "./components/skeleton.js";
+export { Spinner, type SpinnerProps } from "./components/spinner.js";
+export { Switch, type SwitchProps } from "./components/switch.js";
+export {
+  Tab,
+  TabPanel,
+  Tabs,
+  TabsList,
+  type TabPanelProps,
+  type TabProps,
+  type TabsListProps,
+  type TabsProps,
+} from "./components/tabs.js";
 export { Textarea } from "./components/textarea.js";
 export { toast, ToastProvider } from "./components/toast.js";
 export { Tooltip, TooltipProvider } from "./components/tooltip.js";
@@ -96,7 +94,3 @@ export {
   type SuggestionKeyBinding,
 } from "./components/suggestion-list/suggestion-navigation.js";
 
-export { NodeHeading } from "./components/node-editor/node-heading.js";
-export { NodeEditor } from "./components/node-editor/node-editor.js";
-export { NodeTable, type NodeTableColumn, type NodeTableRow } from "./components/node-editor/node-table.js";
-export { OutlineEmptyChild } from "./components/node-editor/outline-empty-child.js";

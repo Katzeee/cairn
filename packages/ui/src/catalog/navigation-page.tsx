@@ -1,4 +1,5 @@
 import { Breadcrumbs } from "../components/breadcrumbs.js";
+import { CardDescription } from "../components/card.js";
 import { Link } from "../components/link.js";
 import { NavItem, NavRailItem, NavSectionLabel } from "../components/nav.js";
 import { Tab, TabPanel, Tabs, TabsList } from "../components/tabs.js";
@@ -23,14 +24,14 @@ export function NavigationPage() {
             <Tab value="references">References</Tab>
             <Tab value="history">History</Tab>
           </TabsList>
-          <TabPanel className="text-body text-muted-foreground" value="content">
-            The node itself: its fields, children, and inline content.
+          <TabPanel value="content">
+            <CardDescription>The node itself: its fields, children, and inline content.</CardDescription>
           </TabPanel>
-          <TabPanel className="text-body text-muted-foreground" value="references">
-            Every node that links here, grouped by Workspace.
+          <TabPanel value="references">
+            <CardDescription>Every node that links here, grouped by Workspace.</CardDescription>
           </TabPanel>
-          <TabPanel className="text-body text-muted-foreground" value="history">
-            Fact-by-fact history of this node, newest first.
+          <TabPanel value="history">
+            <CardDescription>Fact-by-fact history of this node, newest first.</CardDescription>
           </TabPanel>
         </Tabs>
       </Specimen>

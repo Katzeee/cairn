@@ -1,7 +1,6 @@
 import { Select as BaseSelect } from "@base-ui/react/select";
 
 import { CairnPortalTheme } from "../cairn-theme.js";
-import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
 
 export type SelectOption = Readonly<{
@@ -11,7 +10,6 @@ export type SelectOption = Readonly<{
 }>;
 
 export function Select({
-  className,
   defaultValue,
   disabled,
   name,
@@ -20,7 +18,6 @@ export function Select({
   placeholder = "Select…",
   value,
 }: Readonly<{
-  className?: string;
   defaultValue?: string;
   disabled?: boolean;
   name?: string;
@@ -42,10 +39,7 @@ export function Select({
       value={value}
     >
       <BaseSelect.Trigger
-        className={cn(
-          "flex h-10 w-full items-center justify-between gap-2 rounded-sm border border-input bg-card px-3 text-body text-foreground outline-none transition-[border-color,box-shadow] focus:border-ring focus:ring-2 focus:ring-ring/25 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-placeholder:text-muted-foreground",
-          className,
-        )}
+        className="flex h-10 w-full items-center justify-between gap-2 rounded-sm border border-input bg-card px-3 text-body text-foreground outline-none transition-[border-color,box-shadow] focus:border-ring focus:ring-2 focus:ring-ring/25 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-placeholder:text-muted-foreground"
       >
         <BaseSelect.Value className="truncate" placeholder={placeholder} />
         <BaseSelect.Icon className="shrink-0 text-muted-foreground">

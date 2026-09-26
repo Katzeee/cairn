@@ -1,10 +1,12 @@
 import { themeVariableGroups } from "@cairn/design-tokens";
 
 import { CairnPreviewTheme } from "../cairn-theme.js";
+import { Alert, AlertTitle } from "../components/alert.js";
 import { Badge, BadgeDot } from "../components/badge.js";
 import { Button } from "../components/button.js";
 import { Field, FieldLabel } from "../components/field.js";
 import { Input } from "../components/input.js";
+import { resolveTheme, type ResolvedCairnTheme } from "../theme-definition.js";
 import { themeNames, type ThemeName, useCatalogMode } from "./catalog-theme.js";
 import { PageIntro, Specimen } from "./specimen.js";
 
@@ -47,8 +49,57 @@ export function ThemingPage({
           </div>
         ))}
       </Specimen>
+      <UserThemeSpecimen />
       <ThemeVariablesSpecimen theme={theme} />
     </>
+  );
+}
+
+/* eslint-disable cairn/no-raw-visual-values -- a user theme definition is color data by nature */
+const userThemeDefinition = {
+  version: 1,
+  base: "forest",
+  colors: {
+    light: { "--cairn-color-primary": "#6B3FA0", "--cairn-color-ring": "#6B3FA0" },
+    dark: { "--cairn-color-primary": "#C9A7F2", "--cairn-color-ring": "#C9A7F2" },
+  },
+  values: { "--cairn-radius-sm": "4px" },
+} as const;
+const sampleUserTheme = resolveTheme(userThemeDefinition).theme;
+const illegibleEditIssues = resolveTheme({
+  ...userThemeDefinition,
+  colors: {
+    ...userThemeDefinition.colors,
+    light: { ...userThemeDefinition.colors.light, "--cairn-color-muted-foreground": "#B8B8B8" },
+  },
+}).issues;
+/* eslint-enable cairn/no-raw-visual-values */
+
+function UserThemeSpecimen() {
+  return (
+    <Specimen
+      className="grid grid-cols-1 items-stretch gap-4 @3xl:grid-cols-2"
+      description="Applications store user themes as data and pass them through resolveTheme. Missing values come from the base theme; invalid entries are ignored; every contrast failure is reported so the application can guide the user."
+      title="User theme"
+    >
+      <div className="flex flex-col gap-3">
+        <ThemeFrame label="user · light" mode="light" theme={sampleUserTheme} />
+        <ThemeFrame label="user · dark" mode="dark" theme={sampleUserTheme} />
+      </div>
+      <div className="flex flex-col gap-2">
+        <h3 className="text-label font-semibold">Issues reported for a lighter muted text color</h3>
+        <ul className="flex flex-col gap-2">
+          {illegibleEditIssues.map((issue) => (
+            <li key={`${issue.mode ?? "both"}:${issue.message}`}>
+              <Alert tone="warning">
+                {issue.mode === undefined ? null : <AlertTitle>{issue.mode}</AlertTitle>}
+                {issue.message}
+              </Alert>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Specimen>
   );
 }
 
@@ -57,7 +108,7 @@ function ThemeVariablesSpecimen({ theme }: Readonly<{ theme: ThemeName }>) {
   return (
     <Specimen
       className="flex-col flex-nowrap items-stretch gap-6"
-      description="These semantic variables define Cairn's built-in themes. Applications can override a specific variable at the application root when a global adjustment is needed."
+      description="These semantic variables define Cairn's built-in themes. A user theme overrides any of them through a theme definition: colors per mode, other values for both modes."
       title="Variables"
     >
       {themeVariableGroups.map((group) => (
@@ -92,7 +143,11 @@ function ThemeVariablesSpecimen({ theme }: Readonly<{ theme: ThemeName }>) {
   );
 }
 
-function ThemeFrame({ mode, theme }: Readonly<{ mode: "light" | "dark"; theme: ThemeName }>) {
+function ThemeFrame({
+  label,
+  mode,
+  theme,
+}: Readonly<{ label?: string; mode: "light" | "dark"; theme: ThemeName | ResolvedCairnTheme }>) {
   return (
     <CairnPreviewTheme
       appearance={mode}
@@ -101,7 +156,7 @@ function ThemeFrame({ mode, theme }: Readonly<{ mode: "light" | "dark"; theme: T
     >
       <div className="mb-3 flex items-center justify-between gap-2">
         <p className="text-caption font-semibold tracking-widest text-muted-foreground uppercase">
-          {theme} · {mode}
+          {label ?? `${String(theme)} · ${mode}`}
         </p>
         <Badge tone="success">
           <BadgeDot />

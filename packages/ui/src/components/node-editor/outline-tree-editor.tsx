@@ -13,7 +13,7 @@ import {
   pickerPosition,
   type OutlinePickerState,
 } from "./outline-editor-picker.js";
-import { SuggestionList, useSuggestionList } from "../suggestion-list/suggestion-list.js";
+import { SuggestionList, useSuggestionList } from "./foundation.js";
 import type {
   OutlineCompletionItem,
   OutlineEditorBinding,

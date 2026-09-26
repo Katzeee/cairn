@@ -11,12 +11,12 @@ const edit = async (page, row) => {
   return editor;
 };
 const leave = async (page) => {
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await page.locator('[data-ui="outline-editor"]').waitFor({ state: "detached" });
 };
 
 designSystemTest("field references edit their shared target and recover completed Supertag source", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const owner = rowAt(page, "projects/cairn/owner-field/kei-owner");
   const original = rowAt(page, "kei");
   const editor = await edit(page, owner);
@@ -43,7 +43,7 @@ designSystemTest("field references edit their shared target and recover complete
 });
 
 designSystemTest("closed source resolves without a completion selection or editor history", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const row = rowAt(page, "inbox/quick-capture");
   const editor = await edit(page, row);
   await editor.pressSequentially("@{Local-first software essay} #{person}");
@@ -63,7 +63,7 @@ designSystemTest("closed source resolves without a completion selection or edito
 });
 
 designSystemTest("choosing a field target never writes the replacement into the previous target", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const owner = rowAt(page, "projects/cairn/owner-field/kei-owner");
   const original = rowAt(page, "kei");
   const editor = await edit(page, owner);

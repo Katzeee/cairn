@@ -67,7 +67,7 @@ export function FormsPage() {
     <>
       <PageIntro
         description="Labels stay visible, descriptions and errors are wired to the control, and validation states come from the field."
-        title="Forms"
+        title="Form composition"
       />
       <Specimen className="max-w-105 flex-col flex-nowrap items-stretch gap-5" title="Text field">
         <Field>
@@ -92,6 +92,8 @@ export function FormsPage() {
           <FieldLabel>Disabled</FieldLabel>
           <Input disabled name="disabled" placeholder="Unavailable while locked" />
         </Field>
+      </Specimen>
+      <Specimen className="max-w-105 flex-col flex-nowrap items-stretch" title="Textarea">
         <Field>
           <FieldLabel>Workspace description</FieldLabel>
           <Textarea name="description" placeholder="What belongs in this Workspace?" rows={4} />
@@ -100,8 +102,8 @@ export function FormsPage() {
       </Specimen>
       <Specimen
         className="max-w-105 flex-col flex-nowrap items-stretch gap-5"
-        description="Select owns a fixed set of options; Combobox filters a large one as you type."
-        title="Select & Combobox"
+        description="Select owns a fixed set of options."
+        title="Select"
       >
         <Field>
           <FieldLabel>Theme</FieldLabel>
@@ -115,6 +117,8 @@ export function FormsPage() {
             ]}
           />
         </Field>
+      </Specimen>
+      <Specimen className="max-w-105 flex-col flex-nowrap items-stretch" title="Combobox">
         <Field>
           <FieldLabel>Move to Workspace</FieldLabel>
           <Combobox
@@ -198,7 +202,7 @@ export function StatusPage() {
     <>
       <PageIntro
         description="Status always carries a text label; color only reinforces it. Alerts own page-level feedback, badges own inline state."
-        title="Status"
+        title="Feedback composition"
       />
       <Specimen title="Badges">
         {badgeTones.map((tone) => (
@@ -229,13 +233,15 @@ export function StatusPage() {
       >
         <div className="flex w-full max-w-105 flex-col gap-5">
           <Progress label="Restoring index" value={64} />
-          <Flex align="center" gap="4">
-            <Spinner label="Loading" tone="primary" />
-            <Button loading variant="secondary">
-              Restoring index
-            </Button>
-          </Flex>
         </div>
+      </Specimen>
+      <Specimen title="Spinner">
+        <Flex align="center" gap="4">
+          <Spinner label="Loading" tone="primary" />
+          <Button loading variant="secondary">
+            Restoring index
+          </Button>
+        </Flex>
       </Specimen>
       <Specimen
         description="Skeletons hold the layout of known content while it loads; never skeleton whole pages."
@@ -287,7 +293,7 @@ export function SurfacesPage() {
     <>
       <PageIntro
         description="Cards organize content with semantic surfaces. The default surface has a border and no elevation; muted is a quieter choice within the same theme."
-        title="Surfaces"
+        title="Surface composition"
       />
       <Specimen
         className="items-stretch"
@@ -296,32 +302,34 @@ export function SurfacesPage() {
       >
         <div className="w-full">
           <Grid columns={{ initial: "1", lg: "2" }} gap="4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Surface · default</CardTitle>
-            <CardDescription>Everything this Home owns, kept on hardware you control.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>Two Actors, one shared Workspace index, and a vault that unlocks per session.</CardDescription>
-          </CardContent>
-          <CardFooter>
-            <Button size="sm" variant="outline">
-              Review
-            </Button>
-            <Button size="sm" variant="ghost">
-              Dismiss
-            </Button>
-          </CardFooter>
-        </Card>
-        <Card variant="muted">
-          <CardHeader>
-            <CardTitle>Muted</CardTitle>
-            <CardDescription>Secondary information stays grouped without demanding attention.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>Use this surface for supporting context within a page.</CardDescription>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Surface · default</CardTitle>
+                <CardDescription>Everything this Home owns, kept on hardware you control.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Two Actors, one shared Workspace index, and a vault that unlocks per session.
+                </CardDescription>
+              </CardContent>
+              <CardFooter>
+                <Button size="sm" variant="outline">
+                  Review
+                </Button>
+                <Button size="sm" variant="ghost">
+                  Dismiss
+                </Button>
+              </CardFooter>
+            </Card>
+            <Card variant="muted">
+              <CardHeader>
+                <CardTitle>Muted</CardTitle>
+                <CardDescription>Secondary information stays grouped without demanding attention.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>Use this surface for supporting context within a page.</CardDescription>
+              </CardContent>
+            </Card>
           </Grid>
         </div>
       </Specimen>

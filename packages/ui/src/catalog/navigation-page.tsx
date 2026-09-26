@@ -11,7 +11,7 @@ export function NavigationPage() {
     <>
       <PageIntro
         description="Navigation states carry text labels and live in the URL where possible, so views stay addressable and restorable."
-        title="Navigation"
+        title="Navigation composition"
       />
       <Specimen
         className="flex-col flex-nowrap items-stretch"
@@ -41,26 +41,38 @@ export function NavigationPage() {
       >
         <Breadcrumbs
           items={[
-            { href: "#/design-system/components/navigation", label: "Personal knowledge" },
-            { href: "#/design-system/components/navigation", label: "Projects" },
-            { href: "#/design-system/components/navigation", label: "Cairn" },
+            { href: "#/design-system/patterns/navigation", label: "Personal knowledge" },
+            { href: "#/design-system/patterns/navigation", label: "Projects" },
+            { href: "#/design-system/patterns/navigation", label: "Cairn" },
             { label: "Design system roadmap" },
           ]}
         />
       </Specimen>
       <Specimen description="Use a text link for navigation within prose or supporting actions." title="Link">
-        <Link href="#/design-system/components/navigation">Read the navigation guide</Link>
+        <Link href="#/design-system/patterns/navigation">Read the navigation guide</Link>
       </Specimen>
       <Specimen className="flex-col flex-nowrap items-start" title="Navigation items">
         <NavSectionLabel>Workspace</NavSectionLabel>
         <nav aria-label="Example navigation" className="flex flex-wrap items-center gap-3">
-          <NavItem active href="#/design-system/components/navigation" icon="house">Overview</NavItem>
-          <NavItem href="#/design-system/components/navigation" icon="layers">Projects</NavItem>
-          <NavRailItem active href="#/design-system/components/navigation" icon="house" label="Overview in compact rail" />
-          <NavRailItem href="#/design-system/components/navigation" icon="layers" label="Projects in compact rail" />
+          <NavItem active href="#/design-system/patterns/navigation" icon="house">
+            Overview
+          </NavItem>
+          <NavItem href="#/design-system/patterns/navigation" icon="layers">
+            Projects
+          </NavItem>
+          <NavRailItem
+            active
+            href="#/design-system/patterns/navigation"
+            icon="house"
+            label="Overview in compact rail"
+          />
+          <NavRailItem href="#/design-system/patterns/navigation" icon="layers" label="Projects in compact rail" />
         </nav>
       </Specimen>
-      <Specimen description="The same keyboard-driven suggestion surface used by rich editors can serve any host-owned search." title="Suggestion list">
+      <Specimen
+        description="The same keyboard-driven suggestion surface used by rich editors can serve any host-owned search."
+        title="Suggestion list"
+      >
         <SuggestionDemo />
       </Specimen>
     </>

@@ -11,7 +11,7 @@ npm install
 npm run showcase
 ```
 
-The catalog is served at `http://127.0.0.1:4173`. After `npm run build`, [its generated page](apps/showcase/dist/index.html) can also be opened directly as a local file. The catalog shows the public components, their relevant states and variants, layouts, and the built-in theme and mode combinations. The `verify:catalog` script checks that every public visual component appears in the showcase.
+The catalog is served at `http://127.0.0.1:4173`. After `npm run build`, [its generated page](apps/showcase/dist/index.html) can also be opened directly as a local file. Theme foundations, Layout, Typography, Components, Editor, and Utilities each have their own navigation group. Component pages contain focused live examples, usage code, and an API Reference generated from the public TypeScript entries. Compositions and Templates show the components used together. The `verify:catalog` script checks that every public visual component appears in the showcase.
 
 The repository is an npm workspace. `@cairn/design-tokens` owns the token source, generated CSS, and font assets; `@cairn/design-system-catalog` owns the review vocabulary and page metadata; `@cairn/ui` owns the React components and catalog implementation; `@cairn/lint` owns the ESLint and Stylelint rules applications run against their own code. `apps/showcase` builds the catalog without a host application. The package manifests are private; applications consume Cairn as a git submodule.
 

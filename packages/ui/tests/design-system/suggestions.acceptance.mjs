@@ -23,7 +23,7 @@ designSystemTest("suggestions preserve the external query and use the registered
 });
 
 designSystemTest("node providers exclude unnamed field targets from suggestions", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const row = page.locator('[data-item-key="outline-item:projects%2Fcairn%2Fowner-field%2Fteam-owner"]');
   await row.locator('[data-ui="outline-row-text"]').click();
   const editor = page.locator('[data-ui="outline-editor"]');
@@ -54,7 +54,7 @@ async function visibleSelection(panel) {
   );
 }
 async function catalogEditor(page) {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const row = page.locator('[data-item-key="outline-item:inbox%2Fquick-capture"]');
   await row.locator('[data-ui="outline-row-text"]').click();
   const editor = page.locator('[data-ui="outline-editor"]');

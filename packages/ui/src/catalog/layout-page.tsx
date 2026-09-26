@@ -61,7 +61,7 @@ export function LayoutPage() {
       <Specimen
         className="flex-col flex-nowrap items-stretch"
         description="Box, Flex, and Grid space children with steps 0–9 of the shared scale. Responsive objects switch values at Cairn breakpoints; siblings are separated by the parent gap, never by margins."
-        title="Layout primitives"
+        title="Flex"
       >
         <Flex align="center" gap="3" justify="between" wrap="wrap">
           <Tile label="Flex start" />
@@ -70,11 +70,26 @@ export function LayoutPage() {
             <Tile label="gap 2" />
           </Flex>
         </Flex>
+      </Specimen>
+      <Specimen
+        className="block"
+        title="Responsive Flex"
+        description="The same children form a column at compact widths and a row at md and above."
+      >
+        <Flex direction={{ initial: "column", md: "row" }} gap="3">
+          <Tile label="One" />
+          <Tile label="Two" />
+          <Tile label="Three" />
+        </Flex>
+      </Specimen>
+      <Specimen className="block" title="Grid" description="Columns respond to the available viewport width.">
         <Grid columns={{ initial: "1", md: "2", lg: "4" }} gap="3">
           {["One", "Two", "Three", "Four"].map((label) => (
             <Tile key={label} label={label} />
           ))}
         </Grid>
+      </Specimen>
+      <Specimen className="block" title="Box" description="Shared padding without changing the content's semantics.">
         <Box p="4">
           <Tile label="Box with p 4" />
         </Box>
@@ -82,12 +97,15 @@ export function LayoutPage() {
       <Specimen
         className="block p-0"
         description="Container caps content at the reading, document, standard, or wide measure. Section sets the vertical rhythm between page regions."
-        title="Container and Section"
+        title="Container"
       >
+        <Container px="4" size="1">
+          <Tile label="Reading measure · Container size 1" />
+        </Container>
+      </Specimen>
+      <Specimen className="block p-0" title="Section" description="Vertical padding follows the shared section rhythm.">
         <Section size="1">
-          <Container px="4" size="1">
-            <Tile label="Container size 1 inside Section size 1" />
-          </Container>
+          <Tile label="Section size 1" />
         </Section>
       </Specimen>
     </>

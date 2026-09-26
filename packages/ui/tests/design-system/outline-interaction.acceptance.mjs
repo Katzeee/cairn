@@ -13,7 +13,7 @@ async function edit(page, path, offset = 0) {
 }
 
 designSystemTest("Plain node clicks place a text caret without selecting a node", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const original = row(page, "inbox/local-first-original");
   await original.click();
   await original.locator('[data-ui="outline-editor"]:focus').waitFor();
@@ -26,7 +26,7 @@ designSystemTest("Plain node clicks place a text caret without selecting a node"
 });
 
 designSystemTest("Escape toggles explicit node selection while preserving the live text editor", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await edit(page, "projects/home-lab", 4);
   await page.keyboard.press("Escape");
   assert.equal(await selected(page).count(), 1);
@@ -41,7 +41,7 @@ designSystemTest("Escape toggles explicit node selection while preserving the li
 });
 
 designSystemTest("Ctrl clicking nodes selects independently from the text caret", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await edit(page, "projects/home-lab", 4);
   await row(page, "inbox/local-first-original").click({ modifiers: ["Control"] });
   await row(page, "inbox/crdt-survey").click({ modifiers: ["Control"] });
@@ -53,7 +53,7 @@ designSystemTest("Ctrl clicking nodes selects independently from the text caret"
 });
 
 designSystemTest("Shift arrows enter and extend node selection before ordinary typing resumes", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/local-first-original", 3);
   await page.keyboard.press("Shift+ArrowDown");
   assert.equal(await selected(page).count(), 1);
@@ -66,7 +66,7 @@ designSystemTest("Shift arrows enter and extend node selection before ordinary t
 });
 
 designSystemTest("Selected nodes delete as nodes and leave a text caret in the following row", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/local-first-original", 3);
   await page.keyboard.press("Escape");
   await page.keyboard.press("Backspace");
@@ -77,7 +77,7 @@ designSystemTest("Selected nodes delete as nodes and leave a text caret in the f
 });
 
 designSystemTest("A double click on a resting node selects a word for replacement", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const text = row(page, "inbox/crdt-survey").locator('[data-ui="outline-inline-content"]');
   await text.scrollIntoViewIfNeeded();
   const box = await text.boundingBox();
@@ -90,7 +90,7 @@ designSystemTest("A double click on a resting node selects a word for replacemen
 });
 
 designSystemTest("Dragging across resting source text selects characters without selecting nodes", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const text = row(page, "inbox/crdt-survey").locator('[data-ui="outline-inline-content"]');
   await text.scrollIntoViewIfNeeded();
   const points = await text.evaluate((element) => {
@@ -112,7 +112,7 @@ designSystemTest("Dragging across resting source text selects characters without
 });
 
 designSystemTest("Dragging across rows creates explicit node selection and clicking text clears it", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const source = row(page, "inbox/crdt-survey");
   const target = row(page, "inbox/quick-capture");
   await target.scrollIntoViewIfNeeded();

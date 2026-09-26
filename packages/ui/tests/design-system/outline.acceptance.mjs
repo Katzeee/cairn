@@ -8,7 +8,7 @@ designSystemTest(
 );
 
 async function verifyOutlinePresentation(page) {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const tree = page.getByRole("tree");
   await tree.waitFor({ state: "visible" });
   const rowByText = (text) => page.locator('[data-ui="outline-row"]', { hasText: text }).first();
@@ -203,7 +203,7 @@ async function verifyOutlinePresentation(page) {
     0,
     "a Supertag must not render a duplicate badge beside its editable source",
   );
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
   const supertagBox = await cairnEditingRow.locator('[data-ui="outline-row-badge"]').boundingBox();
   assert.ok(
@@ -273,7 +273,7 @@ async function verifyOutlinePresentation(page) {
   if (await suggestions.isVisible()) {
     await editor.press("Escape");
   }
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
 
   const fieldDefinition = rowByPath("field-definitions/status-definition-occurrence");
@@ -362,7 +362,7 @@ async function verifyOutlinePresentation(page) {
       Math.abs(inactivePlaceholderBox.height - emptyChildBox.height) <= 1,
     "activating an empty-child placeholder must not change the visual row height",
   );
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
   await emptyChild.waitFor({ state: "visible" });
   assert.equal(
@@ -390,7 +390,7 @@ async function verifyOutlinePresentation(page) {
     0,
     "the empty Node fixed by Enter must retain ordinary Node identity",
   );
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
   assert.equal(await emptyChildren.count(), 2, "the next empty Node must also survive an unfocused state");
   await rowByText("Status").click();
@@ -446,7 +446,7 @@ async function verifyOutlinePresentation(page) {
   await editor.press("Escape");
   await rowByPath("kei").locator('[data-ui="outline-row-text"]').click();
   await editor.waitFor({ state: "visible" });
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
   assert.equal(
     await rowByText("Interaction coverage").getByRole("progressbar").getAttribute("aria-valuenow"),
@@ -470,7 +470,7 @@ async function verifyOutlinePresentation(page) {
   });
   assert.equal(await editor.count(), 1, "a Reference edit must update its Original while the editor remains focused");
   await editor.press("Backspace");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
 
   await originalRow.locator('[data-ui="outline-row-text"]').click();
@@ -482,7 +482,7 @@ async function verifyOutlinePresentation(page) {
   });
   assert.equal(await editor.count(), 1, "an Original edit must update its References while the editor remains focused");
   await editor.press("Backspace");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
 
   await referenceChild.locator('[data-ui="outline-row-text"]').click();
@@ -490,7 +490,7 @@ async function verifyOutlinePresentation(page) {
   await editor.press("End");
   await editor.press("Enter");
   await editor.pressSequentially("Shared through reference");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
   await childrenOfPath("projects/cairn/roadmap/local-first-reference")
     .filter({ hasText: "Shared through reference" })
@@ -514,8 +514,8 @@ async function verifyOutlinePresentation(page) {
     1,
     "structural edits through a Reference must update the target Node seen from its Original occurrence",
   );
-  await navigateToCatalogPage(page, "components/buttons");
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "components/button");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await tree.waitFor({ state: "visible" });
 
   await tree.focus();
@@ -560,7 +560,7 @@ async function verifyOutlinePresentation(page) {
 designSystemTest("outline editing emits content and structural intents", verifyOutlineEditing);
 
 async function verifyOutlineEditing(page) {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const tree = page.getByRole("tree");
   await tree.waitFor({ state: "visible" });
   const rowByText = (text) => page.locator('[data-ui="outline-row"]', { hasText: text }).first();
@@ -644,7 +644,7 @@ async function verifyOutlineEditing(page) {
     "Engine facts and projections edited",
     "forced sibling insertion preserves the original node",
   );
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
   await rowByText("Engine facts and projections edited").waitFor({ state: "visible" });
 
@@ -676,7 +676,7 @@ async function verifyOutlineEditing(page) {
   await editor.evaluate((surface) => {
     surface.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true, data: "中" }));
   });
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
   await rowByText("CRDT ordering survey")
     .locator('[data-ui="outline-reference"]', { hasText: "Local-first software essay" })
@@ -694,7 +694,7 @@ async function verifyOutlineEditing(page) {
     ((await editor.boundingBox())?.width ?? 0) >= 96,
     "an empty Node editor must retain a usable horizontal click target",
   );
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
   assert.equal(await quickCapture.count(), 1, "focusing and leaving a real empty Node must not remove it");
 
@@ -710,12 +710,12 @@ async function verifyOutlineEditing(page) {
     1,
     "a slash command must hand the semantic node transformation to its owner",
   );
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editor.waitFor({ state: "detached" });
 
   // A field is selected through the editor, but the resulting Field and Field Value remain distinct Node rows.
-  await navigateToCatalogPage(page, "components/buttons");
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "components/button");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await page.getByRole("tree").focus();
   await page.keyboard.press("End");
   await rowByPath("inbox/quick-capture").locator('[data-ui="outline-row-text"]').click();
@@ -762,7 +762,7 @@ async function verifyOutlineEditing(page) {
 designSystemTest("outline drag and drop preserves tree constraints", verifyOutlineDragging);
 
 async function verifyOutlineDragging(page) {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const tree = page.getByRole("tree");
   await tree.waitFor({ state: "visible" });
   const rowByText = (text) => page.locator('[data-ui="outline-row"]', { hasText: text }).first();
@@ -806,7 +806,7 @@ async function verifyOutlineDragging(page) {
 }
 
 async function outlineDragContext(page) {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const tree = page.getByRole("tree");
   await tree.waitFor({ state: "visible" });
   const itemKey = (modelPath) => `outline-item:${encodeURIComponent(modelPath)}`;
@@ -836,8 +836,8 @@ async function outlineDragContext(page) {
     return indicatorBox;
   };
   const reset = async () => {
-    await navigateToCatalogPage(page, "components/buttons");
-    await navigateToCatalogPage(page, "components/outline");
+    await navigateToCatalogPage(page, "components/button");
+    await navigateToCatalogPage(page, "editor/outline-tree");
     await tree.waitFor({ state: "visible" });
   };
   const nodeOf = (row) => row.locator('xpath=ancestor::*[@data-ui="outline-node"][1]');

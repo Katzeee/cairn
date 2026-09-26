@@ -43,17 +43,24 @@ export const iconNames = [
 ] as const;
 export type IconName = (typeof iconNames)[number];
 
+export {
+  componentDocs,
+  componentPath,
+  type CatalogComponentId,
+  type ComponentDocumentation,
+} from "./component-docs.js";
+import { componentDocs, componentPath, type CatalogComponentId } from "./component-docs.js";
+
 export type CatalogPageId =
+  | CatalogComponentId
   | "overview"
   | "color"
   | "theming"
   | "typography"
   | "content"
   | "geometry"
-  | "buttons"
   | "forms"
   | "navigation"
-  | "outline"
   | "overlays"
   | "status"
   | "surfaces"
@@ -67,7 +74,8 @@ export type CatalogPage = Readonly<{
   title: string;
 }>;
 
-export type CatalogSectionId = "foundations" | "components" | "templates";
+export type CatalogSectionId =
+  "foundations" | "layout" | "typography" | "components" | "editor" | "utilities" | "patterns" | "templates";
 
 export type CatalogSection = Readonly<{
   id: CatalogSectionId;
@@ -89,10 +97,19 @@ export const overviewPage = page(
   "One token source, one component layer, and the rules that keep every Cairn surface consistent.",
 );
 
+const componentGroups = [
+  { id: "layout", title: "Layout" },
+  { id: "typography", title: "Typography" },
+  { id: "components", title: "Components" },
+  { id: "editor", title: "Editor" },
+  { id: "utilities", title: "Utilities" },
+] as const;
+const componentIds = Object.keys(componentDocs) as CatalogComponentId[];
+
 export const catalogSections: readonly CatalogSection[] = [
   {
     id: "foundations",
-    title: "Foundations",
+    title: "Theme & foundations",
     pages: [
       page(
         "color",
@@ -116,32 +133,41 @@ export const catalogSections: readonly CatalogSection[] = [
       ),
     ],
   },
+  ...componentGroups.map((group) => ({
+    ...group,
+    pages: componentIds
+      .filter((id) => componentDocs[id].group === group.id)
+      .map((id) => page(id, componentPath(id), id, componentDocs[id].description)),
+  })),
   {
-    id: "components",
-    title: "Components",
+    id: "patterns",
+    title: "Compositions",
     pages: [
-      page("buttons", "components/buttons", "Buttons", "Action hierarchy, sizes, and busy states."),
-      page("forms", "components/forms", "Forms", "Fields, inputs, selection controls, and validation."),
+      page(
+        "forms",
+        "patterns/forms",
+        "Form composition",
+        "Fields, inputs, selection controls, and validation used together.",
+      ),
       page(
         "navigation",
-        "components/navigation",
-        "Navigation",
+        "patterns/navigation",
+        "Navigation composition",
         "Tabs, breadcrumbs, and the patterns that move between views.",
       ),
       page(
-        "outline",
-        "components/outline",
-        "Outline",
-        "The node tree behind every surface: rows, zoom, and keyboard structure editing.",
-      ),
-      page(
         "overlays",
-        "components/overlays",
-        "Overlays",
+        "patterns/overlays",
+        "Overlay interactions",
         "Dialogs, menus, popovers, tooltips, and transient notifications.",
       ),
-      page("status", "components/status", "Status", "Badges, alerts, and progress indication."),
-      page("surfaces", "components/surfaces", "Surfaces", "Cards and the panels that structure a page."),
+      page(
+        "status",
+        "patterns/status",
+        "Feedback composition",
+        "Badges, alerts, and progress indication used together.",
+      ),
+      page("surfaces", "patterns/surfaces", "Surface composition", "Cards and the panels that structure a page."),
     ],
   },
   {
@@ -166,6 +192,17 @@ export const catalogSections: readonly CatalogSection[] = [
 
 export const catalogPages: readonly CatalogPage[] = [overviewPage, ...catalogSections.flatMap(({ pages }) => pages)];
 
+const componentIcons = Object.fromEntries(
+  componentIds.map((id) => [
+    id,
+    componentDocs[id].group === "editor"
+      ? "list-tree"
+      : componentDocs[id].group === "layout"
+        ? "layout-template"
+        : "layers",
+  ]),
+) as Record<CatalogComponentId, IconName>;
+
 export const catalogPageIcons: Readonly<Record<CatalogPageId, IconName>> = {
   overview: "house",
   color: "palette",
@@ -173,15 +210,14 @@ export const catalogPageIcons: Readonly<Record<CatalogPageId, IconName>> = {
   typography: "type",
   content: "messages-square",
   geometry: "shapes",
-  buttons: "mouse-pointer-click",
   forms: "text-cursor-input",
   navigation: "compass",
-  outline: "list-tree",
   overlays: "ellipsis",
   status: "circle-alert",
   surfaces: "layers",
   layouts: "layout-template",
   product: "app-window",
+  ...componentIcons,
 };
 
 export function findCatalogPage(path: string): CatalogPage | undefined {

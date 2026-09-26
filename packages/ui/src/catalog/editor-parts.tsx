@@ -14,28 +14,43 @@ export function EditorParts() {
   const [heading, setHeading] = useState<OutlineContent>(text("Design review"));
   const [rows, setRows] = useState(["Buttons", "Forms"]);
   return (
-    <Specimen
-      className="flex-col flex-nowrap items-stretch gap-5"
-      description="NodeEditor coordinates editable regions. NodeHeading, NodeTable, inline content, and the empty-child target can be composed around host-owned data."
-      title="Editor building blocks"
-    >
-      <NodeEditor>
+    <NodeEditor>
+      <Specimen
+        className="block"
+        title="Node heading"
+        description="An editable heading inside a coordinated document region."
+      >
         <div className="text-title font-semibold">
           <NodeHeading
             target={{ accessibilityLabel: "Example document heading", content: heading, key: "showcase-heading" }}
-            editing={{ onContentChange: (_, content) => setHeading(content), onContentCommit: (_, content) => setHeading(content) }}
+            editing={{
+              onContentChange: (_, content) => setHeading(content),
+              onContentCommit: (_, content) => setHeading(content),
+            }}
             onEmptyBody={() => undefined}
             onEnter={() => undefined}
           />
         </div>
+      </Specimen>
+      <Specimen
+        className="block"
+        title="Node table"
+        description="Columns, rows, inline cell content, and an empty-child footer receive host-owned data."
+      >
         <NodeTable
           label="Example component table"
-          columns={[{ key: "component", heading: "Component" }, { key: "purpose", heading: "Purpose" }]}
+          columns={[
+            { key: "component", heading: "Component" },
+            { key: "purpose", heading: "Purpose" },
+          ]}
           rows={rows.map((name, index) => ({
             key: name,
             cells: new Map([
               ["component", <OutlineInlineContent content={text(name)} key={`${name}-name`} />],
-              ["purpose", <OutlineInlineContent content={text(index === 0 ? "Actions" : "Input")} key={`${name}-purpose`} />],
+              [
+                "purpose",
+                <OutlineInlineContent content={text(index === 0 ? "Actions" : "Input")} key={`${name}-purpose`} />,
+              ],
             ]),
           }))}
           footer={
@@ -46,7 +61,13 @@ export function EditorParts() {
             />
           }
         />
-      </NodeEditor>
-    </Specimen>
+      </Specimen>
+      <Specimen
+        title="Inline content"
+        description="Structured content can also be rendered outside an editable region."
+      >
+        <OutlineInlineContent content={text("Shared content without an editor")} />
+      </Specimen>
+    </NodeEditor>
   );
 }

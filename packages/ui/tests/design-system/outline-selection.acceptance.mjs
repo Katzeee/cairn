@@ -8,7 +8,7 @@ const editor = (page) => page.locator('[data-ui="outline-editor"]');
 const node = (row) => row.locator('xpath=ancestor::*[@data-ui="outline-node"][1]');
 
 designSystemTest("Selecting an outline parent covers its subtree with one continuous surface", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const parent = row(page, "projects/cairn/roadmap");
   const subtree = node(parent);
   const before = await subtree.boundingBox();
@@ -49,7 +49,7 @@ designSystemTest("Selecting an outline parent covers its subtree with one contin
 });
 
 designSystemTest("Shift click extends a node selection and Ctrl click adds independent subtree roots", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const parent = row(page, "projects/cairn/roadmap");
   await parent.locator('[data-ui="outline-row-text"]').click();
   await editor(page).press("Escape");
@@ -70,12 +70,12 @@ designSystemTest("Shift click extends a node selection and Ctrl click adds indep
 designSystemTest(
   "A selected field covers its value column while copying and deleting a parent runs once",
   async (page) => {
-    await navigateToCatalogPage(page, "components/outline");
+    await navigateToCatalogPage(page, "editor/outline-tree");
     const field = row(page, "projects/cairn/owner-field");
     await field.click({ modifiers: ["Control"] });
     assert.equal(await selected(page).count(), 3);
     assert.notEqual(await node(field).evaluate((el) => getComputedStyle(el, "::after").boxShadow), "none");
-    await page.getByRole("heading", { name: "Outline", exact: true }).click();
+    await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
     await row(page, "inbox").click();
     await editor(page).press("Escape");
     const clipboard = await editor(page).evaluate((element) => {

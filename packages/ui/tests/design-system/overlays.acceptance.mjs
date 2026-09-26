@@ -7,7 +7,7 @@ designSystemTest("overlays remain reachable in a short viewport", verifyOverlays
 async function verifyOverlaysAtShortViewport(page) {
   const viewport = { height: 390, label: "phone landscape", width: 844 };
   await page.setViewportSize({ height: viewport.height, width: viewport.width });
-  await navigateToCatalogPage(page, "components/overlays");
+  await navigateToCatalogPage(page, "patterns/overlays");
 
   await page.getByRole("button", { name: "Open dialog" }).click();
   const dialog = page.locator('[role="dialog"].cairn-overlay-popup');

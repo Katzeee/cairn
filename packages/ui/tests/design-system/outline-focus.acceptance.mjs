@@ -31,7 +31,7 @@ async function assertEditing(page, path, from, to = from) {
 }
 
 designSystemTest("Tana pointer disclosure keeps the current editor and text selection", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await editRow(page, "projects/cairn/roadmap", 2, 6);
   await page.getByRole("button", { name: "Collapse Design system roadmap", exact: true }).click();
   await assertEditing(page, "projects/cairn/roadmap", 2, 6);
@@ -42,7 +42,7 @@ designSystemTest("Tana pointer disclosure keeps the current editor and text sele
 });
 
 designSystemTest("Tana disclosure of other nodes and empty children does not move the typing cursor", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await editRow(page, "projects", 3);
   await page.getByRole("button", { name: "Collapse Cairn", exact: true }).click();
   await assertEditing(page, "projects", 3);
@@ -58,7 +58,7 @@ designSystemTest("Tana disclosure of other nodes and empty children does not mov
 });
 
 designSystemTest("Tana collapsing an edited descendant moves its cursor to the ancestor start", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await editRow(page, "projects/cairn/roadmap", "Design system roadmap".length);
   await page.keyboard.type(" draft");
   await page.getByRole("button", { name: "Collapse Projects", exact: true }).click();
@@ -75,7 +75,7 @@ designSystemTest("Tana collapsing an edited descendant moves its cursor to the a
 });
 
 designSystemTest("Tana pointer disclosure resumes text editing after explicit node selection", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await editRow(page, "projects", 3);
   await page.keyboard.press("Escape");
   await page.locator('[data-ui="outline-editor"]:focus').waitFor();
@@ -88,12 +88,12 @@ designSystemTest("Tana pointer disclosure resumes text editing after explicit no
 designSystemTest(
   "Outline disclosure without an active editing context does not manufacture a selection",
   async (page) => {
-    await navigateToCatalogPage(page, "components/outline");
+    await navigateToCatalogPage(page, "editor/outline-tree");
     await page.getByRole("button", { name: "Expand Home lab notes", exact: true }).click();
     assert.equal(await page.locator('[data-ui="outline-editor"]').count(), 0);
     assert.equal(await page.locator('[data-ui="outline-row"][data-selected="true"]').count(), 0);
     await editRow(page, "projects", 3);
-    await page.getByRole("heading", { name: "Outline", exact: true }).click();
+    await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
     await page.getByRole("button", { name: "Collapse Home lab notes", exact: true }).click();
     assert.equal(await page.locator('[data-ui="outline-editor"]').count(), 0);
     assert.equal(
@@ -105,7 +105,7 @@ designSystemTest(
 );
 
 designSystemTest("Tana checkbox focus owns its keys without invoking tree editing commands", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const path = "projects/cairn/roadmap/outline-m2";
   await editRow(page, path, 3);
   const checkbox = rowAt(page, path).getByRole("checkbox");

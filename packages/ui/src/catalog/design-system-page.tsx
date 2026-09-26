@@ -1,25 +1,27 @@
 import {
   catalogPageIcons,
   catalogSections,
+  componentDocs,
   findCatalogPage,
   overviewPage,
   type CatalogPage,
+  type CatalogComponentId,
 } from "@cairn/design-system-catalog";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { CairnTheme } from "../cairn-theme.js";
 import { AppShell, type AppShellSection, type AppShellUtility } from "../components/app-shell.js";
 import { CatalogModeContext, type CatalogMode, type ThemeName } from "./catalog-theme.js";
-import { ButtonsPage, FormsPage, StatusPage, SurfacesPage } from "./component-pages.js";
+import { FormsPage, StatusPage, SurfacesPage } from "./component-pages.js";
 import { ContentPage } from "./content-page.js";
 import { ColorPage, GeometryPage, TypographyPage } from "./foundation-pages.js";
 import { NavigationPage } from "./navigation-page.js";
-import { OutlinePage } from "./outline-page.js";
 import { OverviewPage } from "./overview-page.js";
 import { OverlaysPage } from "./overlays-page.js";
 import { LayoutPage } from "./layout-page.js";
 import { ProductPreviewPage } from "./product-preview.js";
 import { ThemingPage } from "./theming-page.js";
+import { ComponentReferencePage } from "./component-reference-page.js";
 
 function currentCatalogPath(): string {
   const route = window.location.hash.slice("#/design-system".length).split("?")[0] ?? "";
@@ -65,14 +67,26 @@ export function DesignSystemPage({ productPreview }: Readonly<{ productPreview?:
   useEffect(() => {
     const previousScrollRestoration = history.scrollRestoration;
     history.scrollRestoration = "manual";
-    window.scrollTo({ left: 0, top: 0 });
+    const scrollToSection = () => {
+      const section = new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("section");
+      if (section === null) window.scrollTo({ left: 0, top: 0 });
+      else document.getElementById(section)?.scrollIntoView();
+    };
+    scrollToSection();
+    let frame: number | undefined;
     const updatePage = () => {
       setPage(findCatalogPage(currentCatalogPath()) ?? overviewPage);
-      window.scrollTo({ left: 0, top: 0 });
+      if (frame !== undefined) cancelAnimationFrame(frame);
+      if (new URLSearchParams(window.location.hash.split("?")[1] ?? "").has("section")) {
+        frame = requestAnimationFrame(scrollToSection);
+      } else {
+        scrollToSection();
+      }
     };
     window.addEventListener("hashchange", updatePage);
     return () => {
       history.scrollRestoration = previousScrollRestoration;
+      if (frame !== undefined) cancelAnimationFrame(frame);
       window.removeEventListener("hashchange", updatePage);
     };
   }, []);
@@ -92,7 +106,13 @@ export function DesignSystemPage({ productPreview }: Readonly<{ productPreview?:
         <div data-ui="design-system">
           <AppShell activeItemId={page.id} brand="Cairn Design System" sections={shellSections} utilities={utilities}>
             <main className="mx-auto w-full max-w-280 px-4 py-6 @shell-medium/app-shell:px-10 @shell-medium/app-shell:py-10">
-              <PageContent onThemeChange={setTheme} page={page} productPreview={productPreview} theme={theme} />
+              <PageContent
+                key={page.id}
+                onThemeChange={setTheme}
+                page={page}
+                productPreview={productPreview}
+                theme={theme}
+              />
               <footer className="mt-16 border-t border-border pt-6 text-caption text-muted-foreground">
                 Cairn Design System — one token source, one component layer.
               </footer>
@@ -115,6 +135,7 @@ function PageContent({
   productPreview?: ReactNode;
   theme: ThemeName;
 }>) {
+  if (Object.hasOwn(componentDocs, page.id)) return <ComponentReferencePage id={page.id as CatalogComponentId} />;
   switch (page.id) {
     case "overview": {
       return <OverviewPage />;
@@ -134,17 +155,11 @@ function PageContent({
     case "geometry": {
       return <GeometryPage />;
     }
-    case "buttons": {
-      return <ButtonsPage />;
-    }
     case "forms": {
       return <FormsPage />;
     }
     case "navigation": {
       return <NavigationPage />;
-    }
-    case "outline": {
-      return <OutlinePage />;
     }
     case "overlays": {
       return <OverlaysPage />;
@@ -162,4 +177,5 @@ function PageContent({
       return <ProductPreviewPage>{productPreview}</ProductPreviewPage>;
     }
   }
+  return <OverviewPage />;
 }

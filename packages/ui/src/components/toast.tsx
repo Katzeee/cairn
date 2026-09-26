@@ -3,7 +3,7 @@ import type { AlertTone, IconName } from "@cairn/design-system-catalog";
 import type { ReactNode } from "react";
 
 import { CairnPortalTheme } from "../cairn-theme.js";
-import { Button } from "./button.js";
+import { Button, StyledButton } from "./button.js";
 import { Icon } from "./icon.js";
 
 export type ToastOptions = Readonly<{
@@ -94,7 +94,7 @@ function ToastList() {
             aria-label="Dismiss notification"
             data-ui="toast-close"
             render={
-              <Button
+              <StyledButton
                 className={`-mr-1.5 size-7 shrink-0 self-start ${mark === undefined ? "" : "mt-0.5"}`}
                 size="icon"
                 variant="ghost"

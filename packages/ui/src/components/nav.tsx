@@ -1,17 +1,18 @@
 import type { IconName } from "@cairn/design-system-catalog";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { cn } from "./cn.js";
+import type { ElementProps } from "./element-props.js";
 import { Icon } from "./icon.js";
 import { Tooltip } from "./tooltip.js";
 
 const activeClasses = "bg-accent text-accent-foreground";
 const idleClasses = "text-muted-foreground hover:bg-accent/60 hover:text-foreground";
 
-type NavItemProperties = ComponentPropsWithoutRef<"a"> &
+export type NavItemProps = ElementProps<"a"> &
   Readonly<{ active?: boolean; icon?: IconName; decoration?: ReactNode }>;
 
-export function NavItem({ active = false, children, className, icon, decoration, ...properties }: NavItemProperties) {
+export function NavItem({ active = false, children, icon, decoration, ...properties }: NavItemProps) {
   return (
     <a
       {...properties}
@@ -19,7 +20,6 @@ export function NavItem({ active = false, children, className, icon, decoration,
       className={cn(
         "flex items-center gap-2 rounded-sm px-2.5 py-1.5 text-label font-medium transition-colors",
         active ? activeClasses : idleClasses,
-        className,
       )}
     >
       {decoration ?? (icon === undefined ? null : <Icon name={icon} size="sm" />)}
@@ -28,17 +28,16 @@ export function NavItem({ active = false, children, className, icon, decoration,
   );
 }
 
-type NavRailItemProperties = ComponentPropsWithoutRef<"a"> &
+export type NavRailItemProps = ElementProps<"a"> &
   Readonly<{ active?: boolean; icon?: IconName; decoration?: ReactNode; label: string }>;
 
 export function NavRailItem({
   active = false,
-  className,
   icon,
   decoration,
   label,
   ...properties
-}: NavRailItemProperties) {
+}: NavRailItemProps) {
   return (
     <Tooltip content={label}>
       <a
@@ -48,7 +47,6 @@ export function NavRailItem({
         className={cn(
           "grid size-10 place-items-center rounded-md transition-colors",
           active ? activeClasses : idleClasses,
-          className,
         )}
       >
         {decoration ?? (icon === undefined ? null : <Icon name={icon} />)}

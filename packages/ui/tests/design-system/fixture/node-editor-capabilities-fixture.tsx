@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { OutlineTree, type OutlineContent, type OutlineItemViewModel } from "../../../dist/index.js";
+import { OutlineTree, type OutlineContent, type OutlineItemViewModel } from "../../../dist/editor.js";
 
 const item = (key: string): OutlineItemViewModel<null> => ({
   key,

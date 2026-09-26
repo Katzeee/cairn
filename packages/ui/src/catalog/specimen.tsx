@@ -21,9 +21,11 @@ export function Specimen(
       {properties.description === undefined ? null : (
         <p className="mt-1 text-body text-muted-foreground">{properties.description}</p>
       )}
-      <Card className={cn("mt-4 flex flex-wrap items-center gap-4 p-6", properties.className)}>
-        {properties.children}
-      </Card>
+      <div className="mt-4">
+        <Card>
+          <div className={cn("flex flex-wrap items-center gap-4 p-6", properties.className)}>{properties.children}</div>
+        </Card>
+      </div>
     </section>
   );
 }

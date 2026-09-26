@@ -10,6 +10,7 @@ import { Combobox } from "../components/combobox.js";
 import { EmptyState } from "../components/empty-state.js";
 import { Field, FieldDescription, FieldError, FieldLabel } from "../components/field.js";
 import { Input } from "../components/input.js";
+import { Flex, Grid } from "../components/layout.js";
 import { Progress } from "../components/progress.js";
 import { Radio, RadioGroup } from "../components/radio-group.js";
 import { Select } from "../components/select.js";
@@ -166,39 +167,29 @@ function CheckboxRow(
   properties: Readonly<{ defaultChecked?: boolean; description: string; disabled?: boolean; label: string }>,
 ) {
   return (
-    <label className="flex cursor-pointer items-start gap-3">
-      <Checkbox className="mt-0.5" defaultChecked={properties.defaultChecked} disabled={properties.disabled} />
-      <span className="flex min-w-0 flex-col flex-nowrap gap-0.5">
-        <span className="text-label font-medium">{properties.label}</span>
-        <span className="text-caption text-muted-foreground">{properties.description}</span>
-      </span>
-    </label>
+    <Checkbox
+      defaultChecked={properties.defaultChecked}
+      description={properties.description}
+      disabled={properties.disabled}
+      label={properties.label}
+    />
   );
 }
 
 function RadioRow(properties: Readonly<{ description: string; label: string; value: string }>) {
-  return (
-    <label className="flex cursor-pointer items-start gap-3">
-      <Radio className="mt-0.5" value={properties.value} />
-      <span className="flex min-w-0 flex-col flex-nowrap gap-0.5">
-        <span className="text-label font-medium">{properties.label}</span>
-        <span className="text-caption text-muted-foreground">{properties.description}</span>
-      </span>
-    </label>
-  );
+  return <Radio description={properties.description} label={properties.label} value={properties.value} />;
 }
 
 function SwitchRow(
   properties: Readonly<{ defaultChecked?: boolean; description: string; disabled?: boolean; label: string }>,
 ) {
   return (
-    <label className="flex cursor-pointer items-start justify-between gap-4">
-      <span className="flex min-w-0 flex-col flex-nowrap gap-0.5">
-        <span className="text-label font-medium">{properties.label}</span>
-        <span className="text-caption text-muted-foreground">{properties.description}</span>
-      </span>
-      <Switch defaultChecked={properties.defaultChecked} disabled={properties.disabled} />
-    </label>
+    <Switch
+      defaultChecked={properties.defaultChecked}
+      description={properties.description}
+      disabled={properties.disabled}
+      label={properties.label}
+    />
   );
 }
 
@@ -238,12 +229,12 @@ export function StatusPage() {
       >
         <div className="flex w-full max-w-105 flex-col gap-5">
           <Progress label="Restoring index" value={64} />
-          <div className="flex items-center gap-4">
-            <Spinner className="text-primary" label="Loading" />
+          <Flex align="center" gap="4">
+            <Spinner label="Loading" tone="primary" />
             <Button loading variant="secondary">
               Restoring index
             </Button>
-          </div>
+          </Flex>
         </div>
       </Specimen>
       <Specimen
@@ -251,12 +242,12 @@ export function StatusPage() {
         title="Skeleton"
       >
         <div className="flex w-full max-w-105 items-start gap-3">
-          <Skeleton className="size-8 rounded-full" />
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <Skeleton className="h-4 w-2/5" />
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-4/5" />
-          </div>
+          <Skeleton shape="circle" size="md" />
+          <Flex direction="column" flexGrow="1" gap="2" minWidth="0">
+            <Skeleton width="short" />
+            <Skeleton size="caption" />
+            <Skeleton size="caption" width="long" />
+          </Flex>
         </div>
       </Specimen>
       <Specimen
@@ -264,17 +255,18 @@ export function StatusPage() {
         description="An empty state names what is missing and leads to the action that creates the first item."
         title="Empty state"
       >
-        <EmptyState
-          action={
-            <Button size="sm" variant="outline">
-              Connect a peer
-            </Button>
-          }
-          className="max-w-120"
-          description="Peers you connect will keep this Workspace in sync."
-          icon="messages-square"
-          title="No peers connected"
-        />
+        <div className="w-full max-w-120">
+          <EmptyState
+            action={
+              <Button size="sm" variant="outline">
+                Connect a peer
+              </Button>
+            }
+            description="Peers you connect will keep this Workspace in sync."
+            icon="messages-square"
+            title="No peers connected"
+          />
+        </div>
       </Specimen>
     </>
   );
@@ -302,13 +294,15 @@ export function SurfacesPage() {
         description="Surface is the default Card variant. Both variants use color and borders rather than a drop shadow."
         title="Card variants"
       >
-        <Card className="max-w-105 flex-1">
+        <div className="w-full">
+          <Grid columns={{ initial: "1", lg: "2" }} gap="4">
+        <Card>
           <CardHeader>
             <CardTitle>Surface · default</CardTitle>
             <CardDescription>Everything this Home owns, kept on hardware you control.</CardDescription>
           </CardHeader>
-          <CardContent className="text-body text-muted-foreground">
-            Two Actors, one shared Workspace index, and a vault that unlocks per session.
+          <CardContent>
+            <CardDescription>Two Actors, one shared Workspace index, and a vault that unlocks per session.</CardDescription>
           </CardContent>
           <CardFooter>
             <Button size="sm" variant="outline">
@@ -319,13 +313,37 @@ export function SurfacesPage() {
             </Button>
           </CardFooter>
         </Card>
-        <Card className="max-w-105 flex-1" variant="muted">
+        <Card variant="muted">
           <CardHeader>
             <CardTitle>Muted</CardTitle>
             <CardDescription>Secondary information stays grouped without demanding attention.</CardDescription>
           </CardHeader>
-          <CardContent className="text-body text-muted-foreground">
-            Use this surface for supporting context within a page.
+          <CardContent>
+            <CardDescription>Use this surface for supporting context within a page.</CardDescription>
+          </CardContent>
+        </Card>
+          </Grid>
+        </div>
+      </Specimen>
+      <Specimen
+        className="flex-col flex-nowrap items-stretch"
+        description="Dense lists of cards use the compact title at a lower heading level, so the page heading outline stays intact."
+        title="Compact card title"
+      >
+        <Card>
+          <CardContent>
+            <Flex align="center" gap="3" wrap="wrap">
+              <Flex direction="column" flexGrow="1" gap="1" minWidth="0">
+                <CardTitle as="h3" size="compact">
+                  Maya 2025
+                </CardTitle>
+                <CardDescription>maya · PID 18244 · Python 3.11</CardDescription>
+              </Flex>
+              <Badge tone="success">
+                <BadgeDot />
+                Ready
+              </Badge>
+            </Flex>
           </CardContent>
         </Card>
       </Specimen>

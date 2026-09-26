@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { OutlineTree, type OutlineContent, type OutlineInlineExtension } from "../../../dist/index.js";
+import { OutlineTree, type OutlineContent, type OutlineInlineExtension } from "../../../dist/editor.js";
 
 const extensions: readonly OutlineInlineExtension[] = [
   {

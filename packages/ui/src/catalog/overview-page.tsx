@@ -1,6 +1,7 @@
 import { Badge } from "../components/badge.js";
 import { Button } from "../components/button.js";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/card.js";
+import { Card, CardContent, CardDescription, CardTitle } from "../components/card.js";
+import { Flex, Grid } from "../components/layout.js";
 import { PageIntro, Specimen } from "./specimen.js";
 
 const principles = [
@@ -28,17 +29,19 @@ export function OverviewPage() {
         description="The interface system behind every Cairn surface: paper-calm in the light, forest-deep in the dark, HarmonyOS Sans throughout."
         title="Cairn Design System"
       />
-      <div className="mb-10 grid gap-4 lg:grid-cols-3">
-        {principles.map((principle) => (
-          <Card key={principle.title}>
-            <CardHeader>
-              <CardTitle className="text-body-large">{principle.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-2">
-              <CardDescription>{principle.detail}</CardDescription>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="mb-10">
+        <Grid columns={{ initial: "1", lg: "3" }} gap="4">
+          {principles.map((principle) => (
+            <Card key={principle.title}>
+              <CardContent>
+                <Flex direction="column" gap="2">
+                  <CardTitle>{principle.title}</CardTitle>
+                  <CardDescription>{principle.detail}</CardDescription>
+                </Flex>
+              </CardContent>
+            </Card>
+          ))}
+        </Grid>
       </div>
       <Specimen description="A quick taste of the working component layer." title="At a glance">
         <Button>Primary action</Button>

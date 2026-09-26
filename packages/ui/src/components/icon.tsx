@@ -66,20 +66,19 @@ const icons: Readonly<Record<IconName, LucideIcon>> = {
   x: X,
 };
 
-const sizes = { sm: "size-4", md: "size-5", lg: "size-6" } as const;
+const sizes = { xs: "size-3.5", sm: "size-4", md: "size-5", lg: "size-6" } as const;
 
 export function Icon({
-  className,
   label,
   name,
   size = "md",
-}: Readonly<{ className?: string; label?: string; name: IconName; size?: keyof typeof sizes }>) {
+}: Readonly<{ label?: string; name: IconName; size?: keyof typeof sizes }>) {
   const Component = icons[name];
   return (
     <Component
       aria-hidden={label === undefined ? "true" : undefined}
       aria-label={label}
-      className={cn("shrink-0", sizes[size], className)}
+      className={cn("shrink-0", sizes[size])}
       role={label === undefined ? undefined : "img"}
     />
   );

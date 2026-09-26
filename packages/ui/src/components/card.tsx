@@ -1,6 +1,5 @@
-import type { ComponentPropsWithoutRef } from "react";
-
 import { cn } from "./cn.js";
+import type { ElementProps } from "./element-props.js";
 
 export type CardVariant = "surface" | "muted";
 
@@ -9,35 +8,34 @@ const variants: Readonly<Record<CardVariant, string>> = {
   muted: "border-transparent bg-muted text-foreground",
 };
 
-export function Card({
-  className,
-  variant = "surface",
-  ...properties
-}: ComponentPropsWithoutRef<"article"> & Readonly<{ variant?: CardVariant }>) {
+export function Card({ variant = "surface", ...properties }: ElementProps<"article"> & Readonly<{ variant?: CardVariant }>) {
+  return <article {...properties} className={cn("rounded-lg border", variants[variant])} />;
+}
+
+export function CardHeader(properties: ElementProps<"header">) {
+  return <header {...properties} className="flex flex-col gap-1.5 p-6 pb-0" />;
+}
+
+export type CardTitleProps = ElementProps<"h2"> &
+  Readonly<{ as?: "h2" | "h3" | "h4"; size?: "default" | "compact" }>;
+
+export function CardTitle({ as: Element = "h2", size = "default", ...properties }: CardTitleProps) {
   return (
-    <article
+    <Element
       {...properties}
-      className={cn("rounded-lg border", variants[variant], className)}
+      className={size === "compact" ? "text-body font-semibold" : "text-title-small font-semibold tracking-tight"}
     />
   );
 }
 
-export function CardHeader({ className, ...properties }: ComponentPropsWithoutRef<"header">) {
-  return <header {...properties} className={cn("flex flex-col gap-1.5 p-6 pb-0", className)} />;
+export function CardDescription(properties: ElementProps<"p">) {
+  return <p {...properties} className="text-body text-muted-foreground" />;
 }
 
-export function CardTitle({ className, ...properties }: ComponentPropsWithoutRef<"h2">) {
-  return <h2 {...properties} className={cn("text-title-small font-semibold tracking-tight", className)} />;
+export function CardContent(properties: ElementProps<"div">) {
+  return <div {...properties} className="p-6" />;
 }
 
-export function CardDescription({ className, ...properties }: ComponentPropsWithoutRef<"p">) {
-  return <p {...properties} className={cn("text-body text-muted-foreground", className)} />;
-}
-
-export function CardContent({ className, ...properties }: ComponentPropsWithoutRef<"div">) {
-  return <div {...properties} className={cn("p-6", className)} />;
-}
-
-export function CardFooter({ className, ...properties }: ComponentPropsWithoutRef<"footer">) {
-  return <footer {...properties} className={cn("flex items-center gap-3 p-6 pt-0", className)} />;
+export function CardFooter(properties: ElementProps<"footer">) {
+  return <footer {...properties} className="flex items-center gap-3 p-6 pt-0" />;
 }

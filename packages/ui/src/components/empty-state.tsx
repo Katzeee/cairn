@@ -1,28 +1,22 @@
 import type { IconName } from "@cairn/design-system-catalog";
 import type { ReactNode } from "react";
 
-import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
 
 export function EmptyState({
   action,
-  className,
   description,
   icon,
   title,
 }: Readonly<{
   action?: ReactNode;
-  className?: string;
   description?: string;
   icon?: IconName;
   title: string;
 }>) {
   return (
     <div
-      className={cn(
-        "flex w-full flex-col items-center gap-1 rounded-lg border border-dashed border-input px-6 py-10 text-center",
-        className,
-      )}
+      className="flex w-full flex-col items-center gap-1 rounded-lg border border-dashed border-input px-6 py-10 text-center"
     >
       {icon === undefined ? null : (
         <span className="mb-2 grid size-10 place-items-center rounded-full bg-secondary text-muted-foreground">

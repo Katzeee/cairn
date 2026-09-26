@@ -21,13 +21,14 @@ export function ContentPage() {
         description="Name what is missing and pair it with the action that creates the first item."
         title="Empty states lead somewhere"
       >
-        <EmptyState
-          action={<Button>Create workspace</Button>}
-          className="max-w-120"
-          description="Create a workspace to organize documents and invite collaborators."
-          icon="layers"
-          title="No workspaces yet"
-        />
+        <div className="w-full max-w-120">
+          <EmptyState
+            action={<Button>Create workspace</Button>}
+            description="Create a workspace to organize documents and invite collaborators."
+            icon="layers"
+            title="No workspaces yet"
+          />
+        </div>
       </Specimen>
       <Specimen
         description="Buttons use a specific verb and object. Avoid Submit, Yes, and OK when the actual outcome has a name."

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NodeEditor, NodeHeading, OutlineTree, contentToSource, type OutlineContent } from "../../../dist/index.js";
+import { NodeEditor, NodeHeading, OutlineTree, contentToSource, type OutlineContent } from "../../../dist/editor.js";
 
 export function NodeEditorLifecycleFixture({ empty = false }: Readonly<{ empty?: boolean }>) {
   const [keys, setKeys] = useState([empty ? "empty" : "source"]);

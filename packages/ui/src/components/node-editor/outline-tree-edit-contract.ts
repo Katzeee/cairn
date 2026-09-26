@@ -1,8 +1,7 @@
 import type { OutlineContent } from "./outline-content.js";
 import type { ReactNode } from "react";
 import type { OutlineEditPosition, OutlineInsertionPlacement, OutlineMerge } from "./outline-tree-view-model.js";
-import type { SuggestionItem } from "../suggestion-list/suggestion-list.js";
-import type { SuggestionKeyBinding } from "../suggestion-list/suggestion-navigation.js";
+import type { SuggestionItem, SuggestionKeyBinding } from "./foundation.js";
 
 export type OutlineCompletionItem = SuggestionItem &
   Readonly<{

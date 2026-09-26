@@ -215,7 +215,7 @@ export const demoOutlinePresentationRegistry: OutlinePresentationRegistry<
         <Checkbox
           aria-label={presentation.checkbox.label}
           checked={presentation.checkbox.checked}
-          className="size-4"
+          size="sm"
           disabled={
             !context.canExecuteCommand(presentation.checkbox.checked ? taskCommandIds.reopen : taskCommandIds.complete)
           }

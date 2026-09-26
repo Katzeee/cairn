@@ -1,0 +1,22 @@
+{
+  "name": "@cairn/lint",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.js",
+    "./stylelint": "./stylelint.js"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0",
+    "stylelint": "^17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "stylelint": {
+      "optional": true
+    }
+  }
+}

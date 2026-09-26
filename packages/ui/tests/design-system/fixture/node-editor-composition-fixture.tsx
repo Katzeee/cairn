@@ -8,7 +8,7 @@ import {
   type OutlineContent,
   type OutlineItemViewModel,
   type OutlineTreeEditing,
-} from "../../../dist/index.js";
+} from "../../../dist/editor.js";
 
 const item = (key: string, label: string): OutlineItemViewModel<null> => ({
   key,

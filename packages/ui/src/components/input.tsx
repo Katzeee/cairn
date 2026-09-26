@@ -1,14 +1,16 @@
 import { Input as BaseInput } from "@base-ui/react/input";
 import { useRef } from "react";
-import type { ComponentPropsWithoutRef, MouseEvent } from "react";
+import type { MouseEvent } from "react";
 
-import { cn } from "./cn.js";
+import type { ElementProps } from "./element-props.js";
 
 // Shared by every text-entry control, including the Combobox input.
 export const inputClassName =
   "flex h-10 w-full rounded-sm border border-input bg-card px-3 text-body text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-muted-foreground read-only:bg-muted focus:border-ring focus:ring-2 focus:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:focus:ring-destructive/25";
 
-export function Input({ className, ...properties }: ComponentPropsWithoutRef<typeof BaseInput>) {
+export type InputProps = ElementProps<"input", "ref">;
+
+export function Input(properties: InputProps) {
   const input = useRef<HTMLInputElement>(null);
 
   const focusFromHitArea = (event: MouseEvent<HTMLSpanElement>) => {
@@ -19,7 +21,7 @@ export function Input({ className, ...properties }: ComponentPropsWithoutRef<typ
 
   return (
     <span className="cairn-input-hit-area flex w-full items-center" data-ui="input-hit-area" onClick={focusFromHitArea}>
-      <BaseInput {...properties} className={cn(inputClassName, className)} ref={input} />
+      <BaseInput {...properties} className={inputClassName} ref={input} />
     </span>
   );
 }

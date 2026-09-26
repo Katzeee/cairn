@@ -1,15 +1,10 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ElementProps } from "./element-props.js";
 
-import { cn } from "./cn.js";
-
-export function Link({ className, ...properties }: ComponentPropsWithoutRef<"a">) {
+export function Link(properties: ElementProps<"a">) {
   return (
     <a
       {...properties}
-      className={cn(
-        "rounded-xs text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-        className,
-      )}
+      className="rounded-xs text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     />
   );
 }

@@ -8,6 +8,7 @@ import {
   Dialog,
   ToastProvider,
   TooltipProvider,
+  resolveTheme,
   type AppShellSection,
 } from "../../../dist/index.js";
 import { DesignSystemPage } from "../../../dist/catalog/index.js";
@@ -51,15 +52,17 @@ function SharedProductPreview() {
   );
 }
 
+const configuredTheme = resolveTheme({
+  version: 1,
+  base: "slate",
+  colors: { light: { "--cairn-color-primary": "#123456" }, dark: { "--cairn-color-primary": "#123456" } },
+  values: { "--cairn-font-sans": '"Georgia", serif' },
+}).theme;
+
 function ConfiguredPortalFixture() {
   const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <CairnTheme
-      appearance="dark"
-      fontFamily='"Georgia", serif'
-      theme="slate"
-      tokens={{ "--cairn-color-primary": "#123456" }}
-    >
+    <CairnTheme appearance="dark" theme={configuredTheme}>
       <Button onClick={() => setDialogOpen(true)} variant="outline">
         Open configured dialog
       </Button>
@@ -87,12 +90,7 @@ function TestSurface() {
   }, []);
   if (hash === "#/configuration-fixture") {
     return (
-      <CairnTheme
-        fontFamily='"Georgia", serif'
-        appearance="dark"
-        theme="slate"
-        tokens={{ "--cairn-color-primary": "#123456" }}
-      >
+      <CairnTheme appearance="dark" theme={configuredTheme}>
         <Button>Configured action</Button>
       </CairnTheme>
     );

@@ -1,6 +1,6 @@
 import { createContext, useContext, type ReactNode } from "react";
 
-import { cn } from "../cn.js";
+import { cn } from "./foundation.js";
 
 const OutlineBulletState = createContext({ hasChildren: false, expanded: false });
 export const OutlineBulletStateProvider = OutlineBulletState.Provider;

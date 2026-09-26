@@ -1,19 +1,14 @@
-import { themeVariableGroups, type tokens } from "@cairn/design-tokens";
 import { createContext, useContext, useMemo, type CSSProperties, type ReactNode } from "react";
 
 import { cn } from "./components/cn.js";
+import { isResolvedTheme, type CairnThemeName, type ResolvedCairnTheme } from "./theme-definition.js";
 
 export type CairnAppearance = "inherit" | "light" | "dark";
-export type CairnThemeName = keyof typeof tokens.theme;
-export type CairnTokenName = (typeof themeVariableGroups)[number]["variables"][number]["name"];
-export type CairnTokenOverrides = Readonly<Partial<Record<CairnTokenName, string>>>;
 
 export type CairnThemeProps = Readonly<{
   appearance?: CairnAppearance;
   children?: ReactNode;
-  fontFamily?: string;
-  theme?: CairnThemeName;
-  tokens?: CairnTokenOverrides;
+  theme?: CairnThemeName | ResolvedCairnTheme;
 }>;
 
 type ThemeContextValue = Readonly<{
@@ -25,46 +20,16 @@ type ThemeContextValue = Readonly<{
 type ThemeScopeProps = CairnThemeProps & Readonly<{ className?: string; hasBackground: boolean }>;
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
-const configurableVariables = new Set<string>(
-  themeVariableGroups.flatMap(({ variables }) => variables.map(({ name }) => name)),
-);
+const noVariables: ReadonlyMap<string, string> = new Map();
 
-function themeVariables(overrides: CairnTokenOverrides | undefined, fontFamily: string | undefined) {
-  const variables = new Map<string, string>();
-  for (const [name, value] of Object.entries(overrides ?? {})) {
-    if (!configurableVariables.has(name)) {
-      throw new Error(`Unknown Cairn theme variable: ${name}`);
-    }
-    if (value !== undefined) {
-      variables.set(name, value);
-    }
-  }
-  if (fontFamily !== undefined) {
-    variables.set("--cairn-font-sans", fontFamily);
-  }
-  return variables;
-}
-
-function ThemeScope({
-  appearance = "inherit",
-  children,
-  className,
-  fontFamily,
-  hasBackground,
-  theme,
-  tokens: overrides,
-}: ThemeScopeProps) {
+function ThemeScope({ appearance = "inherit", children, className, hasBackground, theme }: ThemeScopeProps) {
   const parent = useContext(ThemeContext);
   const resolvedAppearance = appearance === "inherit" ? (parent?.appearance ?? "inherit") : appearance;
-  const resolvedTheme = theme ?? parent?.theme ?? "forest";
-  const localVariables = useMemo(() => themeVariables(overrides, fontFamily), [overrides, fontFamily]);
-  const variables = useMemo(
-    () => new Map([...(parent?.variables ?? []), ...localVariables]),
-    [parent?.variables, localVariables],
-  );
+  const themeName = theme === undefined ? (parent?.theme ?? "forest") : isResolvedTheme(theme) ? theme.base : theme;
+  const variables = theme === undefined ? (parent?.variables ?? noVariables) : isResolvedTheme(theme) ? theme.variables : noVariables;
   const context = useMemo<ThemeContextValue>(
-    () => ({ appearance: resolvedAppearance, theme: resolvedTheme, variables }),
-    [resolvedAppearance, resolvedTheme, variables],
+    () => ({ appearance: resolvedAppearance, theme: themeName, variables }),
+    [resolvedAppearance, themeName, variables],
   );
 
   return (
@@ -75,7 +40,7 @@ function ThemeScope({
         data-has-background={hasBackground ? "true" : "false"}
         data-is-root-theme={parent === null ? "true" : "false"}
         data-mode={resolvedAppearance === "inherit" ? undefined : resolvedAppearance}
-        data-theme={resolvedTheme}
+        data-theme={themeName}
         style={Object.fromEntries(variables) as CSSProperties}
       >
         {children}

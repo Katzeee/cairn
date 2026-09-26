@@ -11,9 +11,9 @@ export function LegalPage({
   return (
     <Container className="mx-auto w-full max-w-240 px-6 pt-14 pb-20">
       <header className="border-b border-border pb-10">
-        <Link className="text-label font-medium" href={backHref}>
-          ← {backLabel}
-        </Link>
+        <span className="text-label font-medium">
+          <Link href={backHref}>← {backLabel}</Link>
+        </span>
         <p className="mt-12 mb-3 text-caption font-semibold tracking-widest text-muted-foreground uppercase">
           Legal & acknowledgements
         </p>

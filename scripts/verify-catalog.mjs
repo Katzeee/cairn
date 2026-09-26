@@ -5,16 +5,18 @@ import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const entry = await parse(join(repositoryRoot, "packages/ui/src/index.ts"));
 const components = new Set();
-for (const statement of entry.statements) {
-  if (!ts.isExportDeclaration(statement) || !statement.exportClause || !ts.isNamedExports(statement.exportClause)) {
-    continue;
-  }
-  for (const element of statement.exportClause.elements) {
-    const name = element.name.text;
-    if (!element.isTypeOnly && /^[A-Z]/u.test(name) && !name.endsWith("Provider")) {
-      components.add(name);
+for (const entryPath of ["packages/ui/src/index.ts", "packages/ui/src/editor.ts"]) {
+  const entry = await parse(join(repositoryRoot, entryPath));
+  for (const statement of entry.statements) {
+    if (!ts.isExportDeclaration(statement) || !statement.exportClause || !ts.isNamedExports(statement.exportClause)) {
+      continue;
+    }
+    for (const element of statement.exportClause.elements) {
+      const name = element.name.text;
+      if (!element.isTypeOnly && /^[A-Z]/u.test(name) && !name.endsWith("Provider")) {
+        components.add(name);
+      }
     }
   }
 }

@@ -19,7 +19,7 @@ export function Breadcrumbs({ items }: Readonly<{ items: readonly BreadcrumbItem
             <Fragment key={`${item.label}-${String(index)}`}>
               {index === 0 ? null : (
                 <li aria-hidden className="text-muted-foreground/60">
-                  <Icon className="size-3.5" name="chevron-right" />
+                  <Icon name="chevron-right" size="xs" />
                 </li>
               )}
               <li className="min-w-0">

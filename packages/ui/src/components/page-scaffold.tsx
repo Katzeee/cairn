@@ -6,6 +6,7 @@ export function PageScaffold({
   children,
   description,
   eyebrow,
+  mark,
   title,
   layout = "standard",
 }: Readonly<{
@@ -14,6 +15,7 @@ export function PageScaffold({
   children: ReactNode;
   description?: string;
   eyebrow?: string;
+  mark?: string;
   title: ReactNode;
   layout?: "standard" | "document";
 }>) {
@@ -37,7 +39,10 @@ export function PageScaffold({
             {eyebrow === undefined ? null : (
               <p className="mb-2 text-caption font-semibold tracking-widest text-primary uppercase">{eyebrow}</p>
             )}
-            <h1 className="text-page-title font-medium tracking-tight text-balance">{title}</h1>
+            <h1 className="flex flex-wrap items-center gap-3 text-page-title font-medium tracking-tight text-balance">
+              {mark === undefined ? null : <img alt="" className="size-10 shrink-0" src={mark} />}
+              {title}
+            </h1>
             {description === undefined ? null : (
               <p className="mt-2 max-w-180 text-body-large text-muted-foreground">{description}</p>
             )}

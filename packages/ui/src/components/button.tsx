@@ -1,8 +1,8 @@
 import { Button as BaseButton } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
-import type { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "./cn.js";
+import type { ElementProps } from "./element-props.js";
 import { Spinner } from "./spinner.js";
 
 const buttonVariants = cva(
@@ -28,11 +28,23 @@ const buttonVariants = cva(
   },
 );
 
-type ButtonProperties = ComponentPropsWithoutRef<typeof BaseButton> &
+export type ButtonProps = ElementProps<"button"> &
   VariantProps<typeof buttonVariants> &
   Readonly<{ loading?: boolean }>;
 
-export function Button({ className, loading = false, size, variant, children, ...properties }: ButtonProperties) {
+export function Button(properties: ButtonProps) {
+  return <StyledButton {...properties} />;
+}
+
+// Cairn-internal composition only; applications use Button.
+export function StyledButton({
+  className,
+  loading = false,
+  size,
+  variant,
+  children,
+  ...properties
+}: ButtonProps & Readonly<{ className?: string }>) {
   return (
     <BaseButton
       {...properties}
@@ -40,7 +52,7 @@ export function Button({ className, loading = false, size, variant, children, ..
       className={cn(buttonVariants({ size, variant }), className)}
       disabled={loading || properties.disabled}
     >
-      {loading ? <Spinner className="size-4" /> : null}
+      {loading ? <Spinner size="sm" /> : null}
       {children}
     </BaseButton>
   );

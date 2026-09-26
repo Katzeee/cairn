@@ -5,7 +5,7 @@ import { designSystemTest, navigateToCatalogPage } from "./support/browser.mjs";
 const rowAt = (page, path) => page.locator(`[data-item-key="outline-item:${encodeURIComponent(path)}"]`);
 
 designSystemTest("outline readonly names retain their cursor without tooltips", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const field = rowAt(page, "projects/cairn/status-field");
   const text = field.locator('[data-ui="outline-readonly-text"]');
   const following = rowAt(page, "projects/cairn/status-field/in-progress");
@@ -61,7 +61,7 @@ designSystemTest("outline readonly names stay non-editable on touch without tool
   const session = await page.context().newCDPSession(page);
   await session.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 1 });
   try {
-    await navigateToCatalogPage(page, "components/outline");
+    await navigateToCatalogPage(page, "editor/outline-tree");
     const label = rowAt(page, "projects/cairn/status-field").locator('[data-ui="outline-readonly-text"]');
     await label.scrollIntoViewIfNeeded();
     const box = await label.boundingBox();
@@ -74,7 +74,7 @@ designSystemTest("outline readonly names stay non-editable on touch without tool
     const hint = page.getByRole("tooltip");
     assert.equal(await hint.count(), 0);
     assert.equal(await page.locator('[data-ui="outline-editor"]').count(), 0);
-    await page.getByRole("heading", { name: "Outline", exact: true }).click();
+    await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   } finally {
     await session.send("Emulation.setTouchEmulationEnabled", { enabled: false });
     await session.detach();

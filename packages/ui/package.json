@@ -21,7 +21,7 @@
   "scripts": {
     "clean": "node ../../scripts/clean-package-dist.mjs",
     "prebuild": "npm run clean",
-    "build": "tsc && node scripts/build-styles.mjs",
+    "build": "node scripts/build-api-reference.mjs && tsc && node scripts/build-styles.mjs",
     "test": "npm run test:unit && npm run test:acceptance",
     "test:unit": "vitest run",
     "test:acceptance": "vitest run --config vitest.acceptance.config.mjs",

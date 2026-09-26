@@ -6,7 +6,7 @@ import { designSystemTest, navigateToCatalogPage } from "./support/browser.mjs";
 designSystemTest("coarse pointers receive effective touch targets", verifyCoarsePointerBehavior);
 
 async function verifyCoarsePointerBehavior(page) {
-  await navigateToCatalogPage(page, "components/overlays");
+  await navigateToCatalogPage(page, "patterns/overlays");
   await page.getByRole("button", { name: "Show actionable toast" }).click();
   const fineToast = await measureToast(page);
   await dismissToast(page);
@@ -29,7 +29,7 @@ async function verifyCoarsePointerBehavior(page) {
       await assertVisibleTouchTargets(page, target, catalogPage.title);
     }
 
-    await navigateToCatalogPage(page, "components/forms");
+    await navigateToCatalogPage(page, "patterns/forms");
     const switchControl = page.getByRole("switch").first();
     const switchGeometry = await measureTouchTarget(switchControl);
     assert.equal(switchGeometry.visualHeight, 24, "the visible Switch pill must remain 24px tall");
@@ -47,14 +47,14 @@ async function verifyCoarsePointerBehavior(page) {
     await page.mouse.click(inputHitBox.x + inputHitBox.width / 2, inputHitBox.y + 2);
     assert.equal(await input.evaluate((element) => document.activeElement === element), true);
 
-    await navigateToCatalogPage(page, "components/buttons");
+    await navigateToCatalogPage(page, "components/button");
     const smallButton = page.getByRole("button", { name: "Size sm" });
     const buttonGeometry = await measureTouchTarget(smallButton);
     assert.equal(buttonGeometry.visualHeight, 32, "the visible small Button must remain 32px tall");
     assertEffectiveTouchTarget(buttonGeometry, target, "small Button");
     await assertExpandedHitArea(page, smallButton, target, "small Button");
 
-    await navigateToCatalogPage(page, "components/overlays");
+    await navigateToCatalogPage(page, "patterns/overlays");
     await page.getByRole("button", { name: "Show actionable toast" }).click();
     const coarseToast = await measureToast(page);
     assertGeometryEqual(coarseToast, fineToast, "Toast layout must not change under a coarse pointer");

@@ -36,7 +36,7 @@ designSystemTest(
 designSystemTest(
   "Host task commands deduplicate referenced targets and undo the whole selection once",
   async (page) => {
-    await navigateToCatalogPage(page, "components/outline");
+    await navigateToCatalogPage(page, "editor/outline-tree");
     const reference = row(page, "projects/cairn/owner-field/kei-owner");
     const original = row(page, "kei");
     const other = row(page, "projects/home-lab");
@@ -62,7 +62,7 @@ designSystemTest(
 );
 
 designSystemTest("Command panel, selection toolbar and checkbox execute host task operations", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const target = row(page, "inbox/quick-capture");
   await target.click();
   await editor(page).pressSequentially("/task");
@@ -79,7 +79,7 @@ designSystemTest("Command panel, selection toolbar and checkbox execute host tas
 designSystemTest(
   "A collapsed text caret copies and cuts its node while character selections stay native",
   async (page) => {
-    await navigateToCatalogPage(page, "components/outline");
+    await navigateToCatalogPage(page, "editor/outline-tree");
     const target = row(page, "inbox/crdt-survey");
     await target.click();
     const copy = (cut = false) =>
@@ -117,7 +117,7 @@ designSystemTest(
 
 designSystemTest("Escape cancels outline dragging and leaving a row cancels its delayed expansion", async (page) => {
   await page.setViewportSize({ width: 1280, height: 1800 });
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const source = row(page, "projects/home-lab");
   const target = row(page, "projects/cairn");
   const from = await source.locator('[data-ui="outline-bullet"]').boundingBox();

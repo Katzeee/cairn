@@ -32,7 +32,7 @@ async function copy(page, cut = false) {
 }
 
 designSystemTest("Outline undo spans text editor sessions and restores the edited node", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/crdt-survey", "CRDT ordering survey".length);
   await page.keyboard.type(" draft");
   await edit(page, "projects/home-lab", 3);
@@ -44,7 +44,7 @@ designSystemTest("Outline undo spans text editor sessions and restores the edite
 });
 
 designSystemTest("Outline structural moves and insertion each undo as one edit", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/crdt-survey", "CRDT ordering survey".length);
   await page.keyboard.press("Enter");
   await page.locator('[data-ui="outline-editor"]:focus').waitFor();
@@ -67,7 +67,7 @@ designSystemTest("Outline structural moves and insertion each undo as one edit",
 });
 
 designSystemTest("Forward delete merges the next leaf and undo restores both node identities", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/crdt-survey", 0);
   await page.keyboard.press("Shift+Enter");
   await page.locator('[data-ui="outline-editor"]:focus').waitFor();
@@ -85,7 +85,7 @@ designSystemTest("Forward delete merges the next leaf and undo restores both nod
 designSystemTest(
   "Multiline paste creates sibling nodes, preserves current text and undoes atomically",
   async (page) => {
-    await navigateToCatalogPage(page, "components/outline");
+    await navigateToCatalogPage(page, "editor/outline-tree");
     await edit(page, "inbox/crdt-survey", 2);
     await paste(page, { "text/plain": "First\nSecond" });
     await page.locator('[data-ui="outline-editor"]:focus').waitFor();
@@ -99,7 +99,7 @@ designSystemTest(
 );
 
 designSystemTest("Copied nodes paste as shared inline references and as reference occurrences", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/crdt-survey", 3);
   await page.keyboard.press("Escape");
   const clipboard = await copy(page);
@@ -124,7 +124,7 @@ designSystemTest("Copied nodes paste as shared inline references and as referenc
   assert.equal(await editor(page).textContent(), "CRDT ordering survey");
   await page.keyboard.press("Control+a");
   await page.keyboard.type("Renamed survey");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   assert.equal(await row(page, "inbox/crdt-survey").textContent(), "Renamed survey");
   assert.equal(
     await row(page, "projects/home-lab").locator('[data-ui="outline-reference"]').textContent(),
@@ -133,7 +133,7 @@ designSystemTest("Copied nodes paste as shared inline references and as referenc
 });
 
 designSystemTest("Deleting all nodes leaves an editable empty outline and remains undoable", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const count = await page.locator('[data-ui="outline-row"]').count();
   await edit(page, "inbox/crdt-survey", 2);
   await page.keyboard.press("Escape");
@@ -155,7 +155,7 @@ designSystemTest("Deleting all nodes leaves an editable empty outline and remain
 });
 
 designSystemTest("Formatting has its own undo boundary after text input", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/quick-capture", 0);
   await page.keyboard.type("Word");
   await page.keyboard.press("Control+a");
@@ -168,7 +168,7 @@ designSystemTest("Formatting has its own undo boundary after text input", async 
 });
 
 designSystemTest("Duplicating a node creates independent content and is undoable", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/crdt-survey", 3);
   await page.keyboard.press("Alt+Shift+d");
   await page.locator('[data-ui="outline-editor"]:focus').waitFor();
@@ -182,7 +182,7 @@ designSystemTest("Duplicating a node creates independent content and is undoable
 });
 
 designSystemTest("Cutting a node transfers its identity to the new parent", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/crdt-survey", 3);
   await page.keyboard.press("Escape");
   const clipboard = await copy(page, true);
@@ -197,7 +197,7 @@ designSystemTest("Cutting a node transfers its identity to the new parent", asyn
 });
 
 designSystemTest("Choosing a field continues directly in its new value editor", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/quick-capture", 0);
   await page.keyboard.type(">");
   await page.getByRole("listbox", { name: "Fields" }).getByRole("option", { name: "Notes" }).click();

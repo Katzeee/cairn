@@ -26,25 +26,25 @@ async function editRow(page, path, from, to = from) {
 }
 
 designSystemTest("Tana Enter placement respects expansion, forced siblings and the start boundary", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await editRow(page, "projects", "Projects".length);
   await editor.press("Enter");
   assert.equal(await activeRow(page).getAttribute("data-parent-key"), key("projects"));
   assert.equal(await activeRow(page).getAttribute("aria-posinset"), "1");
   assert.equal(await editor.textContent(), "");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editRow(page, "projects", "Projects".length);
   await editor.press("Control+ArrowUp");
   await editor.press("Enter");
   assert.equal(await activeRow(page).getAttribute("data-parent-key"), null);
   assert.equal(await rowAt(page, "projects").getAttribute("aria-expanded"), "false");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editRow(page, "projects", 3);
   await editor.press("Control+ArrowDown");
   await editor.press("Shift+Enter");
   assert.equal(await activeRow(page).getAttribute("data-parent-key"), null);
   assert.equal(await rowAt(page, "projects").locator('[data-ui="outline-inline-content"]').textContent(), "Projects");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await editRow(page, "projects/home-lab", 0);
   const position = Number(await rowAt(page, "projects/home-lab").getAttribute("aria-posinset"));
   await editor.press("Enter");
@@ -57,7 +57,7 @@ designSystemTest("Tana Enter placement respects expansion, forced siblings and t
 });
 
 designSystemTest("Tana indentation and sibling ordering preserve the editor and its selection", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await editRow(page, "projects/home-lab", 2, 6);
   await editor.press("Tab");
   await rowAt(page, "projects/cairn/home-lab").locator('[data-ui="outline-editor"]').waitFor();
@@ -75,7 +75,7 @@ designSystemTest("Tana indentation and sibling ordering preserve the editor and 
 });
 
 designSystemTest("Tana disclosure, node navigation and task toggle keep keyboard editing coherent", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await editRow(page, "projects", 2);
   await editor.press("Control+ArrowUp");
   assert.equal(await rowAt(page, "projects").getAttribute("aria-expanded"), "false");
@@ -100,7 +100,7 @@ designSystemTest("Tana disclosure, node navigation and task toggle keep keyboard
 });
 
 designSystemTest("Tana explicit node deletion removes its subtree and keeps adjacent text editing", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await editRow(page, "projects/cairn", 2);
   assert.equal(await rowAt(page, "projects/cairn/roadmap").count(), 1);
   await editor.press("Control+Shift+Backspace");
@@ -112,7 +112,7 @@ designSystemTest("Tana explicit node deletion removes its subtree and keeps adja
 });
 
 designSystemTest("Modified text arrows at node boundaries do not navigate to another editor", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await editRow(page, "projects/home-lab", 0);
   await editor.press("Shift+ArrowLeft");
   assert.equal(await activeRow(page).getAttribute("data-item-key"), key("projects/home-lab"));
@@ -125,7 +125,7 @@ designSystemTest("Modified text arrows at node boundaries do not navigate to ano
 });
 
 designSystemTest("Tana backspace protects child subtrees and merges a leaf at the join", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await editRow(page, "projects/cairn", 0);
   const count = await page.locator('[data-ui="outline-row"]').count();
   await editor.press("Backspace");
@@ -142,7 +142,7 @@ designSystemTest("Tana backspace protects child subtrees and merges a leaf at th
 });
 
 designSystemTest("Tana Enter after Escape uses the retained text position", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await editRow(page, "projects/home-lab", 4);
   await editor.press("Escape");
   await page.keyboard.press("Enter");

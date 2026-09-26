@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { designSystemTest, navigateToCatalogPage } from "./support/browser.mjs";
 
 designSystemTest("outline source editing keeps single-line rows and following bullets stable", async (page) => {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const tree = page.getByRole("tree");
   const geometry = () =>
     tree.evaluate((element) => {
@@ -25,7 +25,7 @@ designSystemTest("outline source editing keeps single-line rows and following bu
       const editor = page.locator('[data-ui="outline-editor"]');
       await editor.waitFor({ state: "visible" });
       assert.deepEqual(await geometry(), before, "entering source editing preserves row heights and bullet positions");
-      await page.getByRole("heading", { name: "Outline", exact: true }).click();
+      await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
       await editor.waitFor({ state: "detached" });
       assert.deepEqual(await geometry(), before, "leaving source editing preserves row heights and bullet positions");
     }
@@ -33,7 +33,7 @@ designSystemTest("outline source editing keeps single-line rows and following bu
 });
 
 async function startEmptyEditor(page) {
-  await navigateToCatalogPage(page, "components/outline");
+  await navigateToCatalogPage(page, "editor/outline-tree");
   const row = page.locator('[data-item-key="outline-item:inbox%2Fquick-capture"]');
   await row.locator('[data-ui="outline-row-text"]').click();
   const editor = page.locator('[data-ui="outline-editor"]');
@@ -64,7 +64,7 @@ designSystemTest("outline completions close at spaces and stay closed after comp
     assert.equal(await editor.textContent(), `${source} more text`);
     assert.equal(await page.getByRole("listbox").count(), 0, "typing after completed content never reopens its search");
   }
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   const row = page.locator('[data-item-key="outline-item:projects%2Fcairn%2Froadmap%2Fcommand-palette"]');
   await row.locator('[data-ui="outline-row-text"]').click();
   await editor.waitFor();
@@ -83,7 +83,7 @@ designSystemTest("outline formatting reveals editable source and preserves the c
   await editor.evaluate((element) => element.editor.commands.setTextSelection({ from: 6, to: 10 }));
   await editor.press("Control+b");
   assert.equal(await editor.textContent(), "Read **bold** today");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   await row.locator("strong").waitFor();
   assert.equal(await row.locator("strong").textContent(), "bold");
   assert.equal(await editor.count(), 0);
@@ -126,7 +126,7 @@ designSystemTest("outline references and Supertags store closed source with targ
   await editor.pressSequentially(" #pro");
   await page.getByRole("listbox", { name: "Supertags" }).getByRole("option", { name: "project", exact: true }).click();
   assert.equal(await editor.textContent(), "@{Local-first software essay} #{project}");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   assert.equal(await row.locator('[data-ui="outline-reference"]').getAttribute("data-reference-id"), "local-first");
   assert.equal(await row.locator('[data-ui="outline-row-badge"]').textContent(), "#project");
   await row.locator('[data-ui="outline-row-text"]').click();
@@ -141,7 +141,7 @@ designSystemTest("outline references and Supertags store closed source with targ
     .getByRole("option", { name: "CRDT ordering survey", exact: true })
     .click();
   assert.equal(await editor.textContent(), "@{CRDT ordering survey} #{project}");
-  await page.getByRole("heading", { name: "Outline", exact: true }).click();
+  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
   assert.equal(await row.locator('[data-ui="outline-reference"]').getAttribute("data-reference-id"), "crdt-survey");
 });
 

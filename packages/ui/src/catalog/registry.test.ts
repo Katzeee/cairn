@@ -19,7 +19,7 @@ const examples = new Map(
     readFileSync(path, "utf8"),
   ]),
 );
-const registered = Object.values(components).flatMap((entry) => entry.examples);
+const registered = Object.values(components).flatMap((entry) => entry.examples.map(({ id }) => id));
 
 describe("catalog registry", () => {
   it("documents every public component", () => {

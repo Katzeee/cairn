@@ -18,17 +18,9 @@ const candidates: readonly OutlineCompletionItem[] = Array.from({ length: 16 }, 
 
 export function OutlineSuggestionFixture() {
   const [content, setContent] = useState<OutlineContent>([]);
-  const [reversed, setReversed] = useState(false);
   const [events, setEvents] = useState({ accepted: [] as string[], moves: 0, created: 0 });
   return (
     <main className="cairn-TestPage">
-      <button
-        onMouseDown={(event) => event.preventDefault()}
-        onClick={() => setReversed(!reversed)}
-        type="button"
-      >
-        Refresh suggestions
-      </button>
       <OutlineTree
         selectionToolbar
         expandedKeys={new Set()}
@@ -51,13 +43,11 @@ export function OutlineSuggestionFixture() {
                 context.textBeforeCaret.startsWith("~")
                   ? { from: 0, to: context.selection.to, query: context.textBeforeCaret.slice(1) }
                   : null,
-              items: (_key, query) => (query === "none" ? [] : reversed ? [...candidates].reverse() : candidates),
+              items: (_key, query) => (query === "none" ? [] : candidates),
               keyBindings: [
                 { key: "Enter", action: null },
                 { key: "Enter", control: true, action: "accept" },
                 { key: "Tab", action: "next" },
-                { key: "Home", control: true, action: "first" },
-                { key: "End", control: true, action: "last" },
               ],
               canAccept: (_key, item) => item.id !== "choice-0",
             },

@@ -19,7 +19,7 @@ export function ComponentPage({ id }: Readonly<{ id: ComponentId }>) {
         title={id}
       >
         <nav aria-label="On this page" className="cairn-CatalogPageNav">
-          {entry.examples.map((example) => (
+          {entry.examples.map(({ id: example }) => (
             <a href={`${section}${example.replace("/", "-")}`} key={example}>
               {example.slice(example.indexOf("/") + 1).replaceAll("-", " ")}
             </a>
@@ -27,8 +27,8 @@ export function ComponentPage({ id }: Readonly<{ id: ComponentId }>) {
           <a href={`${section}api-reference`}>API reference</a>
         </nav>
       </PageHeader>
-      {entry.examples.map((example) => (
-        <Example id={example} key={example} />
+      {entry.examples.map(({ id: example, viewport }) => (
+        <Example id={example} key={example} viewport={viewport} />
       ))}
       <section aria-labelledby="api-reference-title" className="cairn-CatalogExample" id="api-reference">
         <h2 className="cairn-CatalogExampleTitle" id="api-reference-title">

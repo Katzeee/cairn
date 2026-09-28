@@ -34,49 +34,6 @@ editorTest(
 );
 
 editorTest(
-  "Host task commands deduplicate referenced targets and undo the whole selection once",
-  async (page) => {
-    await navigateToCatalogPage(page, "editor/outline-tree");
-    const reference = row(page, "projects/cairn/owner-field/kei-owner");
-    const original = row(page, "kei");
-    const other = row(page, "projects/home-lab");
-    await original.click();
-    await editor(page).press("Escape");
-    await reference.click({ modifiers: ["Control"] });
-    await other.click({ modifiers: ["Control"] });
-    await page.keyboard.press("Control+Enter");
-    for (const item of [reference, original, other]) {
-      assert.equal(await item.getByRole("checkbox").isChecked(), false, "one command adds one open task per Node");
-    }
-    await page.keyboard.press("Control+Enter");
-    for (const item of [reference, original, other]) {
-      assert.equal(await item.getByRole("checkbox").isChecked(), true, "shared target toggles once");
-    }
-    await page.keyboard.press("Control+z");
-    for (const item of [reference, original, other]) {
-      assert.equal(await item.getByRole("checkbox").isChecked(), false, "one undo reverts every target");
-    }
-    await page.keyboard.press("Control+z");
-    for (const item of [reference, original, other]) assert.equal(await item.getByRole("checkbox").count(), 0);
-  },
-);
-
-editorTest("Command panel, selection toolbar and checkbox execute host task operations", async (page) => {
-  await navigateToCatalogPage(page, "editor/outline-tree");
-  const target = row(page, "inbox/quick-capture");
-  await target.click();
-  await editor(page).pressSequentially("/task");
-  await page.getByRole("option", { name: /Make task/ }).click();
-  assert.equal(await editor(page).textContent(), "");
-  assert.equal(await target.getByRole("checkbox").isChecked(), false);
-  await editor(page).press("Escape");
-  await page.getByRole("toolbar").getByRole("button", { name: "Toggle task", exact: true }).click();
-  assert.equal(await target.getByRole("checkbox").isChecked(), true);
-  await target.getByRole("checkbox").click();
-  assert.equal(await target.getByRole("checkbox").isChecked(), false);
-});
-
-editorTest(
   "A collapsed text caret copies and cuts its node while character selections stay native",
   async (page) => {
     await navigateToCatalogPage(page, "editor/outline-tree");

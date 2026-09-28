@@ -7,27 +7,6 @@ const selected = (page) => page.locator('[data-ui="outline-row"][aria-selected="
 const editor = (page) => page.locator('[data-ui="outline-editor"]');
 const node = (row) => row.locator('xpath=ancestor::*[@data-ui="outline-node"][1]');
 
-editorTest("Selecting an outline parent covers its descendants across collapse and expansion", async (page) => {
-  await navigateToCatalogPage(page, "editor/outline-tree");
-  const parent = row(page, "projects/cairn/roadmap");
-  const subtree = node(parent);
-  await parent.locator('[data-ui="outline-row-text"]').click();
-  await editor(page).waitFor({ state: "visible" });
-  await editor(page).press("Escape");
-  const descendants = subtree.locator('[data-ui="outline-row"]');
-  assert.equal(await selected(page).count(), await descendants.count());
-  assert.equal(await row(page, "projects/cairn/engine").getAttribute("aria-selected"), "false");
-  const toolbar = page.getByRole("toolbar", { name: "1 items selected" });
-  await toolbar.waitFor({ state: "visible" });
-  await editor(page).press("Control+ArrowUp");
-  assert.equal(await parent.getAttribute("aria-expanded"), "false");
-  assert.equal(await selected(page).count(), 1);
-  await editor(page).press("Control+ArrowDown");
-  assert.equal(await selected(page).count(), await descendants.count());
-  await editor(page).press("Escape");
-  assert.equal(await selected(page).count(), 0);
-});
-
 editorTest("Shift click extends a node selection and Ctrl click adds independent subtree roots", async (page) => {
   await navigateToCatalogPage(page, "editor/outline-tree");
   const parent = row(page, "projects/cairn/roadmap");

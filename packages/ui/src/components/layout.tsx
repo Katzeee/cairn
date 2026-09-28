@@ -1,7 +1,9 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
-export const breakpoints = ["initial", "xs", "sm", "md", "lg", "xl"] as const;
-export type Breakpoint = (typeof breakpoints)[number];
+import breakpointWidths from "./breakpoints.json" with { type: "json" };
+
+export type Breakpoint = keyof typeof breakpointWidths;
+export const breakpoints = Object.keys(breakpointWidths) as readonly Breakpoint[];
 export type Responsive<T extends string> = T | Readonly<Partial<Record<Breakpoint, T>>>;
 export type Space = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
 export type LayoutElement =

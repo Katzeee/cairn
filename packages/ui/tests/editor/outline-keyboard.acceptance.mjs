@@ -141,6 +141,20 @@ editorTest("Tana backspace protects child subtrees and merges a leaf at the join
   assert.equal((await selection(editor)).from, "Home lab notes #{project}".length);
 });
 
+editorTest("Enter during IME composition neither splits the Node nor leaves editing", async (page) => {
+  await navigateToCatalogPage(page, "editor/outline-tree");
+  const editor = await editRow(page, "inbox/crdt-survey", 4);
+  const count = await page.locator('[data-ui="outline-row"]').count();
+  await editor.evaluate((surface) => {
+    surface.dispatchEvent(new CompositionEvent("compositionstart", { bubbles: true, data: "中" }));
+    surface.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, isComposing: true, key: "Enter" }));
+    surface.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true, data: "中" }));
+  });
+  assert.equal(await page.locator('[data-ui="outline-row"]').count(), count);
+  assert.equal(await editor.textContent(), "CRDT ordering survey");
+  assert.equal(await activeRow(page).getAttribute("data-item-key"), key("inbox/crdt-survey"));
+});
+
 editorTest("Tana Enter after Escape uses the retained text position", async (page) => {
   await navigateToCatalogPage(page, "editor/outline-tree");
   const editor = await editRow(page, "projects/home-lab", 4);

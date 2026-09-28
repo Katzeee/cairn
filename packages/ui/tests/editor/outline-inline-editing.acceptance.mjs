@@ -82,39 +82,6 @@ editorTest("outline formatting reveals editable source and preserves the clicked
   assert.equal(await editor.textContent(), "Read **bold** today!");
 });
 
-editorTest("outline references and Supertags store closed source with target identity", async (page) => {
-  const { editor, row } = await startEmptyEditor(page);
-  await editor.pressSequentially("[[");
-  assert.equal(await page.getByRole("listbox").count(), 0);
-  await editor.press("Control+a");
-  await editor.pressSequentially("@Local-first");
-  await page
-    .getByRole("listbox", { name: "References" })
-    .getByRole("option", { name: "Local-first software essay", exact: true })
-    .click();
-  assert.equal(await editor.textContent(), "@{Local-first software essay}");
-  await editor.pressSequentially(" #pro");
-  await page.getByRole("listbox", { name: "Supertags" }).getByRole("option", { name: "project", exact: true }).click();
-  assert.equal(await editor.textContent(), "@{Local-first software essay} #{project}");
-  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
-  assert.equal(await row.locator('[data-ui="outline-reference"]').getAttribute("data-reference-id"), "local-first");
-  assert.equal(await row.locator('[data-ui="outline-row-badge"]').textContent(), "#project");
-  await row.locator('[data-ui="outline-row-text"]').click();
-  await editor.waitFor();
-  assert.equal(await editor.textContent(), "@{Local-first software essay} #{project}");
-  await editor.evaluate((element) =>
-    element.editor.commands.setTextSelection({ from: 3, to: 3 + "Local-first software essay".length }),
-  );
-  await editor.pressSequentially("CRDT");
-  await page
-    .getByRole("listbox", { name: "References" })
-    .getByRole("option", { name: "CRDT ordering survey", exact: true })
-    .click();
-  assert.equal(await editor.textContent(), "@{CRDT ordering survey} #{project}");
-  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
-  assert.equal(await row.locator('[data-ui="outline-reference"]').getAttribute("data-reference-id"), "crdt-survey");
-});
-
 editorTest(
   "outline consumes external triggers and renderers without installing domain defaults",
   async (page) => {

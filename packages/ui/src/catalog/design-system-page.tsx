@@ -5,6 +5,8 @@ import { AppShell, type AppShellSection, type AppShellUtility } from "../compone
 import { CairnTheme } from "../components/cairn-theme.js";
 import { ToastProvider } from "../components/toast.js";
 import { ComponentPage } from "./docs/component-page.js";
+import { ExampleDocument } from "./docs/example-document.js";
+import { previewRoute, themeFromQuery } from "./docs/preview-protocol.js";
 import {
   ColorPage,
   ElevationAndMotionPage,
@@ -36,6 +38,14 @@ const shellSections: readonly AppShellSection[] = [
 ];
 
 export function DesignSystemPage() {
+  const [preview] = useState(() => {
+    const { path, query } = route();
+    return path.startsWith(previewRoute) ? { id: path.slice(previewRoute.length), theme: themeFromQuery(query) } : undefined;
+  });
+  return preview === undefined ? <CatalogShell /> : <ExampleDocument id={preview.id} initialTheme={preview.theme} />;
+}
+
+function CatalogShell() {
   const [page, setPage] = useState(() => findCatalogPage(route().path) ?? overviewPage);
   const [appearance, setAppearance] = useState<Appearance>(() => (route().query.get("mode") === "dark" ? "dark" : "light"));
   const [theme, setTheme] = useState<CairnThemeName>(() => {

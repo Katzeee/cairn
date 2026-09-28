@@ -39,8 +39,10 @@ export default function AppShellSidebar() {
         ]}
         utilities={[{ id: "settings", label: "Settings", icon: "settings", onSelect: () => setActive("settings") }]}
       >
-        <Heading as="h3" size="title-small">{pages[active][0]}</Heading>
-        <Text as="p" tone="muted">{pages[active][1]}</Text>
+        <Box p="5">
+          <Heading as="h3" size="title-small">{pages[active][0]}</Heading>
+          <Text as="p" tone="muted">{pages[active][1]}</Text>
+        </Box>
       </AppShell>
     </Box>
   );

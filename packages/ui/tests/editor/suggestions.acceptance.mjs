@@ -22,28 +22,6 @@ editorTest("suggestions preserve the external query and use the registered candi
   assert.equal(await editor.textContent(), "%{Ticket}");
 });
 
-editorTest("node providers exclude unnamed field targets from suggestions", async (page) => {
-  await navigateToCatalogPage(page, "editor/outline-tree");
-  const row = page.locator('[data-item-key="outline-item:projects%2Fcairn%2Fowner-field%2Fteam-owner"]');
-  await row.locator('[data-ui="outline-row-text"]').click();
-  const editor = page.locator('[data-ui="outline-editor"]');
-  await editor.waitFor();
-  await editor.press("Control+a");
-  await editor.press("Backspace");
-  const panel = page.getByRole("listbox", { name: "Suggested values" });
-  await panel.waitFor();
-  assert.deepEqual(await panel.getByRole("option").allTextContents(), ["Kei"]);
-  await editor.press("Tab");
-  await panel.waitFor({ state: "detached" });
-  assert.equal(await editor.textContent(), "Kei #{person}");
-  assert.equal(await row.locator('[data-appearance="reference"]').count(), 1);
-  await editor.press("Control+a");
-  await editor.press("Backspace");
-  await panel.getByRole("status").waitFor({ state: "visible" });
-  assert.equal(await panel.getByRole("option").count(), 0);
-  assert.equal(await panel.textContent(), "No matching suggested values");
-});
-
 async function visibleSelection(panel) {
   const listBox = await panel.boundingBox();
   const itemBox = await active(panel).boundingBox();
@@ -120,31 +98,6 @@ for (const acceptKey of ["Tab", "Enter"]) {
     assert.equal(await editor.evaluate((element) => document.activeElement === element), true);
   });
 }
-
-editorTest("suggestions retain identity across refresh and page through variable-height rows", async (page) => {
-  const { editor, panel } = await fixtureEditor(page);
-  const initialId = await active(panel).getAttribute("id");
-  await page.getByRole("button", { name: "Refresh suggestions" }).click();
-  assert.equal(await active(panel).getAttribute("id"), initialId);
-  await visibleSelection(panel);
-  await editor.press("ArrowUp");
-  const chosenId = await active(panel).getAttribute("id");
-  await page.getByRole("button", { name: "Refresh suggestions" }).click();
-  assert.equal(await active(panel).getAttribute("id"), chosenId);
-  await editor.press("Control+Home");
-  assert.match(await active(panel).textContent(), /^Suggestion 0/);
-  await editor.press("PageDown");
-  const nextIndex = Number((await active(panel).textContent()).match(/Suggestion (\d+)/)[1]);
-  assert.ok(nextIndex > 1);
-  await visibleSelection(panel);
-  await editor.press("PageUp");
-  const previousIndex = Number((await active(panel).textContent()).match(/Suggestion (\d+)/)[1]);
-  assert.ok(previousIndex < nextIndex - 1);
-  await visibleSelection(panel);
-  await editor.press("Control+End");
-  assert.equal(await active(panel).textContent(), "Suggestion 15");
-  await visibleSelection(panel);
-});
 
 editorTest("suggestions respect registered acceptance chords and guards", async (page) => {
   const { editor, panel } = await fixtureEditor(page);

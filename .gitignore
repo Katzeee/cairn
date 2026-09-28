@@ -13,3 +13,4 @@ coverage/
 Thumbs.db
 packages/ui/src/catalog/generated/
 packages/ui/src/styles/generated/
+_local/

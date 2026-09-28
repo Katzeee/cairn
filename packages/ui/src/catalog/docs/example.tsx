@@ -1,18 +1,16 @@
-import { useState, type MouseEvent } from "react";
+import { useState } from "react";
 
 import { Button } from "../../components/button.js";
 import { Icon } from "../../components/icon.js";
 import { examples } from "../generated/examples.js";
-import { exampleTitle } from "../registry.js";
+import { exampleTitle, type ExampleViewport } from "../registry.js";
+import { containExampleNavigation } from "./example-document.js";
 import { HighlightedCode } from "./highlighted-code.js";
+import { ViewportPreview } from "./viewport-preview.js";
 
 const collapsedLines = 28;
 
-function containNavigation(event: MouseEvent<HTMLDivElement>) {
-  if (event.target instanceof Element && event.target.closest("a[href]") !== null) event.preventDefault();
-}
-
-export function Example({ id }: Readonly<{ id: string }>) {
+export function Example({ id, viewport }: Readonly<{ id: string; viewport?: ExampleViewport }>) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const example = examples[id];
@@ -35,9 +33,18 @@ export function Example({ id }: Readonly<{ id: string }>) {
         {title}
       </h2>
       <div className="cairn-CatalogExampleFrame">
-        <div className="cairn-CatalogExamplePreview" data-example={id} onClick={containNavigation} onAuxClick={containNavigation}>
-          <Component />
-        </div>
+        {viewport === undefined ? (
+          <div
+            className="cairn-CatalogExamplePreview"
+            data-example={id}
+            onAuxClick={containExampleNavigation}
+            onClick={containExampleNavigation}
+          >
+            <Component />
+          </div>
+        ) : (
+          <ViewportPreview id={id} title={title} viewport={viewport} />
+        )}
         <div className="cairn-CatalogExampleSource" data-collapsed={collapsible && !expanded ? "" : undefined}>
           <div className="cairn-CatalogExampleToolbar">
             <span className="cairn-CatalogExampleFile">{id.slice(id.indexOf("/") + 1)}.tsx</span>

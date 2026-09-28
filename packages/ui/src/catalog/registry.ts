@@ -6,25 +6,39 @@ type ComponentEntry = Readonly<{
   group: "layout" | "typography" | "components" | "editor" | "utilities";
   description: string;
   exports: readonly string[];
-  examples: readonly string[];
+  examples: readonly ExampleEntry[];
 }>;
+
+// A viewport example renders in its own resizable document, so media queries, viewport units,
+// and fixed layers respond to the preview. Content examples size the viewport to their height;
+// screen examples fill a viewport whose height the reader sets.
+export type ExampleViewport = "content" | "screen";
+export type ExampleEntry = Readonly<{ id: string; viewport?: ExampleViewport }>;
+
+const responsive = (id: string): ExampleEntry => ({ id, viewport: "content" });
+const screen = (id: string): ExampleEntry => ({ id, viewport: "screen" });
 
 const entry = (
   group: ComponentEntry["group"],
   description: string,
   exports: readonly string[],
-  examples: readonly string[],
-): ComponentEntry => ({ group, description, exports, examples });
+  examples: readonly (string | ExampleEntry)[],
+): ComponentEntry => ({
+  group,
+  description,
+  exports,
+  examples: examples.map((example) => (typeof example === "string" ? { id: example } : example)),
+});
 
 export const components = {
   Box: entry("layout", "A block container for padding, size, and display rules.", ["Box"], ["box/size", "box/padding"]),
-  Flex: entry("layout", "Arrange children in a row or column with alignment and gaps.", ["Flex"], ["flex/alignment", "flex/responsive"]),
-  Grid: entry("layout", "Arrange children in rows and columns that respond to width.", ["Grid"], ["grid/columns", "grid/responsive"]),
+  Flex: entry("layout", "Arrange children in a row or column with alignment and gaps.", ["Flex"], ["flex/alignment", responsive("flex/responsive")]),
+  Grid: entry("layout", "Arrange children in rows and columns that respond to width.", ["Grid"], ["grid/columns", responsive("grid/responsive")]),
   Container: entry("layout", "Constrain content to one of four shared measures.", ["Container"], ["container/sizes", "container/alignment"]),
   Section: entry("layout", "Set vertical rhythm between page regions.", ["Section"], ["section/rhythm"]),
-  AppShell: entry("layout", "Application navigation that adapts to its container.", ["AppShell"], ["app-shell/bottom-bar", "app-shell/sidebar"]),
-  PageScaffold: entry("layout", "A page template with a heading, actions, content width, and gutters.", ["PageScaffold"], ["page-scaffold/standard"]),
-  ListDetail: entry("layout", "A list beside its selected detail, or one pane at a time in narrow containers.", ["ListDetail"], ["list-detail/inbox"]),
+  AppShell: entry("layout", "Application navigation that adapts to its container.", ["AppShell"], [screen("app-shell/bottom-bar"), screen("app-shell/sidebar")]),
+  PageScaffold: entry("layout", "A page template with a heading, actions, content width, and gutters.", ["PageScaffold"], [responsive("page-scaffold/standard")]),
+  ListDetail: entry("layout", "A list beside its selected detail, or one pane at a time in narrow containers.", ["ListDetail"], [responsive("list-detail/inbox")]),
 
   Text: entry("typography", "Body text in the shared type roles, weights, and tones.", ["Text"], ["text/roles", "text/tones"]),
   Heading: entry("typography", "Semantic headings in the title roles.", ["Heading"], ["heading/roles"]),
@@ -138,6 +152,14 @@ export const catalogPages: readonly CatalogPage[] = [overviewPage, ...catalogSec
 export function findCatalogPage(path: string): CatalogPage | undefined {
   const normalized = path.replace(/^\/+|\/+$/g, "");
   return catalogPages.find((page) => page.path === normalized);
+}
+
+export function exampleViewport(example: string): ExampleViewport | undefined {
+  for (const { examples } of Object.values(components)) {
+    const found = examples.find(({ id }) => id === example);
+    if (found !== undefined) return found.viewport;
+  }
+  return undefined;
 }
 
 export function exampleTitle(example: string): string {

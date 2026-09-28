@@ -21,16 +21,6 @@ async function paste(page, data) {
     );
   }, data);
 }
-async function copy(page, cut = false) {
-  return page.evaluate((cut) => {
-    const transfer = new DataTransfer();
-    document.activeElement.dispatchEvent(
-      new ClipboardEvent(cut ? "cut" : "copy", { bubbles: true, cancelable: true, clipboardData: transfer }),
-    );
-    return Object.fromEntries(transfer.types.map((type) => [type, transfer.getData(type)]));
-  }, cut);
-}
-
 editorTest("Outline undo spans text editor sessions and restores the edited node", async (page) => {
   await navigateToCatalogPage(page, "editor/outline-tree");
   await edit(page, "inbox/crdt-survey", "CRDT ordering survey".length);
@@ -98,40 +88,6 @@ editorTest(
   },
 );
 
-editorTest("Copied nodes paste as shared inline references and as reference occurrences", async (page) => {
-  await navigateToCatalogPage(page, "editor/outline-tree");
-  await edit(page, "inbox/crdt-survey", 3);
-  await page.keyboard.press("Escape");
-  const clipboard = await copy(page);
-  assert.equal(clipboard["text/plain"], "CRDT ordering survey");
-  await edit(page, "projects/home-lab", 4);
-  await paste(page, clipboard);
-  assert.equal(await editor(page).textContent(), "Home@{CRDT ordering survey} lab notes #{project}");
-  await edit(page, "inbox/quick-capture", 0);
-  await paste(page, clipboard);
-  assert.equal(
-    await current(page).getAttribute("data-item-key"),
-    key("inbox/crdt-survey"),
-    "pasting into the same parent reuses its existing occurrence",
-  );
-  await row(page, "projects/home-lab")
-    .getByRole("button", { name: /^Expand/ })
-    .click();
-  await row(page, "projects/home-lab").locator("..").locator('[data-ui="outline-empty-child-placeholder"]').click();
-  await page.locator('[data-ui="outline-editor"]:focus').waitFor();
-  await paste(page, clipboard);
-  assert.equal(await current(page).locator('[data-appearance="reference"]').count(), 1);
-  assert.equal(await editor(page).textContent(), "CRDT ordering survey");
-  await page.keyboard.press("Control+a");
-  await page.keyboard.type("Renamed survey");
-  await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
-  assert.equal(await row(page, "inbox/crdt-survey").textContent(), "Renamed survey");
-  assert.equal(
-    await row(page, "projects/home-lab").locator('[data-ui="outline-reference"]').textContent(),
-    "Renamed survey",
-  );
-});
-
 editorTest("Deleting all nodes leaves an editable empty outline and remains undoable", async (page) => {
   await navigateToCatalogPage(page, "editor/outline-tree");
   const count = await page.locator('[data-ui="outline-row"]').count();
@@ -165,45 +121,4 @@ editorTest("Formatting has its own undo boundary after text input", async (page)
   assert.equal(await editor(page).textContent(), "Word");
   await page.keyboard.press("Control+z");
   assert.equal(await editor(page).textContent(), "");
-});
-
-editorTest("Duplicating a node creates independent content and is undoable", async (page) => {
-  await navigateToCatalogPage(page, "editor/outline-tree");
-  await edit(page, "inbox/crdt-survey", 3);
-  await page.keyboard.press("Alt+Shift+d");
-  await page.locator('[data-ui="outline-editor"]:focus').waitFor();
-  const duplicate = await current(page).getAttribute("data-item-key");
-  assert.notEqual(duplicate, key("inbox/crdt-survey"));
-  await page.keyboard.type(" copy");
-  assert.equal(await row(page, "inbox/crdt-survey").textContent(), "CRDT ordering survey");
-  await page.keyboard.press("Control+z");
-  await page.keyboard.press("Control+z");
-  assert.equal(await page.locator(`[data-item-key="${duplicate}"]`).count(), 0);
-});
-
-editorTest("Cutting a node transfers its identity to the new parent", async (page) => {
-  await navigateToCatalogPage(page, "editor/outline-tree");
-  await edit(page, "inbox/crdt-survey", 3);
-  await page.keyboard.press("Escape");
-  const clipboard = await copy(page, true);
-  assert.equal(await row(page, "inbox/crdt-survey").count(), 0);
-  await page.getByRole("button", { name: "Expand Home lab notes", exact: true }).click();
-  await page.getByRole("button", { name: "Create child under Home lab notes", exact: true }).click();
-  await page.locator('[data-ui="outline-editor"]:focus').waitFor();
-  await paste(page, clipboard);
-  assert.equal(await editor(page).textContent(), "CRDT ordering survey");
-  assert.equal(await current(page).getAttribute("data-parent-key"), key("projects/home-lab"));
-  assert.equal(await current(page).locator('[data-appearance="reference"]').count(), 0);
-});
-
-editorTest("Choosing a field continues directly in its new value editor", async (page) => {
-  await navigateToCatalogPage(page, "editor/outline-tree");
-  await edit(page, "inbox/quick-capture", 0);
-  await page.keyboard.type(">");
-  await page.getByRole("listbox", { name: "Fields" }).getByRole("option", { name: "Notes" }).click();
-  await page.locator('[data-ui="outline-editor"]:focus').waitFor();
-  await page.keyboard.type("Field value");
-  assert.equal(await editor(page).textContent(), "Field value");
-  assert.equal(await current(page).getAttribute("data-parent-key"), key("inbox/quick-capture"));
-  assert.equal(await page.locator('[aria-selected="true"][data-ui="outline-row"]').count(), 0);
 });

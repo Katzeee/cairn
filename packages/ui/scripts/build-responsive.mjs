@@ -2,11 +2,12 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import breakpoints from "../src/components/breakpoints.json" with { type: "json" };
+
 // Layout props compile to breakpoint-prefixed utility classes; values outside a fixed
 // scale flow through a custom property set inline by the component.
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "src", "styles", "generated");
-const breakpoints = { initial: 0, xs: 520, sm: 768, md: 1024, lg: 1280, xl: 1640 };
 
 const keywords = (property, values, rename = {}) =>
   Object.fromEntries(values.map((value) => [value, `${property}:${rename[value] ?? value}`]));

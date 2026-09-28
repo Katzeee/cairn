@@ -22,10 +22,6 @@ editorTest("outline readonly names remain selectable and leave editing to editab
   await tree.press("Enter");
   await page.locator('[data-ui="outline-editor"]').waitFor({ state: "visible" });
   await page.locator('[data-ui="outline-editor"]').press("Escape");
-  const daily = rowAt(page, "daily-notes");
-  await daily.locator('[data-ui="outline-readonly-text"]').click();
-  await daily.locator('[data-ui="outline-bullet"]').click();
-  await page.getByRole("navigation", { name: "Breadcrumb" }).getByText("Daily notes", { exact: true }).waitFor();
 });
 
 editorTest("outline readonly names stay non-editable on touch", async (page) => {

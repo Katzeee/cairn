@@ -183,7 +183,7 @@
   padding: var(--cairn-space-6);
   container: example / inline-size;
 
-  &:where([data-example^="page-scaffold/"], [data-example^="legal-page/"], [data-example^="app-shell/"]) {
+  &:where([data-example^="page-scaffold/"], [data-example^="legal-page/"]) {
     padding: 0;
   }
 
@@ -192,19 +192,183 @@
     overflow: auto;
   }
 
-  &:where([data-example^="app-shell/"]) {
-    height: 26rem;
-    overflow: auto;
+  /* Inside a viewport preview the example is the whole document. */
+  &[data-viewport] {
+    background-color: var(--cairn-color-surface);
+  }
 
-    & .cairn-AppShell,
-    & .cairn-AppShellRail,
-    & .cairn-AppShellSidebar {
-      height: 100%;
-      min-height: 100%;
+  &[data-viewport="screen"] {
+    height: 100dvh;
+    padding: 0;
+  }
+}
+
+:root:has(.cairn-CatalogExamplePreview[data-viewport]) {
+  scrollbar-gutter: auto;
+}
+
+:root:has(.cairn-CatalogExamplePreview[data-viewport="content"]) {
+  overflow: hidden;
+}
+
+/* Viewport preview */
+
+.cairn-CatalogViewport {
+  background-color: var(--cairn-color-surface-muted);
+}
+
+.cairn-CatalogViewportToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cairn-space-2);
+  padding: var(--cairn-space-2) var(--cairn-space-3);
+  border-bottom: var(--cairn-border-width) solid var(--cairn-color-border);
+  background-color: var(--cairn-color-surface);
+}
+
+.cairn-CatalogViewportPresets {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--cairn-radius-control);
+  background-color: var(--cairn-color-surface-muted);
+}
+
+.cairn-CatalogViewportPreset {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--cairn-space-1);
+  height: calc(var(--cairn-control-height-sm) - 4px);
+  padding-inline: var(--cairn-space-2);
+  border: 0;
+  border-radius: calc(var(--cairn-radius-control) - 2px);
+  background: transparent;
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: calc(var(--cairn-control-height-sm) - 4px);
+  cursor: pointer;
+  transition:
+    background-color var(--cairn-duration-fast) var(--cairn-ease-standard),
+    color var(--cairn-duration-fast) var(--cairn-ease-standard);
+
+  &:hover {
+    color: var(--cairn-color-text);
+  }
+
+  &[aria-pressed="true"] {
+    background-color: var(--cairn-color-surface);
+    box-shadow: var(--cairn-elevation-control);
+    color: var(--cairn-accent-text);
+  }
+}
+
+.cairn-CatalogViewportPresetWidth {
+  color: var(--cairn-color-text-muted);
+  font-family: var(--cairn-font-code);
+  font-size: var(--cairn-text-caption-size);
+  font-weight: var(--cairn-weight-regular);
+}
+
+.cairn-CatalogViewportSize {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cairn-space-2);
+  margin-inline-start: auto;
+  color: var(--cairn-color-text-muted);
+  font-family: var(--cairn-font-code);
+  font-size: var(--cairn-text-caption-size);
+  font-variant-numeric: tabular-nums;
+}
+
+.cairn-CatalogViewportScale {
+  padding: 0 var(--cairn-space-1);
+  border-radius: var(--cairn-radius-indicator);
+  background-color: var(--cairn-color-surface-muted);
+}
+
+.cairn-CatalogViewportStage {
+  display: flex;
+  justify-content: center;
+  padding: var(--cairn-space-5) var(--cairn-space-6);
+
+  [data-viewport="screen"] > & {
+    padding-bottom: var(--cairn-space-6);
+  }
+
+  &[data-resizing] {
+    user-select: none;
+
+    & .cairn-CatalogViewportDocument {
+      pointer-events: none;
     }
+  }
+}
 
-    & .cairn-AppShellContent {
-      padding: var(--cairn-space-5);
+.cairn-CatalogViewportFrame {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cairn-CatalogViewportScreen {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--cairn-radius-panel);
+  background-color: var(--cairn-color-surface);
+  box-shadow:
+    0 0 0 var(--cairn-border-width) var(--cairn-color-border),
+    var(--cairn-elevation-card);
+}
+
+.cairn-CatalogViewportDocument {
+  display: block;
+  border: 0;
+  transform-origin: 0 0;
+}
+
+.cairn-CatalogViewportHandle {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: var(--cairn-radius-pill);
+  touch-action: none;
+
+  &::before {
+    content: "";
+    border-radius: var(--cairn-radius-pill);
+    background-color: var(--cairn-color-border-strong);
+    transition: background-color var(--cairn-duration-fast) var(--cairn-ease-standard);
+  }
+
+  &:hover::before,
+  &:active::before,
+  &:focus-visible::before {
+    background-color: var(--cairn-accent-solid);
+  }
+
+  &[data-axis="x"] {
+    inset-block: 0;
+    left: 100%;
+    width: var(--cairn-space-5);
+    cursor: ew-resize;
+
+    &::before {
+      width: var(--cairn-space-1);
+      height: min(var(--cairn-space-8), 50%);
+    }
+  }
+
+  &[data-axis="y"] {
+    inset-inline: 0;
+    top: 100%;
+    height: var(--cairn-space-5);
+    cursor: ns-resize;
+
+    &::before {
+      width: min(var(--cairn-space-8), 50%);
+      height: var(--cairn-space-1);
     }
   }
 }

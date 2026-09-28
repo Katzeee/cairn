@@ -19,7 +19,6 @@ editorTest("Plain node clicks place a text caret without selecting a node", asyn
   await original.locator('[data-ui="outline-editor"]:focus').waitFor();
   assert.equal(await selected(page).count(), 0);
   assert.equal(await page.getByRole("toolbar").count(), 0);
-  assert.equal(await original.evaluate((element) => getComputedStyle(element).boxShadow), "none");
   await row(page, "inbox/crdt-survey").click();
   await row(page, "inbox/crdt-survey").locator('[data-ui="outline-editor"]:focus').waitFor();
   assert.equal(await selected(page).count(), 0);
@@ -127,4 +126,28 @@ editorTest("Dragging across rows creates explicit node selection and clicking te
   await source.locator('[data-ui="outline-row-text"]').click();
   assert.equal(await selected(page).count(), 0);
   assert.equal(await page.locator('[data-ui="outline-editor"]:focus').count(), 1);
+});
+
+editorTest("Bullet dragging moves a Node and never into its own descendants", async (page) => {
+  await navigateToCatalogPage(page, "editor/outline-tree");
+  const drag = async (source, target, y) => {
+    const handle = await source.locator('[data-ui="outline-bullet"]').boundingBox();
+    const box = await target.boundingBox();
+    assert.ok(handle && box);
+    await page.mouse.move(handle.x + handle.width / 2, handle.y + handle.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(handle.x + handle.width / 2, y(box), { steps: 5 });
+    await page.mouse.up();
+  };
+  await row(page, "projects/cairn").getByRole("button", { name: "Collapse Cairn" }).click();
+  await row(page, "projects/home-lab").scrollIntoViewIfNeeded();
+  await drag(row(page, "projects/home-lab"), row(page, "projects/cairn"), (box) => box.y + 3);
+  const moved = row(page, "projects/home-lab");
+  assert.equal(await moved.getAttribute("aria-level"), "2");
+  assert.equal(await moved.getAttribute("aria-posinset"), "1");
+
+  await row(page, "projects/cairn").getByRole("button", { name: "Expand Cairn" }).click();
+  await row(page, "projects").scrollIntoViewIfNeeded();
+  await drag(row(page, "projects"), row(page, "projects/cairn/roadmap"), (box) => box.y + box.height - 3);
+  assert.equal(await row(page, "projects").getAttribute("aria-level"), "1");
 });

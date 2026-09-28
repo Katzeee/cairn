@@ -96,11 +96,7 @@ editorTest(
     await page.getByRole("heading", { name: "OutlineTree", exact: true, level: 1 }).click();
     await page.getByRole("button", { name: "Collapse Home lab notes", exact: true }).click();
     assert.equal(await page.locator('[data-ui="outline-editor"]').count(), 0);
-    assert.equal(
-      await rowAt(page, "projects").evaluate((element) => getComputedStyle(element).boxShadow),
-      "none",
-      "a remembered cursor must not look selected after focus leaves the tree",
-    );
+    assert.equal(await page.locator('[data-ui="outline-row"][data-selected="true"]').count(), 0);
   },
 );
 

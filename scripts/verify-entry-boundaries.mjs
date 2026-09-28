@@ -63,7 +63,8 @@ async function importsOf(path) {
 
 async function resolveSource(specifierPath) {
   const base = specifierPath.replace(/\.js$/u, "");
-  for (const candidate of [`${base}.ts`, `${base}.tsx`]) {
+  const candidates = specifierPath.endsWith(".json") ? [specifierPath] : [`${base}.ts`, `${base}.tsx`];
+  for (const candidate of candidates) {
     try {
       await readFile(candidate);
       return candidate;

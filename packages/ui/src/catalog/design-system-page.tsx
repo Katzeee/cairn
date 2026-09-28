@@ -1,181 +1,126 @@
-import {
-  catalogPageIcons,
-  catalogSections,
-  componentDocs,
-  findCatalogPage,
-  overviewPage,
-  type CatalogPage,
-  type CatalogComponentId,
-} from "@cairn/design-system-catalog";
-import { useEffect, useState, type ReactNode } from "react";
+import { themeNames, themes, type CairnThemeName } from "@cairn/design-tokens";
+import { useEffect, useState } from "react";
 
-import { CairnTheme } from "../cairn-theme.js";
 import { AppShell, type AppShellSection, type AppShellUtility } from "../components/app-shell.js";
-import { CatalogModeContext, type CatalogMode, type ThemeName } from "./catalog-theme.js";
-import { FormsPage, StatusPage, SurfacesPage } from "./component-pages.js";
-import { ContentPage } from "./content-page.js";
-import { ColorPage, GeometryPage, TypographyPage } from "./foundation-pages.js";
-import { NavigationPage } from "./navigation-page.js";
-import { OverviewPage } from "./overview-page.js";
-import { OverlaysPage } from "./overlays-page.js";
-import { LayoutPage } from "./layout-page.js";
-import { ProductPreviewPage } from "./product-preview.js";
-import { ThemingPage } from "./theming-page.js";
-import { ComponentReferencePage } from "./component-reference-page.js";
+import { CairnTheme } from "../components/cairn-theme.js";
+import { ToastProvider } from "../components/toast.js";
+import { ComponentPage } from "./docs/component-page.js";
+import {
+  ColorPage,
+  ElevationAndMotionPage,
+  SpaceAndShapePage,
+  ThemesPage,
+  TypographyPage,
+} from "./pages/foundations.js";
+import { OverviewPage } from "./pages/overview.js";
+import { catalogSections, components, findCatalogPage, overviewPage, type CatalogPage, type ComponentId } from "./registry.js";
 
-function currentCatalogPath(): string {
-  const route = window.location.hash.slice("#/design-system".length).split("?")[0] ?? "";
-  return route.replace(/^\/+|\/+$/g, "");
-}
+type Appearance = "light" | "dark";
 
-function initialCatalogAppearance(): Readonly<{
-  mode: CatalogMode;
-  theme: ThemeName;
-}> {
-  const query = window.location.hash.split("?")[1] ?? "";
-  const parameters = new URLSearchParams(query);
-  return {
-    mode: parameters.get("mode") === "dark" ? "dark" : "light",
-    theme: parameters.get("theme") === "slate" ? "slate" : "forest",
-  };
-}
-
-function toShellItem(page: CatalogPage): AppShellSection["items"][number] {
-  return {
-    icon: catalogPageIcons[page.id],
-    id: page.id,
-    label: page.title,
-    target: `#/design-system/${page.path}`,
-  };
-}
+const route = () => {
+  const [path = "", query = ""] = window.location.hash.slice("#/design-system".length).split("?");
+  return { path: path.replace(/^\/+|\/+$/g, ""), query: new URLSearchParams(query) };
+};
 
 const shellSections: readonly AppShellSection[] = [
-  { id: "overview", items: [toShellItem(overviewPage)] },
+  { id: "overview", items: [{ id: overviewPage.id, label: overviewPage.title, target: "#/design-system" }] },
   ...catalogSections.map((section) => ({
     id: section.id,
-    items: section.pages.map(toShellItem),
     label: section.title,
+    items: section.pages.map((page) => ({
+      id: page.id,
+      label: page.title,
+      target: `#/design-system/${page.path}`,
+    })),
   })),
 ];
 
-export function DesignSystemPage({ productPreview }: Readonly<{ productPreview?: ReactNode }>) {
-  const [initialAppearance] = useState(initialCatalogAppearance);
-  const [page, setPage] = useState(() => findCatalogPage(currentCatalogPath()) ?? overviewPage);
-  const [mode, setMode] = useState<CatalogMode>(initialAppearance.mode);
-  const [theme, setTheme] = useState<ThemeName>(initialAppearance.theme);
+export function DesignSystemPage() {
+  const [page, setPage] = useState(() => findCatalogPage(route().path) ?? overviewPage);
+  const [appearance, setAppearance] = useState<Appearance>(() => (route().query.get("mode") === "dark" ? "dark" : "light"));
+  const [theme, setTheme] = useState<CairnThemeName>(() => {
+    const requested = route().query.get("theme");
+    return themeNames.find((name) => name === requested) ?? "forest";
+  });
 
   useEffect(() => {
-    const previousScrollRestoration = history.scrollRestoration;
+    const root = document.documentElement;
+    const previous = root.dataset.cairnTheme;
+    root.dataset.cairnTheme = theme;
+    return () => {
+      if (previous === undefined) delete root.dataset.cairnTheme;
+      else root.dataset.cairnTheme = previous;
+    };
+  }, [theme]);
+
+  useEffect(() => {
+    const previousRestoration = history.scrollRestoration;
     history.scrollRestoration = "manual";
+    let frame: number | undefined;
     const scrollToSection = () => {
-      const section = new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("section");
+      const section = route().query.get("section");
       if (section === null) window.scrollTo({ left: 0, top: 0 });
       else document.getElementById(section)?.scrollIntoView();
     };
-    scrollToSection();
-    let frame: number | undefined;
-    const updatePage = () => {
-      setPage(findCatalogPage(currentCatalogPath()) ?? overviewPage);
+    const update = () => {
+      setPage(findCatalogPage(route().path) ?? overviewPage);
       if (frame !== undefined) cancelAnimationFrame(frame);
-      if (new URLSearchParams(window.location.hash.split("?")[1] ?? "").has("section")) {
-        frame = requestAnimationFrame(scrollToSection);
-      } else {
-        scrollToSection();
-      }
+      frame = requestAnimationFrame(scrollToSection);
     };
-    window.addEventListener("hashchange", updatePage);
+    scrollToSection();
+    window.addEventListener("hashchange", update);
     return () => {
-      history.scrollRestoration = previousScrollRestoration;
+      history.scrollRestoration = previousRestoration;
       if (frame !== undefined) cancelAnimationFrame(frame);
-      window.removeEventListener("hashchange", updatePage);
+      window.removeEventListener("hashchange", update);
     };
   }, []);
 
+  const nextTheme = themeNames[(themeNames.indexOf(theme) + 1) % themeNames.length]!;
   const utilities: readonly AppShellUtility[] = [
     {
-      icon: mode === "light" ? "moon" : "sun",
-      id: "mode",
-      label: mode === "light" ? "Switch to dark mode" : "Switch to light mode",
-      onSelect: () => setMode(mode === "light" ? "dark" : "light"),
+      icon: "palette",
+      id: "theme",
+      label: `Switch to ${themes[nextTheme].label}`,
+      onSelect: () => setTheme(nextTheme),
+    },
+    {
+      icon: appearance === "light" ? "moon" : "sun",
+      id: "appearance",
+      label: appearance === "light" ? "Switch to dark" : "Switch to light",
+      onSelect: () => setAppearance(appearance === "light" ? "dark" : "light"),
     },
   ];
 
   return (
-    <CairnTheme appearance={mode} theme={theme}>
-      <CatalogModeContext.Provider value={mode}>
+    <CairnTheme appearance={appearance}>
+      <ToastProvider>
         <div data-ui="design-system">
-          <AppShell activeItemId={page.id} brand="Cairn Design System" sections={shellSections} utilities={utilities}>
-            <main className="mx-auto w-full max-w-280 px-4 py-6 @shell-medium/app-shell:px-10 @shell-medium/app-shell:py-10">
-              <PageContent
-                key={page.id}
-                onThemeChange={setTheme}
-                page={page}
-                productPreview={productPreview}
-                theme={theme}
-              />
-              <footer className="mt-16 border-t border-border pt-6 text-caption text-muted-foreground">
-                Cairn Design System — one token source, one component layer.
-              </footer>
+          <AppShell activeItemId={page.id} brand="Cairn" sections={shellSections} utilities={utilities}>
+            <main className="cairn-CatalogContent">
+              <PageContent key={page.id} page={page} theme={theme} />
             </main>
           </AppShell>
         </div>
-      </CatalogModeContext.Provider>
+      </ToastProvider>
     </CairnTheme>
   );
 }
 
-function PageContent({
-  onThemeChange,
-  page,
-  productPreview,
-  theme,
-}: Readonly<{
-  onThemeChange(theme: ThemeName): void;
-  page: CatalogPage;
-  productPreview?: ReactNode;
-  theme: ThemeName;
-}>) {
-  if (Object.hasOwn(componentDocs, page.id)) return <ComponentReferencePage id={page.id as CatalogComponentId} />;
+function PageContent({ page, theme }: Readonly<{ page: CatalogPage; theme: CairnThemeName }>) {
+  if (Object.hasOwn(components, page.id)) return <ComponentPage id={page.id as ComponentId} />;
   switch (page.id) {
-    case "overview": {
+    case "themes":
+      return <ThemesPage />;
+    case "color":
+      return <ColorPage theme={theme} />;
+    case "typography":
+      return <TypographyPage theme={theme} />;
+    case "space-and-shape":
+      return <SpaceAndShapePage theme={theme} />;
+    case "elevation-and-motion":
+      return <ElevationAndMotionPage theme={theme} />;
+    default:
       return <OverviewPage />;
-    }
-    case "color": {
-      return <ColorPage />;
-    }
-    case "theming": {
-      return <ThemingPage onThemeChange={onThemeChange} theme={theme} />;
-    }
-    case "typography": {
-      return <TypographyPage />;
-    }
-    case "content": {
-      return <ContentPage />;
-    }
-    case "geometry": {
-      return <GeometryPage />;
-    }
-    case "forms": {
-      return <FormsPage />;
-    }
-    case "navigation": {
-      return <NavigationPage />;
-    }
-    case "overlays": {
-      return <OverlaysPage />;
-    }
-    case "status": {
-      return <StatusPage />;
-    }
-    case "surfaces": {
-      return <SurfacesPage />;
-    }
-    case "layouts": {
-      return <LayoutPage />;
-    }
-    case "product": {
-      return <ProductPreviewPage>{productPreview}</ProductPreviewPage>;
-    }
   }
-  return <OverviewPage />;
 }

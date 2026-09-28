@@ -20,25 +20,25 @@ export function OutlineRowContent({
   trailing?: ReactNode;
 }>) {
   return (
-    <div className={cn("flex min-w-0 flex-1 items-start gap-1.5", className)} data-ui="outline-row-content">
-      {leading === undefined ? null : <span className="mt-0.5 shrink-0">{leading}</span>}
-      <div className="min-w-0 flex-1">
-        <div className="min-w-0 whitespace-pre-wrap break-words">
+    <div className={cn("cairn-OutlineRowContent", className)} data-ui="outline-row-content">
+      {leading === undefined ? null : <span className="cairn-OutlineRowLeading">{leading}</span>}
+      <div className="cairn-OutlineRowMain">
+        <div className="cairn-OutlineRowLine">
           {prefix === undefined ? null : (
-            <span className="mr-1.5 font-medium text-primary" data-ui="outline-row-prefix">
+            <span className="cairn-OutlineRowPrefix" data-ui="outline-row-prefix">
               {prefix}
             </span>
           )}
           {children}
           {suffix}
           {trailing === undefined ? null : (
-            <span className="ml-1.5 inline-flex align-middle" data-ui="outline-row-trailing">
+            <span className="cairn-OutlineRowTrailing" data-ui="outline-row-trailing">
               {trailing}
             </span>
           )}
         </div>
         {details === undefined ? null : (
-          <div className="mt-0.5 text-caption text-muted-foreground" data-ui="outline-row-details">
+          <div className="cairn-OutlineRowDetails" data-ui="outline-row-details">
             {details}
           </div>
         )}
@@ -57,11 +57,11 @@ export function OutlineRowProgress({ label, max, value }: Readonly<{ label?: str
       aria-valuemax={boundedMax}
       aria-valuemin={0}
       aria-valuenow={boundedValue}
-      className="inline-flex items-center gap-1.5"
+      className="cairn-OutlineProgress"
       role="progressbar"
     >
-      <span className="h-1 w-20 overflow-hidden rounded-full bg-secondary">
-        <span className="block h-full rounded-full bg-primary" style={{ width: `${String(percentage)}%` }} />
+      <span className="cairn-OutlineProgressTrack">
+        <span className="cairn-OutlineProgressIndicator" style={{ width: `${String(percentage)}%` }} />
       </span>
       <span>{label ?? `${String(boundedValue)} / ${String(boundedMax)}`}</span>
     </span>

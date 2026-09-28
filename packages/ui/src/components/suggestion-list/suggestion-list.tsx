@@ -1,9 +1,7 @@
 import { useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 
-import { CairnPortalTheme } from "../../cairn-theme.js";
-import { menuItemClassName, menuPopupClassName } from "../dropdown-menu.js";
-import { cn } from "../cn.js";
+import { usePortalContainer } from "../internal/portal-container.js";
 import {
   activeSuggestionId,
   pageSuggestionId,
@@ -152,69 +150,63 @@ export function SuggestionList<Item extends SuggestionItem>({
   panelRef: RefObject<HTMLDivElement | null>;
   renderItem?: (item: Item, active: boolean) => ReactNode;
 }>) {
-  return createPortal(
-    <CairnPortalTheme>
-      <div
-        className={`${menuPopupClassName} fixed z-50 flex max-h-64 w-72 max-w-full flex-col`}
-        onMouseDown={(event) => event.preventDefault()}
-        ref={panelRef}
-      >
-        <div className="shrink-0 px-2.5 pb-1 pt-1.5 text-caption font-medium text-muted-foreground">{heading}</div>
-        <div
-          aria-label={label}
-          className="min-h-0 overflow-y-auto"
-          id={controller.listId}
-          ref={controller.listRef}
-          role="listbox"
-        >
-          {items.length === 0 ? (
-            <div className="px-2.5 py-2 text-label text-muted-foreground" role="status">
-              {emptyLabel}
-            </div>
-          ) : (
-            items.map((item) => {
-              const active = item.id === controller.activeId;
-              return (
-                <button
-                  aria-selected={active}
-                  className={cn(menuItemClassName(undefined), "w-full items-start text-left")}
-                  data-highlighted={active ? "" : undefined}
-                  id={controller.optionId(item.id)}
-                  key={item.id}
-                  onClick={() => controller.accept(item)}
-                  onMouseDown={(event) => event.preventDefault()}
-                  role="option"
-                  tabIndex={-1}
-                  type="button"
-                >
-                  {renderItem?.(item, active) ?? (
-                    <>
-                      {item.leading === undefined ? null : (
-                        <span
-                          aria-hidden
-                          className="mt-0.5 grid size-4 shrink-0 place-items-center text-muted-foreground"
-                          data-ui="suggestion-leading"
-                        >
-                          {item.leading}
-                        </span>
-                      )}
-                      <span className="flex min-w-0 flex-1 flex-col items-start">
-                        <span className="font-medium">{item.label}</span>
-                        {item.description === undefined ? null : (
-                          <span className="max-w-full truncate text-caption text-muted-foreground">
-                            {item.description}
+  const { anchorRef, container } = usePortalContainer();
+  return (
+    <>
+      <span hidden ref={anchorRef} />
+      {createPortal(
+        <div className="cairn-SuggestionPopup" onMouseDown={(event) => event.preventDefault()} ref={panelRef}>
+          <div className="cairn-SuggestionHeading">{heading}</div>
+          <div
+            aria-label={label}
+            className="cairn-SuggestionList"
+            id={controller.listId}
+            ref={controller.listRef}
+            role="listbox"
+          >
+            {items.length === 0 ? (
+              <div className="cairn-SuggestionEmpty" role="status">
+                {emptyLabel}
+              </div>
+            ) : (
+              items.map((item) => {
+                const active = item.id === controller.activeId;
+                return (
+                  <button
+                    aria-selected={active}
+                    className="cairn-PopupItem cairn-SuggestionItem"
+                    data-highlighted={active ? "" : undefined}
+                    id={controller.optionId(item.id)}
+                    key={item.id}
+                    onClick={() => controller.accept(item)}
+                    onMouseDown={(event) => event.preventDefault()}
+                    role="option"
+                    tabIndex={-1}
+                    type="button"
+                  >
+                    {renderItem?.(item, active) ?? (
+                      <>
+                        {item.leading === undefined ? null : (
+                          <span aria-hidden className="cairn-SuggestionLeading" data-ui="suggestion-leading">
+                            {item.leading}
                           </span>
                         )}
-                      </span>
-                    </>
-                  )}
-                </button>
-              );
-            })
-          )}
-        </div>
-      </div>
-    </CairnPortalTheme>,
-    document.body,
+                        <span className="cairn-SuggestionText">
+                          <span className="cairn-SuggestionLabel">{item.label}</span>
+                          {item.description === undefined ? null : (
+                            <span className="cairn-SuggestionDescription">{item.description}</span>
+                          )}
+                        </span>
+                      </>
+                    )}
+                  </button>
+                );
+              })
+            )}
+          </div>
+        </div>,
+        container ?? document.body,
+      )}
+    </>
   );
 }

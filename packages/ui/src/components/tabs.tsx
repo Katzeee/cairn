@@ -1,58 +1,46 @@
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
-import type { ReactNode } from "react";
 
-import type { ElementProps } from "./element-props.js";
+import type { ElementProps } from "./internal/element-props.js";
 
-export type TabsProps = ElementProps<"div", "defaultValue" | "onChange"> &
+export type TabsRootProps = ElementProps<"div", "defaultValue" | "onChange"> &
   Readonly<{
+    value?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     orientation?: "horizontal" | "vertical";
-    value?: string;
   }>;
 
-export function Tabs({ onValueChange, ...properties }: TabsProps) {
+function Root({ onValueChange, ...props }: TabsRootProps) {
   return (
     <BaseTabs.Root
-      {...properties}
-      className="flex flex-col"
+      {...props}
+      className="cairn-TabsRoot"
       onValueChange={onValueChange === undefined ? undefined : (value) => onValueChange(String(value))}
     />
   );
 }
 
-export type TabsListProps = ElementProps<"div"> & Readonly<{ children?: ReactNode }>;
+export type TabsListProps = ElementProps<"div">;
 
-export function TabsList({ children, ...properties }: TabsListProps) {
+function List({ children, ...props }: TabsListProps) {
   return (
-    <BaseTabs.List {...properties} className="relative flex gap-1 border-b border-border">
+    <BaseTabs.List {...props} className="cairn-TabsList">
       {children}
-      <BaseTabs.Indicator
-        className="absolute bottom-0 h-0.5 rounded-full bg-primary transition-[left,width] duration-(--cairn-duration-fast) ease-(--cairn-ease-standard)"
-        style={{ left: "var(--active-tab-left)", width: "var(--active-tab-width)" }}
-      />
+      <BaseTabs.Indicator className="cairn-TabsIndicator" />
     </BaseTabs.List>
   );
 }
 
-export type TabProps = ElementProps<"button", "value"> & Readonly<{ value: string }>;
+export type TabsTriggerProps = ElementProps<"button", "value"> & Readonly<{ value: string }>;
 
-export function Tab(properties: TabProps) {
-  return (
-    <BaseTabs.Tab
-      {...properties}
-      className="rounded-t-sm px-3 py-2 text-label font-medium text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/45 data-disabled:opacity-50 data-selected:text-foreground"
-    />
-  );
+function Trigger(props: TabsTriggerProps) {
+  return <BaseTabs.Tab {...props} className="cairn-TabsTrigger" />;
 }
 
-export type TabPanelProps = ElementProps<"div"> & Readonly<{ keepMounted?: boolean; value: string }>;
+export type TabsContentProps = ElementProps<"div"> & Readonly<{ value: string; keepMounted?: boolean }>;
 
-export function TabPanel(properties: TabPanelProps) {
-  return (
-    <BaseTabs.Panel
-      {...properties}
-      className="pt-4 text-body outline-none focus-visible:ring-2 focus-visible:ring-ring/45"
-    />
-  );
+function Content(props: TabsContentProps) {
+  return <BaseTabs.Panel {...props} className="cairn-TabsContent" />;
 }
+
+export const Tabs = { Root, List, Trigger, Content };

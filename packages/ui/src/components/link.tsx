@@ -1,10 +1,7 @@
-import type { ElementProps } from "./element-props.js";
+import type { ElementProps } from "./internal/element-props.js";
 
-export function Link(properties: ElementProps<"a">) {
-  return (
-    <a
-      {...properties}
-      className="rounded-xs text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-    />
-  );
+export type LinkProps = ElementProps<"a"> & Readonly<{ underline?: "always" | "hover" }>;
+
+export function Link({ underline = "always", ...props }: LinkProps) {
+  return <a {...props} className="cairn-Link cairn-Focusable" data-underline={underline} />;
 }

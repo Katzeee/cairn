@@ -1,8 +1,6 @@
-const rawColorPattern = /#[0-9a-fA-F]{3,8}(?![\w/-])|\b(?:rgba?|hsla?|oklch)\(/;
-const arbitraryUtilityPattern =
-  /(?:^|[\s"'`:])(?:bg|text|border|ring|fill|stroke|shadow|rounded|gap|[pm][trblxyse]?|space-[xy])-\[/;
-const arbitraryAbsoluteSizePattern =
-  /(?:^|[\s"'`:])(?:size|w|h|max-w|min-w|max-h|min-h|inset|top|right|bottom|left)-\[[^\]]*(?:px|rem)/;
+const rawColorPattern = /#[0-9a-fA-F]{3,8}(?![\w/-])|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\(/i;
+const absoluteLengthPattern = /(?<![\w.-])\d*\.?\d+(?:px|rem|em|pt)\b/i;
+const primitiveVariablePattern = /var\(--(?!cairn-)/;
 const disableDirectivePattern = /^\s*eslint-disable(?:-next-line|-line)?\b/;
 
 const noRawVisualValues = {
@@ -16,13 +14,19 @@ const noRawVisualValues = {
         context.report({
           node,
           messageId: "restricted",
-          data: { message: "Colors resolve from semantic design tokens, never raw color literals." },
+          data: { message: "Colors come from Cairn color roles such as var(--cairn-color-text), never raw literals." },
         });
-      } else if (arbitraryUtilityPattern.test(value) || arbitraryAbsoluteSizePattern.test(value)) {
+      } else if (primitiveVariablePattern.test(value)) {
         context.report({
           node,
           messageId: "restricted",
-          data: { message: "Token-owned utilities do not take arbitrary absolute values." },
+          data: { message: "Read Cairn semantic tokens (--cairn-*); palette steps stay behind the roles a theme binds." },
+        });
+      } else if (absoluteLengthPattern.test(value)) {
+        context.report({
+          node,
+          messageId: "restricted",
+          data: { message: "Lengths come from Cairn space, radius, or typography tokens." },
         });
       }
     };

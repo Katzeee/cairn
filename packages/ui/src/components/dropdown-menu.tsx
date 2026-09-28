@@ -1,54 +1,66 @@
 import { Menu } from "@base-ui/react/menu";
-import type { IconName } from "@cairn/design-system-catalog";
+import type { ReactElement, ReactNode } from "react";
 
-import { CairnPortalTheme } from "../cairn-theme.js";
-import { Button } from "./button.js";
-import { Icon } from "./icon.js";
+import { usePortalContainer } from "./internal/portal-container.js";
+import { CheckboxItem, Group, Item, Label, RadioGroup, RadioItem, Separator, Sub, SubTrigger } from "./internal/menu-parts.js";
 
-export type DropdownMenuItem = Readonly<{
-  disabled?: boolean;
-  icon?: IconName;
-  label: string;
-  onSelect: () => void;
-  tone?: "default" | "destructive";
+export type { MenuCheckboxItemProps, MenuItemProps, MenuRadioGroupProps, MenuRadioItemProps } from "./internal/menu-parts.js";
+
+export type DropdownMenuRootProps = Readonly<{
+  children: ReactNode;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }>;
 
-// Dropdown and context menus render identical items from identical data.
-export const menuPopupClassName =
-  "cairn-overlay-popup min-w-52 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none";
+export type DropdownMenuContentProps = Readonly<{
+  children: ReactNode;
+  side?: "top" | "bottom" | "left" | "right";
+  align?: "start" | "center" | "end";
+}>;
 
-export function menuItemClassName(tone: DropdownMenuItem["tone"]): string {
-  return tone === "destructive"
-    ? "flex cursor-default items-center gap-2 rounded-sm px-2.5 py-2 text-label text-destructive outline-none data-disabled:opacity-50 data-highlighted:bg-destructive-subtle data-highlighted:text-destructive-strong"
-    : "flex cursor-default items-center gap-2 rounded-sm px-2.5 py-2 text-label outline-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground";
+function Root({ children, ...props }: DropdownMenuRootProps) {
+  return <Menu.Root {...props}>{children}</Menu.Root>;
 }
 
-export function DropdownMenu({ items, label }: Readonly<{ items: readonly DropdownMenuItem[]; label: string }>) {
+function Trigger({ children }: Readonly<{ children: ReactElement }>) {
+  return <Menu.Trigger render={children} />;
+}
+
+function Popup({ children, side, align, sideOffset }: DropdownMenuContentProps & Readonly<{ sideOffset: number }>) {
+  const { anchorRef, container } = usePortalContainer();
   return (
-    <Menu.Root>
-      <Menu.Trigger render={<Button size="sm" variant="outline" />}>
-        {label}
-        <Icon name="chevron-down" size="sm" />
-      </Menu.Trigger>
-      <Menu.Portal>
-        <CairnPortalTheme>
-          <Menu.Positioner align="start" className="z-50 outline-none" sideOffset={8}>
-            <Menu.Popup className={menuPopupClassName}>
-              {items.map((item) => (
-                <Menu.Item
-                  className={menuItemClassName(item.tone)}
-                  disabled={item.disabled}
-                  key={item.label}
-                  onClick={item.onSelect}
-                >
-                  {item.icon === undefined ? null : <Icon name={item.icon} size="sm" />}
-                  {item.label}
-                </Menu.Item>
-              ))}
-            </Menu.Popup>
-          </Menu.Positioner>
-        </CairnPortalTheme>
+    <>
+      <span hidden ref={anchorRef} />
+      <Menu.Portal container={container}>
+        <Menu.Positioner align={align} className="cairn-Positioner" side={side} sideOffset={sideOffset}>
+          <Menu.Popup className="cairn-Popup">{children}</Menu.Popup>
+        </Menu.Positioner>
       </Menu.Portal>
-    </Menu.Root>
+    </>
   );
 }
+
+function Content({ align = "start", ...props }: DropdownMenuContentProps) {
+  return <Popup {...props} align={align} sideOffset={8} />;
+}
+
+function SubContent({ children }: Readonly<{ children: ReactNode }>) {
+  return <Popup sideOffset={4}>{children}</Popup>;
+}
+
+export const DropdownMenu = {
+  Root,
+  Trigger,
+  Content,
+  Item,
+  CheckboxItem,
+  RadioGroup,
+  RadioItem,
+  Label,
+  Group,
+  Separator,
+  Sub,
+  SubTrigger,
+  SubContent,
+};

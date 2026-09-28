@@ -1,0 +1,603 @@
+@import "../../components/node-editor/geometry.css";
+
+.cairn-outline-tree {
+  position: relative;
+  font-family: var(--cairn-font-document);
+  width: 100%;
+  border-radius: var(--cairn-radius-selection);
+  color: var(--cairn-color-text);
+  font-size: var(--cairn-text-document-size);
+  line-height: var(--cairn-text-document-line-height);
+  outline: none;
+}
+
+:where([data-ui="outline-node"][data-selection-root="true"])::before {
+  position: absolute;
+  inset-block: var(--cairn-space-1);
+  inset-inline: -1.5px 0;
+  border-radius: var(--cairn-radius-selection);
+  background-color: var(--cairn-accent-subtle-hover);
+  content: "";
+  pointer-events: none;
+}
+
+:where(
+  [data-selection-root-row="true"],
+  [data-ui="outline-node"][data-selection-root="true"][data-children-layout="beside"]
+)::after {
+  position: absolute;
+  inset-block: var(--cairn-space-1);
+  inset-inline: -1.5px 0;
+  box-shadow: inset 0 0 0 1px var(--cairn-accent-border-strong);
+  border-radius: var(--cairn-radius-selection);
+  content: "";
+  pointer-events: none;
+}
+
+:where(
+  [data-ui="outline-node"][data-children-layout="beside"] > .cairn-outline-layout > [data-selection-root-row="true"]
+)::after {
+  content: none;
+}
+
+:where([data-ui="outline-row"][data-object-focused="true"]:not([data-selected="true"]))::after {
+  position: absolute;
+  inset-block: var(--cairn-space-1);
+  inset-inline: -1.5px 0;
+  box-shadow: inset 0 0 0 1px var(--cairn-accent-border);
+  border-radius: var(--cairn-radius-selection);
+  content: "";
+  pointer-events: none;
+}
+
+.cairn-OutlineNode {
+  position: relative;
+  min-width: 0;
+  container: outline-node / inline-size;
+}
+
+.cairn-OutlineLayoutBeside {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@container outline-node (min-width: 424px) {
+  .cairn-OutlineLayoutBeside {
+    grid-template-columns: var(--cairn-outline-field-column) minmax(0, 1fr);
+  }
+}
+
+.cairn-OutlineChildren {
+  min-width: 0;
+}
+
+.cairn-OutlineChildren[data-indented="true"] {
+  position: relative;
+  padding-inline-start: var(--cairn-outline-indent);
+}
+
+.cairn-OutlineGuide {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--cairn-space-3);
+  width: 1px;
+  background-color: var(--cairn-color-border);
+}
+
+.cairn-OutlineBesideChildren {
+  min-width: 0;
+  padding-inline-start: var(--cairn-space-5);
+}
+
+.cairn-OutlineRow {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: var(--cairn-outline-gap);
+  padding-block: var(--cairn-outline-row-padding);
+  padding-inline-end: var(--cairn-space-2);
+  border-radius: var(--cairn-radius-selection);
+}
+
+.cairn-OutlineRow[data-dragged="true"] {
+  background-color: var(--cairn-accent-subtle-hover);
+  box-shadow: inset 0 0 0 1px var(--cairn-accent-border);
+}
+
+.cairn-OutlineRowBody,
+.cairn-OutlineRowMain {
+  min-width: 0;
+  flex: 1;
+}
+
+.cairn-OutlineRowBody {
+  font-size: var(--cairn-text-document-size);
+  line-height: var(--cairn-text-document-line-height);
+}
+
+.cairn-OutlineRowText,
+.cairn-OutlineRowContent {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+}
+
+.cairn-OutlineRowText {
+  max-width: 100%;
+  min-height: 1lh;
+}
+
+.cairn-OutlineRowContent {
+  flex: 1;
+  gap: var(--cairn-space-2);
+}
+
+.cairn-OutlineRowLeading {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 1lh;
+}
+
+.cairn-OutlineRowLine {
+  min-width: 0;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.cairn-OutlineRowPrefix {
+  margin-inline-end: var(--cairn-space-2);
+  color: var(--cairn-accent-text);
+  font-weight: var(--cairn-weight-medium);
+}
+
+.cairn-OutlineRowTrailing {
+  display: inline-flex;
+  margin-inline-start: var(--cairn-space-2);
+  vertical-align: middle;
+}
+
+.cairn-OutlineRowDetails {
+  margin-block-start: var(--cairn-space-1);
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+}
+
+.cairn-OutlineMuted {
+  color: var(--cairn-color-text-muted);
+}
+.cairn-OutlineStruck {
+  text-decoration: line-through;
+}
+.cairn-OutlineMedium {
+  font-weight: var(--cairn-weight-medium);
+}
+.cairn-OutlineNavigate {
+  cursor: pointer;
+}
+.cairn-OutlineObject {
+  cursor: default;
+}
+.cairn-OutlineEditable {
+  cursor: text;
+}
+
+.cairn-outline-readonly {
+  cursor:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20stroke%3D%22%23484848%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3.5%2013.3%2013.4%202.5a1.45%201.45%200%200%201%202.1%200l1.8%201.8a1.45%201.45%200%200%201%200%202.1L6.8%2016.5H3.5Z%22%2F%3E%3Cpath%20d%3D%22m11.6%204.5%203.9%203.9M2.8%205.1l12%2012%22%2F%3E%3C%2Fsvg%3E")
+      10 10,
+    default;
+}
+
+:root[data-cairn-appearance="dark"] .cairn-outline-readonly {
+  cursor:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20stroke%3D%22%23c6c6c6%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3.5%2013.3%2013.4%202.5a1.45%201.45%200%200%201%202.1%200l1.8%201.8a1.45%201.45%200%200%201%200%202.1L6.8%2016.5H3.5Z%22%2F%3E%3Cpath%20d%3D%22m11.6%204.5%203.9%203.9M2.8%205.1l12%2012%22%2F%3E%3C%2Fsvg%3E")
+      10 10,
+    default;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-cairn-appearance]) .cairn-outline-readonly {
+    cursor:
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20stroke%3D%22%23c6c6c6%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3.5%2013.3%2013.4%202.5a1.45%201.45%200%200%201%202.1%200l1.8%201.8a1.45%201.45%200%200%201%200%202.1L6.8%2016.5H3.5Z%22%2F%3E%3Cpath%20d%3D%22m11.6%204.5%203.9%203.9M2.8%205.1l12%2012%22%2F%3E%3C%2Fsvg%3E")
+        10 10,
+      default;
+  }
+}
+
+.cairn-OutlineControl,
+.cairn-OutlineEmptyMark {
+  position: relative;
+  display: flex;
+  width: var(--cairn-outline-bullet);
+  height: 1lh;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.cairn-OutlineDisclosure {
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--cairn-space-5));
+  display: grid;
+  width: var(--cairn-space-5);
+  height: var(--cairn-space-5);
+  place-items: center;
+  border: 0;
+  border-radius: var(--cairn-radius-selection);
+  background: transparent;
+  color: var(--cairn-color-text-muted);
+  opacity: 0;
+  outline: none;
+  transition:
+    opacity var(--cairn-duration-fast),
+    color var(--cairn-duration-fast),
+    background-color var(--cairn-duration-fast);
+}
+
+.cairn-OutlineDisclosure[data-expanded="true"] {
+  opacity: 0.5;
+}
+.cairn-OutlineDisclosure[data-hidden="true"] {
+  visibility: hidden;
+}
+.cairn-OutlineRow:hover .cairn-OutlineDisclosure,
+.cairn-OutlineDisclosure:hover {
+  opacity: 1;
+}
+.cairn-OutlineDisclosure:hover {
+  background-color: var(--cairn-accent-subtle-hover);
+  color: var(--cairn-accent-text);
+}
+.cairn-OutlineDisclosure:focus-visible,
+.cairn-OutlineBulletButton:focus-visible,
+.cairn-OutlineEmptyChild:focus-visible,
+.cairn-OutlineToolbarAction:focus-visible {
+  outline: 2px solid var(--cairn-color-focus-ring);
+  outline-offset: 1px;
+}
+
+.cairn-OutlineDisclosureIcon {
+  display: inline-flex;
+  transition: transform var(--cairn-duration-fast);
+}
+
+.cairn-OutlineDisclosure[data-expanded="true"] .cairn-OutlineDisclosureIcon {
+  transform: rotate(90deg);
+}
+
+.cairn-OutlineBulletControl {
+  display: grid;
+  width: 100%;
+  height: 1lh;
+  place-items: center;
+  border: 0;
+  border-radius: var(--cairn-radius-pill);
+  background: transparent;
+}
+
+.cairn-OutlineBulletControl[data-draggable="true"] {
+  cursor: grab;
+  touch-action: none;
+}
+.cairn-OutlineBulletControl[data-draggable="true"]:active {
+  cursor: grabbing;
+}
+.cairn-OutlineBulletButton {
+  cursor: pointer;
+  outline: none;
+}
+.cairn-OutlineBulletButton[data-draggable="true"] {
+  cursor: pointer;
+}
+.cairn-OutlineBulletButton[data-draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.cairn-OutlineBulletMark {
+  position: relative;
+  display: grid;
+  width: var(--cairn-outline-bullet);
+  height: var(--cairn-outline-bullet);
+  place-items: center;
+  border-radius: var(--cairn-radius-pill);
+  pointer-events: none;
+  transition:
+    background-color var(--cairn-duration-fast),
+    box-shadow var(--cairn-duration-fast);
+}
+
+.cairn-OutlineBulletMark[data-halo="muted"] {
+  background-color: var(--cairn-color-surface-muted);
+  box-shadow: inset 0 0 0 2px var(--cairn-color-surface-muted);
+}
+.cairn-OutlineBulletMark[data-halo="accent"],
+.cairn-OutlineBulletControl:hover .cairn-OutlineBulletMark {
+  background-color: var(--cairn-accent-subtle-hover);
+  box-shadow: inset 0 0 0 2px var(--cairn-accent-subtle-hover);
+}
+.cairn-OutlineBulletContent {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+.cairn-OutlineReferenceRing {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed var(--cairn-color-border-strong);
+  border-radius: var(--cairn-radius-pill);
+}
+.cairn-OutlineBulletDot {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--cairn-radius-pill);
+  background-color: var(--cairn-color-text-muted);
+}
+.cairn-OutlineBulletDot[data-color="accent"] {
+  background-color: var(--cairn-accent-solid);
+}
+.cairn-OutlineBulletDot[data-quiet="true"] {
+  background-color: var(--cairn-color-text-disabled);
+}
+
+.cairn-OutlineEmptyChild {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: flex-start;
+  gap: var(--cairn-outline-gap);
+  padding-block: var(--cairn-outline-row-padding);
+  padding-inline-end: var(--cairn-space-2);
+  border: 0;
+  border-radius: var(--cairn-radius-selection);
+  background: transparent;
+  color: var(--cairn-color-text);
+  font-size: var(--cairn-text-document-size);
+  line-height: var(--cairn-text-document-line-height);
+  text-align: start;
+  outline: none;
+  transition: background-color var(--cairn-duration-fast);
+}
+
+.cairn-OutlineEmptyChild:hover {
+  background-color: var(--cairn-accent-subtle);
+}
+.cairn-OutlineEmptyBullet {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+.cairn-OutlineEmptyMark {
+  display: grid;
+  place-items: center;
+  border-radius: var(--cairn-radius-pill);
+}
+.cairn-OutlineEmptyChild:hover .cairn-OutlineEmptyMark {
+  background-color: var(--cairn-color-surface-muted);
+}
+.cairn-OutlineEmptyBody {
+  min-width: 0;
+  flex: 1;
+}
+.cairn-OutlineEmptyLine {
+  display: block;
+  min-height: 1lh;
+}
+
+.cairn-OutlineInlineContent {
+  display: inline-block;
+  min-height: 1lh;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  vertical-align: top;
+}
+.cairn-OutlinePlaceholder {
+  color: var(--cairn-color-text-muted);
+  user-select: none;
+}
+.cairn-OutlineSourceContent {
+  display: inline-flex;
+  max-width: 100%;
+  min-height: 1lh;
+  align-items: center;
+  vertical-align: top;
+}
+.cairn-OutlineSourceContent > * {
+  min-width: 0;
+}
+.cairn-OutlineTextEditor {
+  display: inline-block;
+  width: max-content;
+  max-width: 100%;
+  min-width: calc(var(--cairn-space-8) * 2);
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  color: inherit;
+  outline: none;
+}
+.cairn-OutlineTextEditor p {
+  margin: 0;
+}
+.cairn-OutlineEditorBox {
+  position: relative;
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  vertical-align: top;
+}
+.cairn-OutlineEditorInput {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+}
+.cairn-OutlineEditorBox[data-empty="true"],
+.cairn-OutlineEditorInput[data-empty="true"] {
+  width: 100%;
+  min-width: var(--cairn-space-7);
+}
+.cairn-OutlineEditorPlaceholder {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  overflow: hidden;
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-document-size);
+  line-height: var(--cairn-text-document-line-height);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.cairn-OutlineProgress {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cairn-space-2);
+}
+.cairn-OutlineProgressTrack {
+  width: var(--cairn-space-7);
+  height: var(--cairn-space-1);
+  overflow: hidden;
+  border-radius: var(--cairn-radius-pill);
+  background-color: var(--cairn-color-surface-muted);
+}
+.cairn-OutlineProgressIndicator {
+  display: block;
+  height: 100%;
+  border-radius: var(--cairn-radius-pill);
+  background-color: var(--cairn-accent-solid);
+}
+
+.cairn-OutlineDropIndicator {
+  position: relative;
+  z-index: 1;
+  height: 0;
+  pointer-events: none;
+}
+.cairn-OutlineDropLine {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: calc(-1 * var(--cairn-space-1));
+  display: flex;
+  align-items: center;
+  padding-inline: var(--cairn-space-2);
+}
+.cairn-OutlineDropDot {
+  width: var(--cairn-space-2);
+  height: var(--cairn-space-2);
+  border: 2px solid var(--cairn-accent-solid);
+  border-radius: var(--cairn-radius-pill);
+}
+.cairn-OutlineDropBar {
+  height: 2px;
+  min-width: 0;
+  flex: 1;
+  border-radius: var(--cairn-radius-pill);
+  background-color: var(--cairn-accent-solid);
+}
+.cairn-OutlineDragPreview {
+  position: fixed;
+  z-index: 50;
+  max-width: var(--cairn-space-9);
+  padding: var(--cairn-space-2) var(--cairn-space-3);
+  border: 1px solid var(--cairn-color-border);
+  border-radius: var(--cairn-radius-panel);
+  background-color: var(--cairn-color-overlay);
+  color: var(--cairn-color-text);
+  box-shadow: var(--cairn-elevation-popover);
+  font-size: var(--cairn-text-document-size);
+  line-height: var(--cairn-text-document-line-height);
+  pointer-events: none;
+}
+.cairn-OutlineDragCount {
+  margin-inline-start: var(--cairn-space-2);
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+}
+
+.cairn-OutlineToolbar {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cairn-space-1);
+  padding: var(--cairn-space-1);
+  border: 1px solid var(--cairn-color-border);
+  border-radius: var(--cairn-radius-selection);
+  background-color: var(--cairn-color-overlay);
+  color: var(--cairn-color-text);
+  box-shadow: var(--cairn-elevation-popover);
+}
+.cairn-OutlineToolbarAction {
+  display: grid;
+  width: var(--cairn-space-6);
+  height: var(--cairn-space-6);
+  place-items: center;
+  border: 0;
+  border-radius: var(--cairn-radius-selection);
+  background: transparent;
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-label-size);
+  outline: none;
+  transition:
+    color var(--cairn-duration-fast),
+    background-color var(--cairn-duration-fast);
+}
+.cairn-OutlineToolbarAction:hover {
+  background-color: var(--cairn-accent-subtle-hover);
+  color: var(--cairn-accent-text);
+}
+.cairn-OutlineToolbarTextAction {
+  width: auto;
+  padding-inline: var(--cairn-space-2);
+  white-space: nowrap;
+}
+.cairn-OutlineToolbarAction:disabled {
+  color: var(--cairn-color-text-disabled);
+}
+.cairn-OutlineMenuPositioner {
+  z-index: 50;
+}
+
+.cairn-NodeHeading {
+  min-width: 0;
+  font-size: var(--cairn-text-title-size);
+  font-weight: var(--cairn-weight-semibold);
+  line-height: var(--cairn-text-title-line-height);
+  letter-spacing: var(--cairn-heading-letter-spacing);
+  outline: none;
+}
+.cairn-NodeTableViewport {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.cairn-NodeTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: start;
+  font-size: var(--cairn-text-document-size);
+  line-height: var(--cairn-text-document-line-height);
+}
+.cairn-NodeTableHeading {
+  min-width: var(--cairn-space-8);
+  padding: var(--cairn-space-2);
+  border-bottom: 1px solid var(--cairn-color-border);
+  color: var(--cairn-color-text-muted);
+  font-weight: var(--cairn-weight-regular);
+}
+.cairn-NodeTableHeading:first-child {
+  min-width: var(--cairn-space-9);
+}
+.cairn-NodeTableCell {
+  padding: var(--cairn-space-1);
+  border-bottom: 1px solid var(--cairn-color-border);
+  border-inline-end: 1px solid var(--cairn-color-border);
+  vertical-align: top;
+}
+.cairn-NodeTableCell:last-child {
+  border-inline-end: 0;
+}

@@ -1,0 +1,19 @@
+.cairn-Focusable:focus-visible {
+  outline: var(--cairn-focus-ring-width) solid var(--cairn-color-focus-ring);
+  outline-offset: var(--cairn-focus-ring-offset);
+}
+
+.cairn-Truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cairn-VisuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

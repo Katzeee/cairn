@@ -2,7 +2,7 @@ import { OutlineBulletStateProvider } from "./outline-bullet.js";
 import { useLayoutEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 
 import { Menu } from "@base-ui/react/menu";
-import { CairnPortalTheme, cn, Icon, menuItemClassName, menuPopupClassName } from "./foundation.js";
+import { Icon } from "./foundation.js";
 import type { OutlineHostCommand } from "./outline-commands.js";
 import type { ResolvedOutlineBulletPresentation } from "./outline-presentation.js";
 import type { OutlineRowViewModel } from "./outline-tree-view-model.js";
@@ -61,12 +61,11 @@ export function OutlineSelectionToolbar({
       globalThis.removeEventListener("resize", update);
     };
   }, [containerRef, anchorKey, count]);
-  const actionClass =
-    "grid size-7 place-items-center rounded-sm text-label text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/45";
+  const actionClass = "cairn-OutlineToolbarAction";
   return (
     <div
       aria-label={`${String(count)} items selected`}
-      className="absolute z-20 flex max-w-full flex-wrap items-center gap-0.5 rounded-sm border border-border bg-popover p-0.5 text-popover-foreground shadow-md"
+      className="cairn-OutlineToolbar"
       data-ui="outline-selection-toolbar"
       onClick={(event) => event.stopPropagation()}
       role="toolbar"
@@ -87,7 +86,7 @@ export function OutlineSelectionToolbar({
         <button
           key={command.id}
           type="button"
-          className={cn(actionClass, "w-auto px-2 whitespace-nowrap disabled:opacity-50")}
+          className="cairn-OutlineToolbarAction cairn-OutlineToolbarTextAction"
           disabled={!canExecuteCommand(command.id)}
           onClick={() => executeCommand(command.id)}
         >
@@ -100,11 +99,11 @@ export function OutlineSelectionToolbar({
             <Icon name="ellipsis" size="sm" />
           </Menu.Trigger>
           <Menu.Portal>
-            <CairnPortalTheme>
-              <Menu.Positioner sideOffset={4} className="z-50">
+            <>
+              <Menu.Positioner sideOffset={4} className="cairn-Positioner">
                 <Menu.Popup
                   data-outline-owner={containerRef.current?.id}
-                  className={menuPopupClassName}
+                  className="cairn-Popup"
                   finalFocus={containerRef}
                 >
                   {onMove === undefined
@@ -117,22 +116,18 @@ export function OutlineSelectionToolbar({
                           ["reorder-down", "Move down"],
                         ] as const
                       ).map(([operation, label]) => (
-                        <Menu.Item
-                          key={operation}
-                          className={menuItemClassName("default")}
-                          onClick={() => onMove(operation)}
-                        >
+                        <Menu.Item key={operation} className="cairn-PopupItem" onClick={() => onMove(operation)}>
                           {label}
                         </Menu.Item>
                       ))}
                   {onDelete === undefined ? null : (
-                    <Menu.Item className={menuItemClassName("destructive")} onClick={onDelete}>
+                    <Menu.Item className="cairn-PopupItem" data-variant="destructive" onClick={onDelete}>
                       Delete
                     </Menu.Item>
                   )}
                 </Menu.Popup>
               </Menu.Positioner>
-            </CairnPortalTheme>
+            </>
           </Menu.Portal>
         </Menu.Root>
       )}
@@ -159,19 +154,14 @@ export function OutlineRowControls({
 }>) {
   return (
     <OutlineBulletStateProvider value={{ hasChildren: row.hasChildren, expanded: row.expanded }}>
-      <span
-        className="relative flex shrink-0 items-center"
-        style={{ width: "var(--cairn-outline-bullet)", height: "1lh" }}
-      >
+      <span className="cairn-OutlineControl">
         <button
           aria-label={
             row.expanded ? `Collapse ${row.item.accessibilityLabel}` : `Expand ${row.item.accessibilityLabel}`
           }
-          className={cn(
-            "absolute -left-5 grid size-5 place-items-center rounded-sm text-muted-foreground/70 outline-none transition-[opacity,color,background-color] hover:bg-accent hover:text-accent-foreground hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring/45 group-hover/outline-row:opacity-100",
-            row.expanded ? "opacity-50" : "opacity-0",
-            !row.expandable && "invisible",
-          )}
+          className="cairn-OutlineDisclosure"
+          data-expanded={row.expanded ? "true" : undefined}
+          data-hidden={!row.expandable ? "true" : undefined}
           onClick={(event) => {
             event.stopPropagation();
             onExpandedChange(row.key, !row.expanded);
@@ -181,10 +171,7 @@ export function OutlineRowControls({
           type="button"
         >
           <span
-            className={cn(
-              "inline-flex transition-transform duration-(--cairn-duration-fast)",
-              row.expanded && "rotate-90",
-            )}
+            className="cairn-OutlineDisclosureIcon"
           >
             <Icon name="chevron-right" size="xs" />
           </span>
@@ -192,10 +179,8 @@ export function OutlineRowControls({
         {bullet.onActivate === undefined ? (
           <span
             aria-hidden
-            className={cn(
-              "group/outline-bullet grid h-lh w-full place-items-center rounded-full",
-              draggable && "cursor-grab touch-none active:cursor-grabbing",
-            )}
+            className="cairn-OutlineBulletControl"
+            data-draggable={draggable ? "true" : undefined}
             data-ui="outline-bullet"
             onPointerDown={draggable ? onDragHandleDown : undefined}
           >
@@ -204,10 +189,8 @@ export function OutlineRowControls({
         ) : (
           <button
             aria-label={bullet.accessibilityLabel ?? `Activate ${row.item.accessibilityLabel}`}
-            className={cn(
-              "group/outline-bullet grid h-lh w-full cursor-pointer place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring/45",
-              draggable && "touch-none active:cursor-grabbing",
-            )}
+            className="cairn-OutlineBulletControl cairn-OutlineBulletButton"
+            data-draggable={draggable ? "true" : undefined}
             data-ui="outline-bullet"
             onClick={(event) => {
               event.stopPropagation();

@@ -38,9 +38,9 @@ export function OutlineInlineContent({ content }: Readonly<{ content: OutlineCon
     return <OutlineTreeEditor binding={binding} />;
   }
   return (
-    <span className="inline-block min-h-lh whitespace-pre-wrap break-words align-top" data-ui="outline-inline-content">
+    <span className="cairn-OutlineInlineContent" data-ui="outline-inline-content">
       {content.length === 0 && placeholder.length > 0 ? (
-        <span className="select-none text-muted-foreground" data-ui="outline-placeholder">
+        <span className="cairn-OutlinePlaceholder" data-ui="outline-placeholder">
           {placeholder}
         </span>
       ) : (
@@ -278,7 +278,7 @@ function OutlineTreeEditor({ binding }: Readonly<{ binding: OutlineEditorBinding
         "aria-haspopup": "listbox",
         "aria-multiline": "true",
         role: "textbox",
-        class: "inline-block w-max max-w-full whitespace-pre-wrap break-words text-current outline-none",
+        class: "cairn-OutlineTextEditor",
         "data-ui": "outline-editor",
       },
       handleDOMEvents: {
@@ -370,14 +370,6 @@ function OutlineTreeEditor({ binding }: Readonly<{ binding: OutlineEditorBinding
     }
   }, [binding.completionProviders, editor]);
 
-  useLayoutEffect(() => {
-    if (editor === null) {
-      return;
-    }
-    // Tiptap owns this DOM node; only an empty editor needs a stable hit target.
-    editor.view.dom.classList.toggle("min-w-24", empty);
-  }, [editor, empty]);
-
   useEffect(() => {
     if (editor === null || !pickerOpen) {
       return;
@@ -438,16 +430,17 @@ function OutlineTreeEditor({ binding }: Readonly<{ binding: OutlineEditorBinding
 
   return (
     <>
-      <div className={`relative inline-flex max-w-full align-top ${empty ? "w-full min-w-24" : "w-max"}`}>
+      <div className="cairn-OutlineEditorBox" data-empty={empty ? "true" : undefined}>
         <EditorContent
-          className={`inline-flex max-w-full ${empty ? "w-full min-w-24" : "w-max"}`}
+          className="cairn-OutlineEditorInput"
+          data-empty={empty ? "true" : undefined}
           editor={editor}
           onClick={(event) => event.stopPropagation()}
         />
         {empty ? (
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 truncate whitespace-nowrap text-document-body text-muted-foreground"
+            className="cairn-OutlineEditorPlaceholder"
             data-ui="outline-placeholder"
           >
             {binding.placeholder}

@@ -1,0 +1,45 @@
+.cairn-EmptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cairn-space-1);
+  width: 100%;
+  padding: var(--cairn-space-7) var(--cairn-space-5);
+  border: var(--cairn-border-width) dashed var(--cairn-color-border-strong);
+  border-radius: var(--cairn-radius-card);
+  text-align: center;
+}
+
+.cairn-EmptyStateIllustration {
+  display: grid;
+  place-items: center;
+  width: var(--cairn-space-7);
+  height: var(--cairn-space-7);
+  margin-bottom: var(--cairn-space-2);
+  border-radius: var(--cairn-radius-pill);
+  background-color: var(--cairn-color-surface-muted);
+  color: var(--cairn-color-text-muted);
+}
+
+.cairn-EmptyStateTitle {
+  margin: 0;
+  font-size: var(--cairn-text-body-size);
+  font-weight: var(--cairn-weight-semibold);
+  line-height: var(--cairn-text-body-line-height);
+}
+
+.cairn-EmptyStateDescription {
+  max-width: 24rem;
+  margin: 0;
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+}
+
+.cairn-EmptyStateActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--cairn-space-2);
+  margin-top: var(--cairn-space-4);
+}

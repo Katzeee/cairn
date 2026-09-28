@@ -1,0 +1,26 @@
+.cairn-Tooltip {
+  max-width: 16rem;
+  padding: var(--cairn-space-1) var(--cairn-space-2);
+  border-radius: var(--cairn-radius-control);
+  background-color: var(--cairn-color-inverse);
+  box-shadow: var(--cairn-elevation-tooltip);
+  color: var(--cairn-color-on-inverse);
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+  transform-origin: var(--transform-origin, center);
+  transition-duration: var(--cairn-duration-fast);
+  transition-property: opacity, scale;
+  transition-timing-function: var(--cairn-ease-standard);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+@media (pointer: coarse) {
+  .cairn-Tooltip {
+    display: none;
+  }
+}

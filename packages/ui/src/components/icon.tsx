@@ -1,8 +1,14 @@
-import type { IconName } from "@cairn/design-system-catalog";
 import {
   AppWindow,
   ArrowLeft,
   Check,
+  CircleCheck,
+  Info,
+  Minus,
+  Plus,
+  Search,
+  Settings,
+  TriangleAlert,
   ChevronDown,
   ChevronRight,
   CircleAlert,
@@ -32,12 +38,17 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { cn } from "./cn.js";
-
-const icons: Readonly<Record<IconName, LucideIcon>> = {
+const icons = {
   "app-window": AppWindow,
   "arrow-left": ArrowLeft,
   check: Check,
+  "circle-check": CircleCheck,
+  info: Info,
+  minus: Minus,
+  plus: Plus,
+  search: Search,
+  settings: Settings,
+  "triangle-alert": TriangleAlert,
   "chevron-down": ChevronDown,
   "chevron-right": ChevronRight,
   "circle-alert": CircleAlert,
@@ -64,21 +75,25 @@ const icons: Readonly<Record<IconName, LucideIcon>> = {
   trash: Trash2,
   type: Type,
   x: X,
-};
+} as const satisfies Readonly<Record<string, LucideIcon>>;
 
-const sizes = { xs: "size-3.5", sm: "size-4", md: "size-5", lg: "size-6" } as const;
+export type IconName = keyof typeof icons;
+export const iconNames = Object.keys(icons) as readonly IconName[];
 
-export function Icon({
-  label,
-  name,
-  size = "md",
-}: Readonly<{ label?: string; name: IconName; size?: keyof typeof sizes }>) {
+export type IconProps = Readonly<{
+  name: IconName;
+  size?: "xs" | "sm" | "md" | "lg";
+  label?: string;
+}>;
+
+export function Icon({ name, size = "md", label }: IconProps) {
   const Component = icons[name];
   return (
     <Component
       aria-hidden={label === undefined ? "true" : undefined}
       aria-label={label}
-      className={cn("shrink-0", sizes[size])}
+      className="cairn-Icon"
+      data-size={size}
       role={label === undefined ? undefined : "img"}
     />
   );

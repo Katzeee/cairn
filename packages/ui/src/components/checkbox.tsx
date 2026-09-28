@@ -1,38 +1,37 @@
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox";
 
-import { ChoiceLabel, type ChoiceLabelProps } from "./choice-label.js";
-import { cn } from "./cn.js";
-import type { ElementProps } from "./element-props.js";
 import { Icon } from "./icon.js";
+import { ChoiceLabel, type ChoiceLabelProps } from "./internal/choice-label.js";
+import type { ElementProps } from "./internal/element-props.js";
 
 export type CheckboxProps = ElementProps<"span", "children" | "defaultValue" | "onChange" | "value"> &
   ChoiceLabelProps &
   Readonly<{
     checked?: boolean;
     defaultChecked?: boolean;
-    disabled?: boolean;
     indeterminate?: boolean;
-    name?: string;
     onCheckedChange?: (checked: boolean) => void;
+    disabled?: boolean;
     readOnly?: boolean;
     required?: boolean;
-    size?: "sm" | "md";
+    name?: string;
     value?: string;
+    size?: "sm" | "md";
   }>;
 
-export function Checkbox({ description, label, size = "md", ...properties }: CheckboxProps) {
+export function Checkbox({ label, description, size = "md", indeterminate, onCheckedChange, ...props }: CheckboxProps) {
   const control = (
     <BaseCheckbox.Root
-      {...properties}
-      className={cn(
-        "grid shrink-0 place-items-center rounded-xs border border-input bg-card outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground data-disabled:cursor-not-allowed data-disabled:opacity-50",
-        size === "sm" ? "size-4" : "size-5",
-      )}
+      {...props}
+      className="cairn-Checkbox cairn-Focusable"
+      data-size={size}
+      indeterminate={indeterminate}
+      onCheckedChange={onCheckedChange === undefined ? undefined : (checked) => onCheckedChange(checked)}
     >
-      <BaseCheckbox.Indicator className="flex data-unchecked:hidden">
-        <Icon name="check" size="xs" />
+      <BaseCheckbox.Indicator className="cairn-CheckboxIndicator">
+        <Icon name={indeterminate ? "minus" : "check"} size={size === "sm" ? "xs" : "sm"} />
       </BaseCheckbox.Indicator>
     </BaseCheckbox.Root>
   );
-  return <ChoiceLabel control={control} controlFirst description={description} label={label} />;
+  return <ChoiceLabel control={control} description={description} label={label} placement="start" />;
 }

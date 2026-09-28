@@ -1,10 +1,19 @@
-import { Separator as BaseSeparator } from "@base-ui/react/separator";
+import type { ElementProps } from "./internal/element-props.js";
 
-export function Separator({ orientation = "horizontal" }: Readonly<{ orientation?: "horizontal" | "vertical" }>) {
+export type SeparatorProps = ElementProps<"span"> &
+  Readonly<{
+    orientation?: "horizontal" | "vertical";
+    decorative?: boolean;
+  }>;
+
+export function Separator({ orientation = "horizontal", decorative = true, ...props }: SeparatorProps) {
   return (
-    <BaseSeparator
-      className="shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px"
-      orientation={orientation}
+    <span
+      {...props}
+      aria-orientation={decorative ? undefined : orientation}
+      className="cairn-Separator"
+      data-orientation={orientation}
+      role={decorative ? undefined : "separator"}
     />
   );
 }

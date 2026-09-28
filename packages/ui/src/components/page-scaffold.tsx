@@ -22,34 +22,23 @@ export function PageScaffold({
   return (
     <>
       {navigation === undefined ? null : (
-        <div
-          data-ui="document-navigation"
-          className="sticky top-0 z-20 flex min-h-11 items-center bg-background px-4 py-1.5"
-        >
+        <div data-ui="document-navigation" className="cairn-PageNavigation">
           {navigation}
         </div>
       )}
-      <main
-        className={`cairn-page-scaffold mx-auto w-full py-8 @3xl/app-shell:py-12 ${layout === "document" ? "cairn-page-scaffold--document" : ""}`}
-      >
-        <header
-          className={`flex flex-wrap items-end justify-between gap-5 ${layout === "document" ? "" : "border-b border-border pb-7"}`}
-        >
-          <div className="min-w-0">
-            {eyebrow === undefined ? null : (
-              <p className="mb-2 text-caption font-semibold tracking-widest text-primary uppercase">{eyebrow}</p>
-            )}
-            <h1 className="flex flex-wrap items-center gap-3 text-page-title font-medium tracking-tight text-balance">
-              {mark === undefined ? null : <img alt="" className="size-10 shrink-0" src={mark} />}
+      <main className="cairn-PageScaffold" data-layout={layout}>
+        <header className="cairn-PageHeader">
+          <div className="cairn-PageHeading">
+            {eyebrow === undefined ? null : <p className="cairn-PageEyebrow">{eyebrow}</p>}
+            <h1 className="cairn-PageTitle">
+              {mark === undefined ? null : <img alt="" className="cairn-PageMark" src={mark} />}
               {title}
             </h1>
-            {description === undefined ? null : (
-              <p className="mt-2 max-w-180 text-body-large text-muted-foreground">{description}</p>
-            )}
+            {description === undefined ? null : <p className="cairn-PageDescription">{description}</p>}
           </div>
-          {actions === undefined ? null : <div className="flex items-center gap-2">{actions}</div>}
+          {actions === undefined ? null : <div className="cairn-PageActions">{actions}</div>}
         </header>
-        <div className={layout === "document" ? "pt-4" : "pt-8"}>{children}</div>
+        <div className="cairn-PageBody">{children}</div>
       </main>
     </>
   );

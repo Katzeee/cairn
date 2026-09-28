@@ -1,6 +1,5 @@
 import { createContext, Fragment, useContext, type MouseEvent, type PointerEvent, type ReactNode } from "react";
 
-import { cn } from "./foundation.js";
 import { OutlineEmptyChild } from "./outline-empty-child.js";
 import type { ResolvedOutlineRowPresentation } from "./outline-presentation.js";
 import type { OutlineEditorBinding, OutlineTreeEditing } from "./outline-tree-edit-contract.js";
@@ -72,14 +71,14 @@ export function OutlineChildren({
   }
   return (
     <div
-      className={cn("min-w-0", parent !== null && !beside && "relative")}
-      style={parent !== null && !beside ? { paddingInlineStart: "var(--cairn-outline-indent)" } : undefined}
+      className="cairn-OutlineChildren"
+      data-indented={parent !== null && !beside ? "true" : undefined}
       data-parent-key={parentKey ?? undefined}
       data-ui="outline-children"
       role={parent === null ? undefined : "group"}
     >
       {environment.showGuides && parent !== null && !beside ? (
-        <span aria-hidden className="absolute inset-y-0 left-2.5 w-px bg-border/45" />
+        <span aria-hidden className="cairn-OutlineGuide" />
       ) : null}
       {visible.map((item, index) => (
         <Fragment key={item.key}>
@@ -110,7 +109,7 @@ function OutlineNode({ item }: Readonly<{ item: OutlineItemViewModel }>) {
   const beside = presentation.childrenLayout === "beside";
   return (
     <div
-      className="relative min-w-0 @container/outline-node"
+      className="cairn-OutlineNode"
       data-selection-root={environment.selectionRootKeys.has(row.key) ? "true" : undefined}
       data-children-layout={beside ? "beside" : "indented"}
       data-ui="outline-node"
@@ -118,7 +117,7 @@ function OutlineNode({ item }: Readonly<{ item: OutlineItemViewModel }>) {
       <div
         className={
           beside
-            ? "cairn-outline-layout grid grid-cols-1 items-start @outline-field/outline-node:grid-cols-[var(--cairn-outline-field-column)_minmax(0,1fr)]"
+            ? "cairn-outline-layout cairn-OutlineLayoutBeside"
             : "cairn-outline-layout"
         }
       >
@@ -142,7 +141,7 @@ function OutlineNode({ item }: Readonly<{ item: OutlineItemViewModel }>) {
         />
         {environment.childrenViews?.has(row.key) ? (
           row.expanded ? (
-            <div role="group" className="min-w-0 pl-5" data-parent-key={row.key}>
+            <div role="group" className="cairn-OutlineBesideChildren" data-parent-key={row.key}>
               {environment.childrenViews.get(row.key)}
             </div>
           ) : null
@@ -157,10 +156,10 @@ function OutlineNode({ item }: Readonly<{ item: OutlineItemViewModel }>) {
 // Zero-height in flow so the line sits exactly in the gap without shifting rows while dragging.
 function OutlineDropIndicator() {
   return (
-    <div aria-hidden className="pointer-events-none relative z-10 h-0" data-ui="outline-drop-indicator">
-      <div className="absolute inset-x-0 -top-1 flex items-center pr-2 pl-1.5">
-        <span className="size-2 rounded-full border-2 border-primary" />
-        <span className="h-0.5 min-w-0 flex-1 rounded-full bg-primary" />
+    <div aria-hidden className="cairn-OutlineDropIndicator" data-ui="outline-drop-indicator">
+      <div className="cairn-OutlineDropLine">
+        <span className="cairn-OutlineDropDot" />
+        <span className="cairn-OutlineDropBar" />
       </div>
     </div>
   );

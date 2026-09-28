@@ -1,0 +1,42 @@
+.cairn-Skeleton {
+  border-radius: var(--cairn-radius-indicator);
+  background-color: var(--cairn-color-surface-muted);
+  background-image: none;
+  color: transparent;
+  cursor: default;
+  pointer-events: none;
+  user-select: none;
+  animation: cairn-skeleton-pulse 1.6s var(--cairn-ease-standard) infinite alternate;
+
+  &::selection {
+    background: transparent;
+  }
+
+  & * {
+    visibility: hidden;
+  }
+
+  &[data-inline] {
+    line-height: 0;
+  }
+
+  &:empty {
+    display: block;
+    height: var(--cairn-text-body-line-height);
+  }
+}
+
+@keyframes cairn-skeleton-pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cairn-Skeleton {
+    animation: none;
+  }
+}

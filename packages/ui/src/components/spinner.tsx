@@ -1,17 +1,34 @@
-import { cn } from "./cn.js";
+import type { ReactNode } from "react";
 
-export type SpinnerProps = Readonly<{ label?: string; size?: "sm" | "md"; tone?: "current" | "primary" }>;
+import type { ElementProps } from "./internal/element-props.js";
+import type { ControlSize } from "./internal/variants.js";
 
-export function Spinner({ label, size = "md", tone = "current" }: SpinnerProps) {
-  return (
+export type SpinnerProps = ElementProps<"span", "children"> &
+  Readonly<{
+    size?: ControlSize;
+    loading?: boolean;
+    children?: ReactNode;
+  }>;
+
+export function Spinner({ size = "md", loading = true, children, ...props }: SpinnerProps) {
+  if (!loading) return children;
+  const labelled = props["aria-label"] !== undefined;
+  const indicator = (
     <span
-      aria-label={label}
-      className={cn(
-        "inline-block animate-spin rounded-full border-2 border-current border-t-transparent",
-        size === "sm" ? "size-4" : "size-5",
-        tone === "primary" && "text-primary",
-      )}
-      role={label === undefined ? "presentation" : "status"}
+      {...props}
+      aria-hidden={labelled ? undefined : true}
+      className="cairn-Spinner"
+      data-size={size}
+      role={labelled ? "status" : undefined}
     />
+  );
+  if (children === undefined) return indicator;
+  return (
+    <span className="cairn-SpinnerContainer">
+      <span aria-hidden className="cairn-SpinnerContent" inert>
+        {children}
+      </span>
+      <span className="cairn-SpinnerOverlay">{indicator}</span>
+    </span>
   );
 }

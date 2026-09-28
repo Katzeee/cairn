@@ -16,15 +16,15 @@ export function NodeTable({
   footer?: ReactNode;
 }>) {
   return (
-    <div className="max-w-full overflow-x-auto" data-ui="node-table" tabIndex={0}>
-      <table aria-label={label} className="w-full border-collapse text-left text-document-body">
+    <div className="cairn-NodeTableViewport" data-ui="node-table" tabIndex={0}>
+      <table aria-label={label} className="cairn-NodeTable">
         <thead>
           <tr>
             {columns.map((column) => (
               <th
                 key={column.key}
                 scope="col"
-                className="min-w-48 border-b border-border px-2 py-2 font-normal text-muted-foreground first:min-w-64"
+                className="cairn-NodeTableHeading"
               >
                 {column.heading}
               </th>
@@ -35,7 +35,7 @@ export function NodeTable({
           {rows.map((row) => (
             <tr key={row.key}>
               {columns.map((column) => (
-                <td key={column.key} className="border-b border-r border-border/50 px-1 py-1 align-top last:border-r-0">
+                <td key={column.key} className="cairn-NodeTableCell">
                   {row.cells.get(column.key)}
                 </td>
               ))}

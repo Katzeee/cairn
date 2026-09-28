@@ -1,0 +1,103 @@
+.cairn-NavItem,
+.cairn-NavRailItem {
+  display: flex;
+  align-items: center;
+  border-radius: var(--cairn-radius-item);
+  color: var(--cairn-color-text-muted);
+  text-decoration: none;
+  transition-duration: var(--cairn-duration-fast);
+  transition-property: background-color, color;
+  transition-timing-function: var(--cairn-ease-standard);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--cairn-accent-subtle);
+    color: var(--cairn-color-text);
+  }
+
+  &[aria-current="page"] {
+    background-color: var(--cairn-accent-subtle-hover);
+    color: var(--cairn-accent-text);
+  }
+}
+
+.cairn-NavItem {
+  gap: var(--cairn-space-2);
+  padding: calc(var(--cairn-space-1) * 1.5) calc(var(--cairn-space-1) * 2.5);
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-label-line-height);
+}
+
+.cairn-NavRailItem {
+  justify-content: center;
+  width: var(--cairn-control-height-md);
+  height: var(--cairn-control-height-md);
+  border-radius: var(--cairn-radius-panel);
+}
+
+.cairn-NavSectionLabel {
+  margin: 0 0 var(--cairn-space-2);
+  padding-inline: calc(var(--cairn-space-1) * 2.5);
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  font-weight: var(--cairn-weight-semibold);
+  line-height: var(--cairn-text-caption-line-height);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cairn-Breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--cairn-space-1) / 2);
+  margin: 0;
+  padding: 0;
+  font-size: var(--cairn-text-label-size);
+  line-height: var(--cairn-text-label-line-height);
+  list-style: none;
+}
+
+.cairn-BreadcrumbsItem {
+  min-width: 0;
+}
+
+.cairn-BreadcrumbsSeparator {
+  display: flex;
+  color: var(--cairn-color-text-muted);
+  opacity: 0.6;
+}
+
+.cairn-BreadcrumbsLink,
+.cairn-BreadcrumbsCurrent {
+  display: block;
+  max-width: 100%;
+  padding: var(--cairn-space-1) calc(var(--cairn-space-1) * 1.5);
+  overflow: hidden;
+  border-radius: var(--cairn-radius-item);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cairn-BreadcrumbsLink {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--cairn-color-text-muted);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: var(--cairn-duration-fast);
+  transition-property: background-color, color;
+
+  &:hover {
+    background-color: var(--cairn-accent-subtle);
+    color: var(--cairn-accent-text);
+  }
+}
+
+.cairn-BreadcrumbsCurrent {
+  color: var(--cairn-color-text);
+  font-weight: var(--cairn-weight-medium);
+}

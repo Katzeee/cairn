@@ -1,0 +1,40 @@
+.cairn-OutlineFieldTypeMark {
+  width: var(--cairn-space-3);
+  height: var(--cairn-space-3);
+}
+
+.cairn-OutlineFieldMark {
+  display: grid;
+  width: var(--cairn-space-4);
+  height: var(--cairn-space-4);
+  place-items: center;
+  border: var(--cairn-border-width) solid var(--cairn-accent-border-strong);
+  border-radius: var(--cairn-radius-selection);
+  background-color: var(--cairn-accent-subtle);
+  color: var(--cairn-accent-text);
+  transition:
+    background-color var(--cairn-duration-fast),
+    border-color var(--cairn-duration-fast);
+}
+
+.cairn-OutlineFieldMark[data-prominence="strong"] {
+  border-color: var(--cairn-accent-solid);
+  background-color: var(--cairn-accent-subtle-hover);
+}
+
+.cairn-OutlineSmallMark {
+  width: var(--cairn-space-3);
+  height: var(--cairn-space-3);
+  color: var(--cairn-color-text-muted);
+}
+
+.cairn-OutlineItemBullet {
+  display: contents;
+}
+
+.cairn-OutlineReference {
+  color: var(--cairn-accent-text);
+  text-decoration: underline;
+  text-decoration-color: var(--cairn-accent-border-strong);
+  text-underline-offset: var(--cairn-space-1);
+}

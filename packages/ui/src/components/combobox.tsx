@@ -1,79 +1,110 @@
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
+import { useRef, type MouseEvent } from "react";
 
-import { CairnPortalTheme } from "../cairn-theme.js";
-import { cn } from "./cn.js";
 import { Icon } from "./icon.js";
-import { inputClassName } from "./input.js";
+import { usePortalContainer } from "./internal/portal-container.js";
+import type { ControlSize } from "./internal/variants.js";
 
-export type ComboboxOption = Readonly<{
-  label: string;
-  value: string;
+export type ComboboxOption = Readonly<{ label: string; value: string; disabled?: boolean }>;
+
+export type ComboboxProps = Readonly<{
+  items: readonly ComboboxOption[];
+  value?: string | null;
+  defaultValue?: string | null;
+  onValueChange?: (value: string | null) => void;
+  inputValue?: string;
+  defaultInputValue?: string;
+  onInputValueChange?: (value: string) => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
+  required?: boolean;
+  invalid?: boolean;
+  name?: string;
+  placeholder?: string;
+  emptyLabel?: string;
+  size?: ControlSize;
+  "aria-label"?: string;
 }>;
 
 export function Combobox({
+  items,
+  value,
   defaultValue,
-  disabled,
-  name,
   onValueChange,
-  options,
+  disabled,
+  readOnly,
+  invalid,
   placeholder,
-}: Readonly<{
-  defaultValue?: ComboboxOption;
-  disabled?: boolean;
-  name?: string;
-  onValueChange?: (value: ComboboxOption | null) => void;
-  options: readonly ComboboxOption[];
-  placeholder?: string;
-}>) {
+  emptyLabel = "No matches found.",
+  size = "md",
+  "aria-label": ariaLabel,
+  ...props
+}: ComboboxProps) {
+  const selected = (key: string | null | undefined) => items.find((item) => item.value === key) ?? null;
+  const input = useRef<HTMLInputElement>(null);
+  const { anchorRef, container } = usePortalContainer();
+  const focusInput = (event: MouseEvent<HTMLDivElement>) => {
+    if (!disabled && !(event.target as Element).closest("button")) input.current?.focus();
+  };
   return (
     <BaseCombobox.Root
-      defaultValue={defaultValue}
+      {...props}
+      defaultValue={selected(defaultValue)}
       disabled={disabled}
-      items={options}
-      itemToStringLabel={(option: ComboboxOption) => option.label}
-      itemToStringValue={(option: ComboboxOption) => option.value}
-      name={name}
-      onValueChange={onValueChange}
+      isItemEqualToValue={(item, next) => item.value === next.value}
+      itemToStringLabel={(item) => item.label}
+      itemToStringValue={(item) => item.value}
+      items={items}
+      onValueChange={onValueChange === undefined ? undefined : (next) => onValueChange(next?.value ?? null)}
+      readOnly={readOnly}
+      value={value === undefined ? undefined : selected(value)}
     >
-      <div className="cairn-input-hit-area relative flex w-full items-center" data-ui="input-hit-area">
-        <BaseCombobox.Input className={cn(inputClassName, "pr-9")} placeholder={placeholder} />
-        <BaseCombobox.Trigger
-          aria-label="Open options"
-          className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50"
-          tabIndex={-1}
-        >
+      <div
+        className="cairn-Input cairn-HitArea"
+        data-disabled={disabled || undefined}
+        data-invalid={invalid || undefined}
+        data-readonly={readOnly || undefined}
+        data-size={size}
+        data-ui="input-hit-area"
+        onClick={focusInput}
+        ref={anchorRef}
+      >
+        <BaseCombobox.Input
+          aria-invalid={invalid || undefined}
+          aria-label={ariaLabel}
+          className="cairn-InputControl"
+          placeholder={placeholder}
+          ref={input}
+        />
+        <BaseCombobox.Trigger aria-label="Open options" className="cairn-ComboboxTrigger" tabIndex={-1}>
           <Icon name="chevron-down" size="sm" />
         </BaseCombobox.Trigger>
       </div>
-      <BaseCombobox.Portal>
-        <CairnPortalTheme>
-          <BaseCombobox.Positioner className="z-50 outline-none" sideOffset={6}>
-            <BaseCombobox.Popup
-              className="cairn-overlay-popup max-h-72 overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none"
-              style={{ minWidth: "var(--anchor-width)" }}
-            >
-              {/* The element stays mounted while results exist; only its
-                no-match state may occupy space. */}
-              <BaseCombobox.Empty className="px-2.5 py-2 text-label text-muted-foreground empty:hidden">
-                No matches found.
-              </BaseCombobox.Empty>
-              <BaseCombobox.List>
-                {(option: ComboboxOption) => (
-                  <BaseCombobox.Item
-                    className="grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 rounded-sm px-2.5 py-2 text-label outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground"
-                    key={option.value}
-                    value={option}
-                  >
-                    <BaseCombobox.ItemIndicator className="col-start-1">
-                      <Icon name="check" size="sm" />
-                    </BaseCombobox.ItemIndicator>
-                    <span className="col-start-2 truncate">{option.label}</span>
-                  </BaseCombobox.Item>
-                )}
-              </BaseCombobox.List>
-            </BaseCombobox.Popup>
-          </BaseCombobox.Positioner>
-        </CairnPortalTheme>
+      <BaseCombobox.Portal container={container}>
+        <BaseCombobox.Positioner className="cairn-Positioner" sideOffset={6}>
+          <BaseCombobox.Popup className="cairn-Popup" data-list="">
+            <BaseCombobox.Empty className="cairn-PopupEmpty">{emptyLabel}</BaseCombobox.Empty>
+            <BaseCombobox.List>
+              {(option: ComboboxOption) => (
+                <BaseCombobox.Item
+                  className="cairn-PopupItem"
+                  data-indicator=""
+                  disabled={option.disabled}
+                  key={option.value}
+                  value={option}
+                >
+                  <BaseCombobox.ItemIndicator className="cairn-PopupItemIndicator">
+                    <Icon name="check" size="sm" />
+                  </BaseCombobox.ItemIndicator>
+                  <span className="cairn-PopupItemText">{option.label}</span>
+                </BaseCombobox.Item>
+              )}
+            </BaseCombobox.List>
+          </BaseCombobox.Popup>
+        </BaseCombobox.Positioner>
       </BaseCombobox.Portal>
     </BaseCombobox.Root>
   );

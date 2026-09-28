@@ -1,0 +1,16 @@
+.cairn-Separator {
+  display: block;
+  flex-shrink: 0;
+  background-color: var(--cairn-color-border);
+
+  &[data-orientation="horizontal"] {
+    width: 100%;
+    height: var(--cairn-border-width);
+  }
+
+  &[data-orientation="vertical"] {
+    align-self: stretch;
+    width: var(--cairn-border-width);
+    min-height: 1em;
+  }
+}

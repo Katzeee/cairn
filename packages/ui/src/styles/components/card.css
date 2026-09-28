@@ -1,0 +1,25 @@
+.cairn-Card {
+  min-width: 0;
+  padding: var(--card-padding);
+  border: var(--cairn-border-width) solid var(--cairn-card-border-color, var(--cairn-color-border));
+  border-radius: var(--cairn-radius-card);
+  background-color: var(--cairn-card-background, var(--cairn-color-surface));
+  box-shadow: var(--cairn-card-shadow, var(--cairn-elevation-card));
+  color: var(--cairn-color-text);
+
+  &[data-size="sm"] {
+    --card-padding: var(--cairn-space-4);
+  }
+  &[data-size="md"] {
+    --card-padding: var(--cairn-space-5);
+  }
+  &[data-size="lg"] {
+    --card-padding: var(--cairn-space-6);
+  }
+
+  &[data-variant="muted"] {
+    border-color: transparent;
+    background-color: var(--cairn-color-surface-muted);
+    box-shadow: none;
+  }
+}

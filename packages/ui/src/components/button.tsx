@@ -1,59 +1,49 @@
 import { Button as BaseButton } from "@base-ui/react/button";
-import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "./cn.js";
-import type { ElementProps } from "./element-props.js";
+import type { ElementProps } from "./internal/element-props.js";
+import type { ControlSize } from "./internal/variants.js";
 import { Spinner } from "./spinner.js";
 
-const buttonVariants = cva(
-  "inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
-  {
-    variants: {
-      variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/70 active:bg-secondary/60",
-        outline: "border border-input bg-card text-foreground hover:bg-accent hover:text-accent-foreground",
-        ghost: "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80",
-      },
-      size: {
-        sm: "h-8 gap-1.5 px-3 text-label",
-        md: "h-10 px-4 text-body",
-        lg: "h-12 px-6 text-body-large",
-        icon: "size-10",
-      },
-    },
-    defaultVariants: { variant: "primary", size: "md" },
-  },
-);
+export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "destructive";
 
 export type ButtonProps = ElementProps<"button"> &
-  VariantProps<typeof buttonVariants> &
-  Readonly<{ loading?: boolean }>;
+  Readonly<{
+    variant?: ButtonVariant;
+    size?: ControlSize;
+    loading?: boolean;
+  }>;
 
-export function Button(properties: ButtonProps) {
-  return <StyledButton {...properties} />;
-}
+export type IconButtonProps = ButtonProps & Readonly<{ "aria-label": string }>;
 
-// Cairn-internal composition only; applications use Button.
-export function StyledButton({
-  className,
+function ButtonBase({
+  variant = "primary",
+  size = "md",
   loading = false,
-  size,
-  variant,
+  icon,
   children,
-  ...properties
-}: ButtonProps & Readonly<{ className?: string }>) {
+  ...props
+}: ButtonProps & Readonly<{ icon?: boolean }>) {
   return (
     <BaseButton
-      {...properties}
+      {...props}
       aria-busy={loading || undefined}
-      className={cn(buttonVariants({ size, variant }), className)}
-      disabled={loading || properties.disabled}
+      className="cairn-Button cairn-Focusable"
+      data-icon={icon ? "" : undefined}
+      data-size={size}
+      data-variant={variant}
+      disabled={loading || props.disabled}
+      focusableWhenDisabled={loading}
     >
-      {loading ? <Spinner size="sm" /> : null}
-      {children}
+      {loading && !icon ? <Spinner size={size === "lg" ? "md" : "sm"} /> : null}
+      {loading && icon ? <Spinner size={size === "lg" ? "md" : "sm"} /> : children}
     </BaseButton>
   );
+}
+
+export function Button(props: ButtonProps) {
+  return <ButtonBase {...props} />;
+}
+
+export function IconButton(props: IconButtonProps) {
+  return <ButtonBase {...props} icon />;
 }

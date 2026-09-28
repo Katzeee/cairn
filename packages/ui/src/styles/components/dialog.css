@@ -1,0 +1,96 @@
+.cairn-DialogBackdrop {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  min-height: 100dvh;
+  background-color: var(--cairn-color-backdrop);
+  transition: opacity var(--cairn-duration-panel) var(--cairn-ease-standard);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+  }
+}
+
+.cairn-DialogViewport {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  overflow-y: auto;
+  padding: var(--cairn-space-4);
+
+  &[data-align="start"] {
+    align-items: start;
+    padding-top: 12vh;
+  }
+}
+
+.cairn-DialogContent {
+  width: 100%;
+  max-width: var(--dialog-width);
+  padding: var(--cairn-space-5);
+  border: var(--cairn-border-width) solid var(--cairn-color-border);
+  border-radius: var(--cairn-radius-dialog);
+  background-color: var(--cairn-overlay-background, var(--cairn-color-overlay));
+  box-shadow: var(--cairn-elevation-dialog);
+  color: var(--cairn-color-text);
+  outline: none;
+  transition-duration: var(--cairn-duration-panel);
+  transition-property: opacity, scale;
+  transition-timing-function: var(--cairn-ease-standard);
+
+  &[data-size="sm"] {
+    --dialog-width: 25rem;
+  }
+  &[data-size="md"] {
+    --dialog-width: 30rem;
+  }
+  &[data-size="lg"] {
+    --dialog-width: 40rem;
+  }
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.cairn-DialogTitle {
+  margin: 0;
+  font-size: var(--cairn-text-title-small-size);
+  font-weight: var(--cairn-weight-semibold);
+  line-height: var(--cairn-text-title-small-line-height);
+  letter-spacing: var(--cairn-heading-letter-spacing);
+}
+
+.cairn-DialogDescription {
+  margin: var(--cairn-space-1) 0 0;
+  color: var(--cairn-color-text-muted);
+}
+
+.cairn-DialogBody {
+  margin-top: var(--cairn-space-5);
+}
+
+.cairn-DialogActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--cairn-space-2);
+  margin-top: var(--cairn-space-5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cairn-DialogContent {
+    transition-property: opacity;
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      scale: 1;
+    }
+  }
+}

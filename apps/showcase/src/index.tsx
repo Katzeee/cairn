@@ -1,8 +1,11 @@
 import "@cairn/ui/styles.css";
+import "@cairn/ui/catalog.css";
+import "@cairn/ui/themes/forest.css";
+import "@cairn/ui/themes/slate.css";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { ToastProvider, TooltipProvider } from "@cairn/ui";
+import { TooltipProvider } from "@cairn/ui";
 import { DesignSystemPage } from "@cairn/ui/catalog";
 
 const root = document.querySelector("#root");
@@ -13,9 +16,7 @@ if (root === null) {
 createRoot(root).render(
   <StrictMode>
     <TooltipProvider>
-      <ToastProvider>
-        <DesignSystemPage />
-      </ToastProvider>
+      <DesignSystemPage />
     </TooltipProvider>
   </StrictMode>,
 );

@@ -1,0 +1,29 @@
+.cairn-Field {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--cairn-space-1) * 1.5);
+  min-width: 0;
+}
+
+.cairn-FieldLabel {
+  color: var(--cairn-color-text);
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-label-line-height);
+}
+
+.cairn-FieldDescription,
+.cairn-FieldError {
+  margin: 0;
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+}
+
+.cairn-FieldDescription {
+  color: var(--cairn-color-text-muted);
+}
+
+.cairn-FieldError {
+  color: var(--cairn-danger-text);
+  font-weight: var(--cairn-weight-medium);
+}

@@ -1,0 +1,4 @@
+@layer cairn.catalog;
+
+@import "./catalog.css" layer(cairn.catalog);
+@import "./outline-demo/outline-demo.css" layer(cairn.catalog);

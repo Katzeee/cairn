@@ -1,0 +1,32 @@
+.cairn-SelectTrigger {
+  justify-content: space-between;
+  text-align: start;
+  cursor: pointer;
+
+  &[data-placeholder] .cairn-SelectValue {
+    color: var(--cairn-color-text-muted);
+  }
+}
+
+.cairn-SelectValue {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cairn-SelectIcon,
+.cairn-ComboboxTrigger {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--cairn-color-text-muted);
+}
+
+.cairn-ComboboxTrigger {
+  margin: 0 calc(-1 * var(--cairn-space-1)) 0 0;
+  padding: var(--cairn-space-1);
+  border: 0;
+  border-radius: var(--cairn-radius-selection);
+  background: transparent;
+  cursor: pointer;
+}

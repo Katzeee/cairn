@@ -16,23 +16,25 @@
       "types": "./dist/catalog/index.d.ts",
       "import": "./dist/catalog/index.js"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./catalog.css": "./dist/catalog.css",
+    "./themes/forest.css": "./dist/themes/forest.css",
+    "./themes/slate.css": "./dist/themes/slate.css"
   },
   "scripts": {
     "clean": "node ../../scripts/clean-package-dist.mjs",
     "prebuild": "npm run clean",
-    "build": "node scripts/build-api-reference.mjs && tsc && node scripts/build-styles.mjs",
+    "build": "node scripts/build-api-reference.mjs && node scripts/build-examples.mjs && tsc && node scripts/build-styles.mjs",
     "test": "npm run test:unit && npm run test:acceptance",
     "test:unit": "vitest run",
     "test:acceptance": "vitest run --config vitest.acceptance.config.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node scripts/build-api-reference.mjs && node scripts/build-examples.mjs && tsc --noEmit",
     "typecheck:test": "tsc -p tsconfig.test.json",
-    "lint": "eslint .",
+    "lint": "eslint . && stylelint \"src/**/*.css\"",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
-    "@cairn/design-system-catalog": "file:../design-system-catalog",
     "@cairn/design-tokens": "file:../design-tokens",
     "@tiptap/core": "^3.31.1",
     "@tiptap/extension-document": "^3.31.1",
@@ -40,22 +42,19 @@
     "@tiptap/extension-text": "^3.31.1",
     "@tiptap/pm": "^3.31.1",
     "@tiptap/react": "^3.31.1",
-    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.39.0",
-    "tailwind-merge": "^3.6.0"
+    "refractor": "5.0.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.3.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   }
 }

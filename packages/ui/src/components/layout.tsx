@@ -1,9 +1,6 @@
-import type { HTMLAttributes, ReactNode } from "react";
+import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
-import { cn } from "./cn.js";
-
-const breakpoints = ["initial", "md", "lg", "xl", "2xl"] as const;
-
+export const breakpoints = ["initial", "xs", "sm", "md", "lg", "xl"] as const;
 export type Breakpoint = (typeof breakpoints)[number];
 export type Responsive<T extends string> = T | Readonly<Partial<Record<Breakpoint, T>>>;
 export type Space = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
@@ -21,252 +18,330 @@ export type LayoutElement =
   | "ol"
   | "li";
 
-// Utility classes are composed at runtime; styles.css safelists every class these tables can produce.
-const spaceSteps: Readonly<Record<Space, string>> = {
-  "0": "0",
-  "1": "1",
-  "2": "2",
-  "3": "3",
-  "4": "4",
-  "5": "6",
-  "6": "8",
-  "7": "10",
-  "8": "12",
-  "9": "16",
-};
+export function responsiveClasses<T extends string>(name: string, value: Responsive<T> | undefined): string[] {
+  if (value === undefined) return [];
+  if (typeof value === "string") return [`cairn-r-${name}-${value.replace("%", "p")}`];
+  return breakpoints.flatMap((point) =>
+    value[point] === undefined
+      ? []
+      : [`${point === "initial" ? "" : `${point}:`}cairn-r-${name}-${value[point].replace("%", "p")}`],
+  );
+}
 
-function responsive<T extends string>(value: Responsive<T> | undefined, toClass: (value: T) => string): string[] {
-  if (value === undefined) {
-    return [];
-  }
-  if (typeof value === "string") {
-    return [toClass(value)];
-  }
-  return breakpoints.flatMap((breakpoint) => {
-    const step = value[breakpoint];
-    if (step === undefined) {
-      return [];
+type NativeProps = Omit<HTMLAttributes<HTMLElement>, "className" | "style" | "color"> &
+  Readonly<{ children?: ReactNode }>;
+type LayoutProps = NativeProps &
+  Readonly<{
+    p?: Responsive<string>;
+    px?: Responsive<string>;
+    py?: Responsive<string>;
+    pt?: Responsive<string>;
+    pr?: Responsive<string>;
+    pb?: Responsive<string>;
+    pl?: Responsive<string>;
+    width?: Responsive<string>;
+    minWidth?: Responsive<string>;
+    maxWidth?: Responsive<string>;
+    height?: Responsive<string>;
+    minHeight?: Responsive<string>;
+    maxHeight?: Responsive<string>;
+    position?: Responsive<"static" | "relative" | "absolute" | "fixed" | "sticky">;
+    overflow?: Responsive<"visible" | "hidden" | "clip" | "scroll" | "auto">;
+    overflowX?: Responsive<"visible" | "hidden" | "clip" | "scroll" | "auto">;
+    overflowY?: Responsive<"visible" | "hidden" | "clip" | "scroll" | "auto">;
+    inset?: Responsive<string>;
+    top?: Responsive<string>;
+    right?: Responsive<string>;
+    bottom?: Responsive<string>;
+    left?: Responsive<string>;
+    flexBasis?: Responsive<string>;
+    flexGrow?: Responsive<string>;
+    flexShrink?: Responsive<string>;
+    gridArea?: Responsive<string>;
+    gridColumn?: Responsive<string>;
+    gridColumnStart?: Responsive<string>;
+    gridColumnEnd?: Responsive<string>;
+    gridRow?: Responsive<string>;
+    gridRowStart?: Responsive<string>;
+    gridRowEnd?: Responsive<string>;
+    alignSelf?: Responsive<"start" | "center" | "end" | "baseline" | "stretch">;
+    justifySelf?: Responsive<"start" | "center" | "end" | "baseline" | "stretch">;
+  }>;
+
+const layoutNames = {
+  p: "p",
+  px: "px",
+  py: "py",
+  pt: "pt",
+  pr: "pr",
+  pb: "pb",
+  pl: "pl",
+  width: "w",
+  minWidth: "min-w",
+  maxWidth: "max-w",
+  height: "h",
+  minHeight: "min-h",
+  maxHeight: "max-h",
+  position: "position",
+  overflow: "overflow",
+  overflowX: "ox",
+  overflowY: "oy",
+  inset: "inset",
+  top: "top",
+  right: "right",
+  bottom: "bottom",
+  left: "left",
+  flexBasis: "fb",
+  flexGrow: "fg",
+  flexShrink: "fs",
+  gridArea: "ga",
+  gridColumn: "gc",
+  gridColumnStart: "gcs",
+  gridColumnEnd: "gce",
+  gridRow: "gr",
+  gridRowStart: "grs",
+  gridRowEnd: "gre",
+  alignSelf: "as",
+  justifySelf: "js",
+} as const;
+
+const customNames = new Set([
+  "p",
+  "px",
+  "py",
+  "pt",
+  "pr",
+  "pb",
+  "pl",
+  "w",
+  "min-w",
+  "max-w",
+  "h",
+  "min-h",
+  "max-h",
+  "inset",
+  "top",
+  "right",
+  "bottom",
+  "left",
+  "fb",
+  "fg",
+  "fs",
+  "ga",
+  "gc",
+  "gcs",
+  "gce",
+  "gr",
+  "grs",
+  "gre",
+]);
+const spaces = new Set<string>(Array.from({ length: 10 }, (_, index) => String(index)));
+const edges = new Set<string>([...spaces, ...Array.from({ length: 9 }, (_, index) => `-${index + 1}`)]);
+
+export function customResponsive(name: string, value: Responsive<string> | undefined, style: Record<string, string>) {
+  if (value === undefined) return [];
+  const entries = typeof value === "string" ? [["initial", value]] : Object.entries(value);
+  return entries.map(([point, step]) => {
+    if (step === undefined) return "";
+    const spaceStep = ["p", "px", "py", "pt", "pr", "pb", "pl", "gap", "cg", "rg"].includes(name) && spaces.has(step);
+    const edgeStep = ["inset", "top", "right", "bottom", "left"].includes(name) && edges.has(step);
+    const flexStep = ["fg", "fs"].includes(name) && (step === "0" || step === "1");
+    if (spaceStep || edgeStep || flexStep) {
+      return `${point === "initial" ? "" : `${point}:`}cairn-r-${name}-${step}`;
     }
-    return [breakpoint === "initial" ? toClass(step) : `${breakpoint}:${toClass(step)}`];
+    style[`--${name}${point === "initial" ? "" : `-${point}`}`] = step;
+    return `${point === "initial" ? "" : `${point}:`}cairn-r-${name}`;
   });
 }
 
-const space = (prefix: string) => (step: Space) => `${prefix}-${spaceSteps[step]}`;
-
-type SharedLayoutProps = Omit<HTMLAttributes<HTMLElement>, "className" | "style" | "color"> &
-  Readonly<{
-    children?: ReactNode;
-    p?: Responsive<Space>;
-    px?: Responsive<Space>;
-    py?: Responsive<Space>;
-    pt?: Responsive<Space>;
-    pr?: Responsive<Space>;
-    pb?: Responsive<Space>;
-    pl?: Responsive<Space>;
-    flexGrow?: Responsive<"0" | "1">;
-    flexShrink?: Responsive<"0" | "1">;
-    minWidth?: Responsive<"0">;
-  }>;
-
-function splitShared<P extends SharedLayoutProps>(properties: P) {
-  const { p, px, py, pt, pr, pb, pl, flexGrow, flexShrink, minWidth, ...element } = properties;
-  const classes = [
-    ...responsive(p, space("p")),
-    ...responsive(px, space("px")),
-    ...responsive(py, space("py")),
-    ...responsive(pt, space("pt")),
-    ...responsive(pr, space("pr")),
-    ...responsive(pb, space("pb")),
-    ...responsive(pl, space("pl")),
-    ...responsive(flexGrow, (value) => (value === "1" ? "grow" : "grow-0")),
-    ...responsive(flexShrink, (value) => (value === "1" ? "shrink" : "shrink-0")),
-    ...responsive(minWidth, () => "min-w-0"),
-  ];
-  return { classes, element };
+function splitLayout(props: LayoutProps) {
+  const element: Record<string, unknown> = {};
+  const classes: string[] = [];
+  const style: Record<string, string> = {};
+  for (const [key, value] of Object.entries(props)) {
+    if (key in layoutNames) {
+      const name = layoutNames[key as keyof typeof layoutNames];
+      classes.push(
+        ...(customNames.has(name)
+          ? customResponsive(name, value as Responsive<string>, style)
+          : responsiveClasses(name, value as Responsive<string>)),
+      );
+    } else {
+      element[key] = value;
+    }
+  }
+  return { element, classes, style: style as CSSProperties };
 }
 
-const displays = {
-  none: "hidden",
-  inline: "inline",
-  "inline-block": "inline-block",
-  block: "block",
-  contents: "contents",
-  flex: "flex",
-  "inline-flex": "inline-flex",
-  grid: "grid",
-  "inline-grid": "inline-grid",
-} as const;
-
-const alignments = {
-  start: "items-start",
-  center: "items-center",
-  end: "items-end",
-  baseline: "items-baseline",
-  stretch: "items-stretch",
-} as const;
-
-const justifications = {
-  start: "justify-start",
-  center: "justify-center",
-  end: "justify-end",
-  between: "justify-between",
-} as const;
-
-type Align = keyof typeof alignments;
-type Justify = keyof typeof justifications;
-
-type GapProps = Readonly<{ gap?: Responsive<Space>; gapX?: Responsive<Space>; gapY?: Responsive<Space> }>;
-
-function gapClasses({ gap, gapX, gapY }: GapProps): string[] {
-  return [
-    ...responsive(gap, space("gap")),
-    ...responsive(gapX, space("gap-x")),
-    ...responsive(gapY, space("gap-y")),
-  ];
+type Display = "none" | "inline" | "inline-block" | "block" | "contents";
+export type BoxProps = LayoutProps & Readonly<{ as?: LayoutElement; display?: Responsive<Display> }>;
+export function Box({ as: Element = "div", display, ...props }: BoxProps) {
+  const { element, classes, style } = splitLayout(props);
+  return (
+    <Element
+      {...element}
+      style={style}
+      className={["cairn-Box", ...responsiveClasses("display", display), ...classes].join(" ")}
+    />
+  );
 }
 
-export type BoxProps = SharedLayoutProps &
-  Readonly<{ as?: LayoutElement; display?: Responsive<"none" | "inline" | "inline-block" | "block" | "contents"> }>;
-
-export function Box({ as: Element = "div", display, ...properties }: BoxProps) {
-  const { classes, element } = splitShared(properties);
-  return <Element {...element} className={cn(responsive(display, (value) => displays[value]), classes)} />;
-}
-
-export type FlexProps = SharedLayoutProps &
+type GapProps = Readonly<{ gap?: Responsive<string>; gapX?: Responsive<string>; gapY?: Responsive<string> }>;
+type Align = "start" | "center" | "end" | "baseline" | "stretch";
+type Justify = "start" | "center" | "end" | "between";
+export type FlexProps = LayoutProps &
   GapProps &
   Readonly<{
     as?: LayoutElement;
-    align?: Responsive<Align>;
-    direction?: Responsive<"row" | "column" | "row-reverse" | "column-reverse">;
     display?: Responsive<"none" | "inline-flex" | "flex">;
+    direction?: Responsive<"row" | "column" | "row-reverse" | "column-reverse">;
+    align?: Responsive<Align>;
     justify?: Responsive<Justify>;
     wrap?: Responsive<"nowrap" | "wrap" | "wrap-reverse">;
   }>;
-
-const directions = {
-  row: "flex-row",
-  column: "flex-col",
-  "row-reverse": "flex-row-reverse",
-  "column-reverse": "flex-col-reverse",
-} as const;
-
 export function Flex({
   as: Element = "div",
-  align,
+  display,
   direction,
-  display = "flex",
+  align,
+  justify,
+  wrap,
   gap,
   gapX,
   gapY,
-  justify,
-  wrap,
-  ...properties
+  ...props
 }: FlexProps) {
-  const { classes, element } = splitShared(properties);
+  const { element, classes, style } = splitLayout(props);
   return (
     <Element
       {...element}
-      className={cn(
-        responsive(display, (value) => displays[value]),
-        responsive(direction, (value) => directions[value]),
-        responsive(align, (value) => alignments[value]),
-        responsive(justify, (value) => justifications[value]),
-        responsive(wrap, (value) => `flex-${value}`),
-        gapClasses({ gap, gapX, gapY }),
-        classes,
-      )}
+      style={style}
+      className={[
+        "cairn-Flex",
+        ...responsiveClasses("display", display),
+        ...responsiveClasses("fd", direction),
+        ...responsiveClasses("ai", align),
+        ...responsiveClasses("jc", justify),
+        ...responsiveClasses("fw", wrap),
+        ...customResponsive("gap", gap, style as Record<string, string>),
+        ...customResponsive("cg", gapX, style as Record<string, string>),
+        ...customResponsive("rg", gapY, style as Record<string, string>),
+        ...classes,
+      ].join(" ")}
     />
   );
 }
 
-type Track = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
-
-export type GridProps = SharedLayoutProps &
+export type GridProps = LayoutProps &
   GapProps &
   Readonly<{
     as?: LayoutElement;
-    align?: Responsive<Align>;
-    columns?: Responsive<Track>;
     display?: Responsive<"none" | "inline-grid" | "grid">;
+    areas?: Responsive<string>;
+    columns?: Responsive<string>;
+    rows?: Responsive<string>;
     flow?: Responsive<"row" | "column" | "dense" | "row-dense" | "column-dense">;
+    align?: Responsive<Align>;
     justify?: Responsive<Justify>;
-    rows?: Responsive<Track>;
+    alignContent?: Responsive<Align | "between" | "around" | "evenly">;
+    justifyItems?: Responsive<Align>;
   }>;
-
-const flows = {
-  row: "grid-flow-row",
-  column: "grid-flow-col",
-  dense: "grid-flow-dense",
-  "row-dense": "grid-flow-row-dense",
-  "column-dense": "grid-flow-col-dense",
-} as const;
-
 export function Grid({
   as: Element = "div",
-  align,
+  display,
+  areas,
   columns,
-  display = "grid",
+  rows,
   flow,
+  align,
+  justify,
+  alignContent,
+  justifyItems,
   gap,
   gapX,
   gapY,
-  justify,
-  rows,
-  ...properties
+  ...props
 }: GridProps) {
-  const { classes, element } = splitShared(properties);
+  const { element, classes, style } = splitLayout(props);
+  const gridClasses = (name: string, value: Responsive<string> | undefined) => {
+    if (value === undefined) return [];
+    const entries = typeof value === "string" ? [["initial", value]] : Object.entries(value);
+    return entries.map(([point, step]) => {
+      if (step === undefined) return "";
+      if ((name === "gtc" || name === "gtr") && /^[1-9]$/.test(step)) {
+        return `${point === "initial" ? "" : `${point}:`}cairn-r-${name}-${step}`;
+      }
+      (style as Record<string, string>)[`--${name}${point === "initial" ? "" : `-${point}`}`] = step;
+      return `${point === "initial" ? "" : `${point}:`}cairn-r-${name}`;
+    });
+  };
   return (
     <Element
       {...element}
-      className={cn(
-        responsive(display, (value) => displays[value]),
-        responsive(columns, (value) => `grid-cols-${value}`),
-        responsive(rows, (value) => `grid-rows-${value}`),
-        responsive(flow, (value) => flows[value]),
-        responsive(align, (value) => alignments[value]),
-        responsive(justify, (value) => justifications[value]),
-        gapClasses({ gap, gapX, gapY }),
-        classes,
-      )}
+      style={style}
+      className={[
+        "cairn-Grid",
+        ...responsiveClasses("display", display),
+        ...gridClasses("gta", areas),
+        ...gridClasses("gtc", columns),
+        ...gridClasses("gtr", rows),
+        ...responsiveClasses("gaf", flow),
+        ...responsiveClasses("ai", align),
+        ...responsiveClasses("jc", justify),
+        ...responsiveClasses("ac", alignContent),
+        ...responsiveClasses("ji", justifyItems),
+        ...customResponsive("gap", gap, style as Record<string, string>),
+        ...customResponsive("cg", gapX, style as Record<string, string>),
+        ...customResponsive("rg", gapY, style as Record<string, string>),
+        ...classes,
+      ].join(" ")}
     />
   );
 }
 
-const containerWidths = {
-  "1": "max-w-(--cairn-content-width-reading)",
-  "2": "max-w-(--cairn-content-width-document)",
-  "3": "max-w-(--cairn-content-width-standard)",
-  "4": "max-w-(--cairn-content-width-wide)",
-} as const;
+type BlockDisplay = Responsive<"none" | "initial">;
 
-const containerAlignments = { left: "mr-auto", center: "mx-auto", right: "ml-auto" } as const;
+function displayAs(display: BlockDisplay | undefined, shown: "flex" | "block") {
+  if (display === undefined || typeof display === "string") return display === "initial" ? shown : display;
+  return Object.fromEntries(
+    Object.entries(display).map(([point, value]) => [point, value === "initial" ? shown : value]),
+  ) as Responsive<"none" | typeof shown>;
+}
 
-export type ContainerProps = SharedLayoutProps &
-  Readonly<{ align?: keyof typeof containerAlignments; size?: Responsive<keyof typeof containerWidths> }>;
-
-export function Container({ align = "center", size = "4", ...properties }: ContainerProps) {
-  const { classes, element } = splitShared(properties);
+export type ContainerProps = LayoutProps &
+  Readonly<{ size?: "1" | "2" | "3" | "4"; display?: BlockDisplay; align?: "left" | "center" | "right" }>;
+export function Container({ size = "4", display, align = "center", ...props }: ContainerProps) {
+  const { children, width, minWidth, maxWidth, height, minHeight, maxHeight, ...outer } = props;
+  const { element, classes, style } = splitLayout(outer);
+  const inner = splitLayout({ width, minWidth, maxWidth, height, minHeight, maxHeight });
   return (
     <div
       {...element}
-      className={cn(
-        "w-full",
-        containerAlignments[align],
-        responsive(size, (value) => containerWidths[value]),
-        classes,
-      )}
-    />
+      style={style}
+      data-size={size}
+      className={[
+        "cairn-Container",
+        ...responsiveClasses("display", displayAs(display, "flex")),
+        ...responsiveClasses("ai", { left: "start", center: "center", right: "end" }[align]),
+        ...classes,
+      ].join(" ")}
+    >
+      <div className={["cairn-ContainerInner", ...inner.classes].join(" ")} style={inner.style}>
+        {children}
+      </div>
+    </div>
   );
 }
 
-const sectionPaddings = { "1": "py-6", "2": "py-10", "3": "py-20", "4": "py-40" } as const;
-
-export type SectionProps = SharedLayoutProps & Readonly<{ size?: Responsive<keyof typeof sectionPaddings> }>;
-
-export function Section({ size = "3", ...properties }: SectionProps) {
-  const { classes, element } = splitShared(properties);
+export type SectionProps = LayoutProps & Readonly<{ size?: "1" | "2" | "3" | "4"; display?: BlockDisplay }>;
+export function Section({ size = "3", display, ...props }: SectionProps) {
+  const { element, classes, style } = splitLayout(props);
   return (
-    <section {...element} className={cn(responsive(size, (value) => sectionPaddings[value]), classes)} />
+    <section
+      {...element}
+      style={style}
+      data-size={size}
+      className={["cairn-Section", ...responsiveClasses("display", displayAs(display, "block")), ...classes].join(" ")}
+    />
   );
 }

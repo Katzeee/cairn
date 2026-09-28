@@ -11,4 +11,5 @@ coverage/
 .vscode/
 .DS_Store
 Thumbs.db
-packages/ui/src/catalog/generated-api.ts
+packages/ui/src/catalog/generated/
+packages/ui/src/styles/generated/

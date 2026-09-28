@@ -1,21 +1,26 @@
 import { Field as BaseField } from "@base-ui/react/field";
 
-import type { ElementProps } from "./element-props.js";
+import type { ElementProps } from "./internal/element-props.js";
 
-export type FieldProps = ElementProps<"div"> & Readonly<{ disabled?: boolean; invalid?: boolean; name?: string }>;
+export type FieldProps = ElementProps<"div"> &
+  Readonly<{
+    disabled?: boolean;
+    invalid?: boolean;
+    name?: string;
+  }>;
 
-export function Field(properties: FieldProps) {
-  return <BaseField.Root {...properties} className="flex flex-col gap-1.5" />;
+export function Field({ disabled, invalid, ...props }: FieldProps) {
+  return <BaseField.Root {...props} className="cairn-Field" disabled={disabled} invalid={invalid} />;
 }
 
-export function FieldLabel(properties: ElementProps<"label">) {
-  return <BaseField.Label {...properties} className="text-label font-medium text-foreground" />;
+export function FieldLabel(props: ElementProps<"label">) {
+  return <BaseField.Label {...props} className="cairn-FieldLabel" />;
 }
 
-export function FieldDescription(properties: ElementProps<"p">) {
-  return <BaseField.Description {...properties} className="text-caption text-muted-foreground" />;
+export function FieldDescription(props: ElementProps<"p">) {
+  return <BaseField.Description {...props} className="cairn-FieldDescription" />;
 }
 
-export function FieldError(properties: ElementProps<"div"> & Readonly<{ match?: boolean }>) {
-  return <BaseField.Error {...properties} className="text-caption font-medium text-destructive" />;
+export function FieldError(props: ElementProps<"div"> & Readonly<{ match?: boolean }>) {
+  return <BaseField.Error {...props} className="cairn-FieldError" />;
 }

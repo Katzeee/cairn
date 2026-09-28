@@ -17,7 +17,7 @@ function SourceSpan({ span }: Readonly<{ span: OutlineSourceSpan }>) {
     // surrounding line height so entering source text does not resize the line.
     return (
       <span
-        className="inline-flex min-h-lh max-w-full items-center align-top [&>*]:min-w-0"
+        className="cairn-OutlineSourceContent"
         data-source-end={span.to}
         data-source-start={span.from}
         data-source-token=""

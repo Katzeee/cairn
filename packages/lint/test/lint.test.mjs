@@ -43,18 +43,25 @@ test("disable directives need a reason and must stay necessary", async () => {
 
 test("application source cannot carry raw visual values", async () => {
   assert.deepEqual(await eslintMessages('export const accent = "#1a2b3c";\n'), ["cairn/no-raw-visual-values"]);
+  assert.deepEqual(await eslintMessages('export const inset = "12px";\n'), ["cairn/no-raw-visual-values"]);
+  assert.deepEqual(await eslintMessages('export const inset = "var(--cairn-space-3)";\n'), []);
+  assert.deepEqual(await eslintMessages('export const tint = "var(--accent-3)";\n'), ["cairn/no-raw-visual-values"]);
   assert.deepEqual(await eslintMessages('export const route = "#/legal";\n'), []);
 });
 
-test("application CSS uses Cairn tokens only", async () => {
+test("application CSS uses Cairn semantic tokens only", async () => {
   assert.deepEqual(await stylelintWarnings(".graph { color: #ff0000; }"), ["cairn/token-values"]);
   assert.deepEqual(await stylelintWarnings(".graph { gap: 12px; }"), ["cairn/token-values"]);
   assert.deepEqual(
     await stylelintWarnings(
-      ".graph { gap: calc(var(--cairn-spacing) * 3); border: 1px solid var(--cairn-color-border); }",
+      ".graph { gap: var(--cairn-space-3); border: var(--cairn-border-width) solid var(--cairn-color-border); }",
     ),
     [],
   );
+  assert.deepEqual(await stylelintWarnings(".graph { color: var(--gray-11); }"), ["cairn/semantic-tokens"]);
+  assert.deepEqual(await stylelintWarnings(".graph { --inset: var(--cairn-space-2); padding: var(--inset); }"), []);
+  assert.deepEqual(await stylelintWarnings(".graph { --gap: 12px; }"), ["cairn/token-values"]);
   assert.deepEqual(await stylelintWarnings(".page .cairn-toast { opacity: 1; }"), ["cairn/no-internal-selectors"]);
   assert.deepEqual(await stylelintWarnings('[data-ui="outline-row"] { opacity: 1; }'), ["cairn/no-internal-selectors"]);
+  assert.deepEqual(await stylelintWarnings('[data-outline-owner] { opacity: 1; }'), ["cairn/no-internal-selectors"]);
 });

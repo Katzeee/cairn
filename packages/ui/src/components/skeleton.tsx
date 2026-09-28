@@ -1,15 +1,42 @@
-const lineHeights = { caption: "h-3", body: "h-4", title: "h-5" } as const;
-const lineWidths = { full: "w-full", long: "w-4/5", medium: "w-3/5", short: "w-2/5" } as const;
-const circleSizes = { sm: "size-6", md: "size-8", lg: "size-10" } as const;
+import { cloneElement, isValidElement, type CSSProperties, type HTMLAttributes, type ReactElement } from "react";
 
-export type SkeletonProps =
-  | Readonly<{ shape?: "line"; size?: keyof typeof lineHeights; width?: keyof typeof lineWidths }>
-  | Readonly<{ shape: "circle"; size?: keyof typeof circleSizes }>;
+import type { ElementProps } from "./internal/element-props.js";
+import { customResponsive, type Responsive } from "./layout.js";
 
-export function Skeleton(properties: SkeletonProps) {
-  const geometry =
-    properties.shape === "circle"
-      ? `${circleSizes[properties.size ?? "md"]} rounded-full`
-      : `${lineHeights[properties.size ?? "body"]} ${lineWidths[properties.width ?? "full"]} rounded-sm`;
-  return <div aria-hidden className={`animate-pulse bg-muted ${geometry}`} />;
+export type SkeletonProps = ElementProps<"span"> &
+  Readonly<{
+    loading?: boolean;
+    width?: Responsive<string>;
+    height?: Responsive<string>;
+  }>;
+
+// A skeleton either wraps the element it stands in for, keeping its geometry, or draws a sized block.
+export function Skeleton({ loading = true, children, width, height, ...props }: SkeletonProps) {
+  if (!loading) return children;
+  const style: Record<string, string> = {};
+  const classes = ["cairn-Skeleton", ...customResponsive("w", width, style), ...customResponsive("h", height, style)];
+  if (isValidElement(children) && typeof children.type === "string") {
+    const child = children as ReactElement<HTMLAttributes<HTMLElement>>;
+    return cloneElement(child, {
+      ...props,
+      "aria-hidden": true,
+      className: [...classes, child.props.className].filter(Boolean).join(" "),
+      inert: true,
+      style: { ...child.props.style, ...style } as CSSProperties,
+      tabIndex: -1,
+    });
+  }
+  return (
+    <span
+      {...props}
+      aria-hidden
+      className={classes.join(" ")}
+      data-inline={isValidElement(children) || children === undefined ? undefined : ""}
+      inert
+      style={style}
+      tabIndex={-1}
+    >
+      {children}
+    </span>
+  );
 }

@@ -1,0 +1,263 @@
+.cairn-AppShell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-block: var(--cairn-safe-area-top) var(--cairn-safe-area-bottom);
+  padding-inline: var(--cairn-safe-area-left) var(--cairn-safe-area-right);
+  background-color: var(--cairn-color-canvas);
+  container: app-shell / inline-size;
+}
+
+.cairn-AppShellBody {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.cairn-AppShellContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.cairn-AppShellCompactHeader,
+.cairn-AppShellBottomBar,
+.cairn-AppShellRail,
+.cairn-AppShellSidebar,
+.cairn-AppShellDrawer {
+  background-color: var(--cairn-color-surface);
+}
+
+.cairn-AppShellCompactHeader {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--cairn-space-1) * 2.5);
+  padding: var(--cairn-space-2);
+  border-bottom: var(--cairn-border-width) solid var(--cairn-color-border);
+}
+
+.cairn-AppShellBottomBar {
+  --app-shell-items: 1;
+
+  display: grid;
+  grid-template-columns: repeat(var(--app-shell-items), minmax(0, 1fr));
+  padding: var(--cairn-space-2);
+  border-top: var(--cairn-border-width) solid var(--cairn-color-border);
+}
+
+.cairn-AppShellBottomItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cairn-space-1);
+  min-width: 0;
+  padding: var(--cairn-space-2) var(--cairn-space-1);
+  border-radius: var(--cairn-radius-item);
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-caption-line-height);
+  text-decoration: none;
+  transition: background-color var(--cairn-duration-fast) var(--cairn-ease-standard);
+
+  &:hover,
+  &[aria-current="page"] {
+    background-color: var(--cairn-accent-subtle);
+    color: var(--cairn-accent-text);
+  }
+
+  & > span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.cairn-AppShellDrawer {
+  position: fixed;
+  z-index: 51;
+  inset-block: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 18rem;
+  max-width: 100%;
+  min-height: 100dvh;
+  overflow-y: auto;
+  padding: var(--cairn-space-5) var(--cairn-space-4);
+  border-right: var(--cairn-border-width) solid var(--cairn-color-border);
+  box-shadow: var(--cairn-elevation-dialog);
+  outline: none;
+  transition: translate var(--cairn-duration-panel) var(--cairn-ease-standard);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    translate: -100% 0;
+  }
+}
+
+.cairn-AppShellDrawerClose {
+  position: absolute;
+  top: var(--cairn-space-3);
+  right: var(--cairn-space-3);
+}
+
+.cairn-AppShellBrand {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: calc(var(--cairn-space-1) * 2.5);
+  min-width: 0;
+  color: var(--cairn-color-text);
+  font-weight: var(--cairn-weight-bold);
+  letter-spacing: var(--cairn-heading-letter-spacing);
+  text-decoration: none;
+}
+
+.cairn-AppShellBrandText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cairn-AppShellBrandMark {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--cairn-control-height-sm);
+  height: var(--cairn-control-height-sm);
+  border-radius: var(--cairn-radius-control);
+  background-color: var(--cairn-accent-solid);
+  color: var(--cairn-accent-on-solid);
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-bold);
+}
+
+.cairn-AppShellRail,
+.cairn-AppShellSidebar {
+  position: sticky;
+  top: 0;
+  display: none;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: var(--cairn-border-width) solid var(--cairn-color-border);
+}
+
+.cairn-AppShellRail {
+  align-items: center;
+  gap: var(--cairn-space-2);
+  width: 4.5rem;
+  padding-block: var(--cairn-space-5);
+}
+
+.cairn-AppShellSidebar {
+  width: var(--cairn-nav-rail-width);
+  padding: var(--cairn-space-5) var(--cairn-space-4);
+}
+
+.cairn-AppShellExpand {
+  display: none;
+}
+
+.cairn-AppShellRailNav,
+.cairn-AppShellRailGroup,
+.cairn-AppShellRailUtilities {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cairn-space-1);
+  width: 100%;
+}
+
+.cairn-AppShellRailNav {
+  margin-top: var(--cairn-space-3);
+}
+
+.cairn-AppShellRailSeparator {
+  width: var(--cairn-space-6);
+  margin: var(--cairn-space-2) auto;
+}
+
+.cairn-AppShellRailUtilities {
+  margin-top: auto;
+  padding-top: var(--cairn-space-4);
+}
+
+.cairn-AppShellSidebarHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--cairn-space-1);
+}
+
+.cairn-AppShellSectionedNav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cairn-space-5);
+  margin-top: var(--cairn-space-6);
+}
+
+.cairn-AppShellNavItems,
+.cairn-AppShellUtilities {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--cairn-space-1) / 2);
+}
+
+.cairn-AppShellUtilities {
+  margin-top: auto;
+  padding-top: var(--cairn-space-5);
+}
+
+.cairn-AppShellUtilityButton {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: start;
+}
+
+@container app-shell (min-width: 600px) {
+  .cairn-AppShellBottomBar,
+  .cairn-AppShellCompactHeader[data-rail="true"] {
+    display: none;
+  }
+
+  .cairn-AppShellRail {
+    display: flex;
+  }
+}
+
+@container app-shell (min-width: 840px) {
+  .cairn-AppShellCompactHeader {
+    display: none;
+  }
+
+  .cairn-AppShellRail[data-preferred="false"] {
+    display: none;
+  }
+
+  .cairn-AppShellRail[data-preferred="true"] .cairn-AppShellExpand {
+    display: inline-flex;
+  }
+
+  .cairn-AppShellSidebar[data-preferred="false"] {
+    display: flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cairn-AppShellDrawer {
+    transition-property: opacity;
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      translate: 0 0;
+      opacity: 0;
+    }
+  }
+}

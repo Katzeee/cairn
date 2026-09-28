@@ -1,42 +1,43 @@
 import { Radio as BaseRadio } from "@base-ui/react/radio";
 import { RadioGroup as BaseRadioGroup } from "@base-ui/react/radio-group";
 
-import { ChoiceLabel, type ChoiceLabelProps } from "./choice-label.js";
-import type { ElementProps } from "./element-props.js";
+import { ChoiceLabel, type ChoiceLabelProps } from "./internal/choice-label.js";
+import type { ElementProps } from "./internal/element-props.js";
 
-export type RadioGroupProps = ElementProps<"div", "defaultValue" | "onChange"> &
+export type RadioGroupRootProps = ElementProps<"div", "defaultValue" | "onChange"> &
   Readonly<{
+    value?: string;
     defaultValue?: string;
-    disabled?: boolean;
-    name?: string;
     onValueChange?: (value: string) => void;
+    disabled?: boolean;
     readOnly?: boolean;
     required?: boolean;
-    value?: string;
+    name?: string;
+    orientation?: "vertical" | "horizontal";
   }>;
 
-export function RadioGroup({ onValueChange, ...properties }: RadioGroupProps) {
+function Root({ onValueChange, orientation = "vertical", ...props }: RadioGroupRootProps) {
   return (
     <BaseRadioGroup
-      {...properties}
-      className="flex flex-col gap-3"
+      {...props}
+      className="cairn-RadioGroup"
+      data-orientation={orientation}
       onValueChange={onValueChange === undefined ? undefined : (value) => onValueChange(String(value))}
     />
   );
 }
 
-export type RadioProps = ElementProps<"span", "children" | "defaultValue" | "onChange" | "value"> &
+export type RadioGroupItemProps = ElementProps<"span", "children" | "defaultValue" | "onChange" | "value"> &
   ChoiceLabelProps &
-  Readonly<{ disabled?: boolean; readOnly?: boolean; required?: boolean; value: string }>;
+  Readonly<{ value: string; disabled?: boolean; readOnly?: boolean; required?: boolean }>;
 
-export function Radio({ description, label, ...properties }: RadioProps) {
+function Item({ label, description, ...props }: RadioGroupItemProps) {
   const control = (
-    <BaseRadio.Root
-      {...properties}
-      className="grid size-5 shrink-0 place-items-center rounded-full border border-input bg-card outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-checked:border-primary data-disabled:cursor-not-allowed data-disabled:opacity-50"
-    >
-      <BaseRadio.Indicator className="size-2.5 rounded-full bg-primary data-unchecked:hidden" />
+    <BaseRadio.Root {...props} className="cairn-Radio cairn-Focusable">
+      <BaseRadio.Indicator className="cairn-RadioIndicator" />
     </BaseRadio.Root>
   );
-  return <ChoiceLabel control={control} controlFirst description={description} label={label} />;
+  return <ChoiceLabel control={control} description={description} label={label} placement="start" />;
 }
+
+export const RadioGroup = { Root, Item };

@@ -1,0 +1,10 @@
+@layer cairn.components {
+  .cairn-TestPage {
+    padding: var(--cairn-space-8);
+  }
+
+  .cairn-TestTable {
+    width: 100%;
+    table-layout: fixed;
+  }
+}

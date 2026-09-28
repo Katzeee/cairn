@@ -51,11 +51,8 @@ export function OutlineTreeRow({
       aria-posinset={row.indexInParent + 1}
       aria-selected={selected}
       aria-setsize={row.siblingCount}
-      className={cn(
-        "group/outline-row relative flex min-w-0 items-start rounded-selection pr-1.5",
-        dragged && "opacity-40",
-      )}
-      style={{ gap: "var(--cairn-outline-gap)", paddingBlock: "var(--cairn-outline-row-padding)" }}
+      className="cairn-OutlineRow"
+      data-dragged={dragged ? "true" : undefined}
       data-object-focused={cursor && row.item.activation === "object" && editActiveKey !== row.key ? "true" : undefined}
       data-editing={editActiveKey === row.key ? "true" : undefined}
       data-item-key={row.key}
@@ -77,7 +74,7 @@ export function OutlineTreeRow({
         onExpandedChange={onExpandedChange}
         row={row}
       />
-      <div className="min-w-0 flex-1 text-document-body">
+      <div className="cairn-OutlineRowBody">
         {editing === undefined ? (
           <OutlineItemContent presentation={presentation} row={row} />
         ) : (
@@ -85,7 +82,7 @@ export function OutlineTreeRow({
             binding={editActiveKey === row.key ? editBinding : null}
             placeholder={cursor || editActiveKey === row.key ? (editing.emptyPlaceholder ?? "Start typing…") : ""}
           >
-            <div className="flex min-h-lh max-w-full min-w-0 items-start" data-ui="outline-row-text">
+            <div className="cairn-OutlineRowText" data-ui="outline-row-text">
               <OutlineItemContent presentation={presentation} row={row} />
             </div>
           </OutlineInlineEditorProvider>
@@ -106,8 +103,8 @@ export function OutlineItemContent({
   return (
     <OutlineRowContent
       className={cn(
-        contentStyle?.tone === "muted" && "text-muted-foreground",
-        contentStyle?.decoration === "line-through" && "line-through",
+        contentStyle?.color === "gray" && "cairn-OutlineMuted",
+        contentStyle?.decoration === "line-through" && "cairn-OutlineStruck",
       )}
       details={presentation.details}
       leading={presentation.leading}
@@ -118,13 +115,13 @@ export function OutlineItemContent({
       <span
         className={cn(
           row.item.activation === "navigate"
-            ? "cursor-pointer"
+            ? "cairn-OutlineNavigate"
             : row.item.editable === false
               ? "cairn-outline-readonly"
               : row.item.activation === "object"
-                ? "cursor-default"
-                : "cursor-text",
-          contentStyle?.weight === "medium" && "font-medium",
+                ? "cairn-OutlineObject"
+                : "cairn-OutlineEditable",
+          contentStyle?.weight === "medium" && "cairn-OutlineMedium",
         )}
         data-ui={row.item.editable === false ? "outline-readonly-text" : undefined}
       >

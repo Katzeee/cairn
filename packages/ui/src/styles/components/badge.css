@@ -1,0 +1,28 @@
+.cairn-Badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: calc(var(--cairn-space-1) * 1.5);
+  padding: calc(var(--cairn-space-1) / 2) calc(var(--cairn-space-1) * 2.5);
+  border: var(--cairn-border-width) solid var(--cairn-tone-border);
+  border-radius: var(--cairn-radius-pill);
+  background-color: var(--cairn-tone-subtle);
+  color: var(--cairn-tone-text);
+  font-size: var(--cairn-text-caption-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-caption-line-height);
+  white-space: nowrap;
+
+  &[data-tone="neutral"] {
+    border-color: var(--cairn-color-border);
+    background-color: var(--cairn-color-surface);
+    color: var(--cairn-color-text-muted);
+  }
+
+  /* Rides along body text without growing its line box. */
+  &[data-size="sm"] {
+    padding-block: 0;
+    padding-inline: calc(var(--cairn-space-1) * 1.5);
+    border-color: transparent;
+  }
+}

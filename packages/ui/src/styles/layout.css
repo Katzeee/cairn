@@ -1,0 +1,65 @@
+.cairn-Box {
+  display: block;
+}
+
+.cairn-Flex {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.cairn-Grid {
+  display: grid;
+  align-items: stretch;
+  justify-content: flex-start;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.cairn-Container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.cairn-ContainerInner {
+  width: 100%;
+  max-width: var(--container-width);
+}
+
+.cairn-Container[data-size="1"] {
+  --container-width: var(--cairn-container-1);
+}
+
+.cairn-Container[data-size="2"] {
+  --container-width: var(--cairn-container-2);
+}
+
+.cairn-Container[data-size="3"] {
+  --container-width: var(--cairn-container-3);
+}
+
+.cairn-Container[data-size="4"] {
+  --container-width: var(--cairn-container-4);
+}
+
+.cairn-Section {
+  flex-shrink: 0;
+  padding-block: var(--section-padding);
+}
+
+.cairn-Section[data-size="1"] {
+  --section-padding: var(--cairn-space-5);
+}
+
+.cairn-Section[data-size="2"] {
+  --section-padding: var(--cairn-space-7);
+}
+
+.cairn-Section[data-size="3"] {
+  --section-padding: var(--cairn-space-9);
+}
+
+.cairn-Section[data-size="4"] {
+  --section-padding: calc(var(--cairn-space-9) * 1.25);
+}

@@ -9,7 +9,11 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "paths": {
+      "@cairn/ui": ["./src/index.ts"],
+      "@cairn/ui/editor": ["./src/editor.ts"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "src/**/*.test.ts"]

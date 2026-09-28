@@ -9,7 +9,8 @@
       "import": "./dist/index.js"
     },
     "./tokens.css": "./dist/tokens.css",
-    "./theme.css": "./dist/theme.css"
+    "./themes/forest.css": "./dist/themes/forest.css",
+    "./themes/slate.css": "./dist/themes/slate.css"
   },
   "scripts": {
     "clean": "node ../../scripts/clean-package-dist.mjs",
@@ -21,6 +22,9 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
+    "@radix-ui/colors": "^3.0.0",
+    "bezier-easing": "^3.1.0",
+    "colorjs.io": "^0.7.1",
     "typescript": "^6.0.3"
   }
 }

@@ -20,5 +20,6 @@ await build({
   outdir: output,
   platform: "browser",
   target: ["chrome120", "firefox120", "safari17"],
+  tsconfig: join(appRoot, "tsconfig.json"),
 });
 await cp(join(appRoot, "src/index.html"), join(output, "index.html"));

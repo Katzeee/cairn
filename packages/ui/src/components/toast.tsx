@@ -1,108 +1,92 @@
 import { Toast as BaseToast } from "@base-ui/react/toast";
-import type { AlertTone, IconName } from "@cairn/design-system-catalog";
 import type { ReactNode } from "react";
 
-import { CairnPortalTheme } from "../cairn-theme.js";
-import { Button, StyledButton } from "./button.js";
-import { Icon } from "./icon.js";
+import { Button, IconButton } from "./button.js";
+import { Icon, type IconName } from "./icon.js";
+import { usePortalContainer } from "./internal/portal-container.js";
+import type { Tone } from "./internal/variants.js";
 
 export type ToastOptions = Readonly<{
-  action?: Readonly<{ label: string; onPress: () => void }>;
-  description?: string;
   title: string;
-  tone?: AlertTone;
+  description?: string;
+  tone?: Tone;
+  action?: Readonly<{ label: string; onPress: () => void }>;
 }>;
 
-type ToastData = Readonly<{
-  action?: ToastOptions["action"];
-  tone: AlertTone;
-}>;
+type ToastData = Readonly<{ action?: ToastOptions["action"]; tone: Tone }>;
 
 const manager = BaseToast.createToastManager<ToastData>();
+
+const marks: Partial<Record<Tone, IconName>> = {
+  info: "info",
+  success: "circle-check",
+  warning: "triangle-alert",
+  danger: "circle-alert",
+};
 
 export function toast({ action, description, title, tone = "neutral" }: ToastOptions): string {
   return manager.add({
     actionProps: action === undefined ? undefined : { onClick: action.onPress },
     data: { action, tone },
     description,
-    priority: tone === "destructive" ? "high" : "low",
+    priority: tone === "danger" ? "high" : "low",
     title,
     type: tone,
   });
 }
 
 export function ToastProvider({ children }: Readonly<{ children: ReactNode }>) {
+  const { anchorRef, container } = usePortalContainer();
   return (
     <BaseToast.Provider limit={4} toastManager={manager}>
       {children}
-      <BaseToast.Portal>
-        <CairnPortalTheme>
-          <BaseToast.Viewport className="pointer-events-none fixed inset-x-4 top-4 z-50 flex flex-col items-end gap-2 outline-none">
-            <ToastList />
-          </BaseToast.Viewport>
-        </CairnPortalTheme>
+      <span hidden ref={anchorRef} />
+      <BaseToast.Portal container={container}>
+        <BaseToast.Viewport className="cairn-ToastViewport">
+          <ToastList />
+        </BaseToast.Viewport>
       </BaseToast.Portal>
     </BaseToast.Provider>
   );
 }
 
-const toneMarks: Readonly<Record<Exclude<AlertTone, "neutral">, Readonly<{ bubble: string; icon: IconName }>>> = {
-  success: { bubble: "bg-success-subtle text-success-strong", icon: "check" },
-  warning: {
-    bubble: "bg-warning-subtle text-warning-strong",
-    icon: "circle-alert",
-  },
-  destructive: {
-    bubble: "bg-destructive-subtle text-destructive-strong",
-    icon: "circle-alert",
-  },
-};
-
 function ToastList() {
   const { toasts } = BaseToast.useToastManager<ToastData>();
   return toasts.map((item) => {
     const data = item.data ?? { tone: "neutral" };
-    const mark = data.tone === "neutral" ? undefined : toneMarks[data.tone];
+    const mark = marks[data.tone];
     return (
       <BaseToast.Root
-        className="cairn-toast pointer-events-auto w-96 max-w-full rounded-lg border border-border bg-popover p-4 text-popover-foreground shadow-lg"
+        className="cairn-Toast"
+        data-tone={data.tone}
         data-ui="toast"
         key={item.id}
         swipeDirection={["up", "right"]}
         toast={item}
       >
-        <BaseToast.Content className="flex items-start gap-3" data-ui="toast-content">
+        <BaseToast.Content className="cairn-ToastContent" data-ui="toast-content">
           {mark === undefined ? null : (
-            <span aria-hidden className={`grid size-8 shrink-0 place-items-center rounded-full ${mark.bubble}`}>
-              <Icon name={mark.icon} size="sm" />
+            <span aria-hidden className="cairn-ToastMark">
+              <Icon name={mark} size="sm" />
             </span>
           )}
-          <div className="min-w-0 flex-1">
-            {/* A single-line title centers against the tone bubble or the
-                close button; descriptions flow below the shared baseline. */}
-            <BaseToast.Title
-              className={`flex items-center text-label font-semibold ${mark === undefined ? "min-h-7" : "min-h-8"}`}
-            />
-            <BaseToast.Description className="text-caption text-muted-foreground" />
+          <div className="cairn-ToastText">
+            <BaseToast.Title className="cairn-ToastTitle" />
+            {item.description ? <BaseToast.Description className="cairn-ToastDescription" /> : null}
             {data.action === undefined ? null : (
-              <BaseToast.Action className="mt-2.5" render={<Button size="sm" variant="outline" />}>
-                {data.action.label}
-              </BaseToast.Action>
+              <div className="cairn-ToastAction">
+                <BaseToast.Action render={<Button size="sm" variant="outline" />}>{data.action.label}</BaseToast.Action>
+              </div>
             )}
           </div>
-          <BaseToast.Close
-            aria-label="Dismiss notification"
-            data-ui="toast-close"
-            render={
-              <StyledButton
-                className={`-mr-1.5 size-7 shrink-0 self-start ${mark === undefined ? "" : "mt-0.5"}`}
-                size="icon"
-                variant="ghost"
-              />
-            }
-          >
-            <Icon name="x" size="sm" />
-          </BaseToast.Close>
+          <span className="cairn-ToastClose">
+            <BaseToast.Close
+              data-ui="toast-close"
+              render={<IconButton aria-label="Dismiss notification" size="sm" variant="ghost" />}
+            >
+              <Icon name="x" size="sm" />
+            </BaseToast.Close>
+          </span>
         </BaseToast.Content>
       </BaseToast.Root>
     );

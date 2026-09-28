@@ -198,7 +198,7 @@ function OutlineTreeRegion<Presentation, Action>({
         aria-activedescendant={cursorKey === null || edit.activeKey !== null ? undefined : rowDomId(cursorKey)}
         aria-label={label}
         aria-multiselectable="true"
-        className="relative w-full rounded-sm text-document-body outline-none"
+        className="cairn-outline-tree"
         onKeyDown={(event) => {
           if ((event.target as Element).closest('[role="tree"]') === event.currentTarget) {
             interaction.handleKeyDown(event);
@@ -244,14 +244,14 @@ function OutlineTreeRegion<Presentation, Action>({
         )}
         {drag === null || draggedRows[0] === undefined ? null : (
           <div
-            className="pointer-events-none fixed z-50 max-w-72 rounded-md border border-border bg-popover px-3 py-1.5 text-body text-popover-foreground shadow-lg"
+            className="cairn-OutlineDragPreview"
             style={{ left: drag.pointer.x + 14, top: drag.pointer.y + 12 }}
           >
             <OutlineInlineExtensionsProvider value={inlineExtensions}>
               <OutlineItemContent presentation={presentRow(draggedRows[0], false)} row={draggedRows[0]} />
             </OutlineInlineExtensionsProvider>
             {draggedRows.length <= 1 ? null : (
-              <span className="ml-2 text-caption text-muted-foreground">+{String(draggedRows.length - 1)}</span>
+              <span className="cairn-OutlineDragCount">+{String(draggedRows.length - 1)}</span>
             )}
           </div>
         )}

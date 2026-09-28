@@ -1,0 +1,18 @@
+.cairn-Icon {
+  flex-shrink: 0;
+  width: var(--icon-size);
+  height: var(--icon-size);
+
+  &[data-size="xs"] {
+    --icon-size: 14px;
+  }
+  &[data-size="sm"] {
+    --icon-size: 16px;
+  }
+  &[data-size="md"] {
+    --icon-size: 20px;
+  }
+  &[data-size="lg"] {
+    --icon-size: 24px;
+  }
+}

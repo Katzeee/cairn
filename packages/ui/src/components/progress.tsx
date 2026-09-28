@@ -1,24 +1,34 @@
 import { Progress as BaseProgress } from "@base-ui/react/progress";
 
-export function Progress({
-  label,
-  max = 100,
-  value,
-}: Readonly<{
-  label?: string;
+import type { Tone } from "./internal/variants.js";
+
+export type ProgressProps = Readonly<{
+  value: number | null;
   max?: number;
-  value: number;
-}>) {
+  label?: string;
+  tone?: Tone;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+}>;
+
+export function Progress({ value, max = 100, label, tone = "accent", ...props }: ProgressProps) {
   return (
-    <BaseProgress.Root className="flex w-full flex-col gap-1.5" max={max} value={value}>
+    <BaseProgress.Root
+      {...props}
+      className="cairn-Progress"
+      data-indeterminate={value === null ? "" : undefined}
+      data-tone={tone}
+      max={max}
+      value={value}
+    >
       {label === undefined ? null : (
-        <div className="flex items-baseline justify-between gap-2">
-          <BaseProgress.Label className="text-label font-medium">{label}</BaseProgress.Label>
-          <BaseProgress.Value className="text-caption text-muted-foreground" />
+        <div className="cairn-ProgressHeader">
+          <BaseProgress.Label className="cairn-ProgressLabel">{label}</BaseProgress.Label>
+          <BaseProgress.Value className="cairn-ProgressValue" />
         </div>
       )}
-      <BaseProgress.Track className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-        <BaseProgress.Indicator className="h-full rounded-full bg-primary transition-[width] duration-(--cairn-duration-standard) ease-(--cairn-ease-standard)" />
+      <BaseProgress.Track className="cairn-ProgressTrack">
+        <BaseProgress.Indicator className="cairn-ProgressIndicator" />
       </BaseProgress.Track>
     </BaseProgress.Root>
   );

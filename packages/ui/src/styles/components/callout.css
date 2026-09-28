@@ -1,0 +1,43 @@
+.cairn-Callout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cairn-space-3);
+  width: 100%;
+  padding: var(--cairn-space-3) var(--cairn-space-4);
+  border: var(--cairn-border-width) solid var(--cairn-tone-border);
+  border-radius: var(--cairn-radius-panel);
+  background-color: var(--cairn-tone-subtle);
+  color: var(--cairn-tone-text);
+  font-size: var(--cairn-text-body-size);
+  line-height: var(--cairn-text-body-line-height);
+
+  &[data-tone="neutral"] {
+    border-color: var(--cairn-color-border);
+    background-color: var(--cairn-color-surface);
+    color: var(--cairn-color-text);
+  }
+}
+
+.cairn-CalloutIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: var(--cairn-text-body-line-height);
+}
+
+.cairn-CalloutBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--cairn-space-1);
+  min-width: 0;
+}
+
+.cairn-CalloutTitle {
+  margin: 0;
+  font-weight: var(--cairn-weight-semibold);
+}
+
+.cairn-CalloutText {
+  margin: 0;
+}

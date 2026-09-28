@@ -4,7 +4,7 @@ export type OutlineChildrenLayout = "beside" | "indented";
 
 export type OutlineContentStyle = Readonly<{
   decoration?: "line-through";
-  tone?: "default" | "muted";
+  color?: "gray";
   weight?: "medium" | "normal";
 }>;
 

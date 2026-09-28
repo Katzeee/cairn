@@ -1,0 +1,155 @@
+/* Shared by every editable box: text fields, text areas, select triggers, and comboboxes. */
+.cairn-Input {
+  --input-height: var(--cairn-control-height-md);
+  --input-padding: var(--cairn-space-3);
+  --input-font-size: var(--cairn-text-body-size);
+  --input-line-height: var(--cairn-text-body-line-height);
+
+  display: flex;
+  align-items: center;
+  gap: var(--cairn-space-2);
+  width: 100%;
+  min-width: 0;
+  min-height: var(--input-height);
+  padding-inline: var(--input-padding);
+  border: var(--cairn-border-width) solid var(--input-border, var(--cairn-color-border-strong));
+  border-radius: var(--cairn-radius-control);
+  background-color: var(--cairn-input-background, var(--cairn-color-surface));
+  box-shadow: var(--cairn-input-shadow, var(--cairn-elevation-control));
+  color: var(--cairn-color-text);
+  font-size: var(--input-font-size);
+  line-height: var(--input-line-height);
+  outline: 0 solid transparent;
+  transition-duration: var(--cairn-duration-fast);
+  transition-property: border-color, outline-color, background-color;
+  transition-timing-function: var(--cairn-ease-standard);
+  cursor: text;
+
+  &[data-size="sm"] {
+    --input-height: var(--cairn-control-height-sm);
+    --input-padding: var(--cairn-space-2);
+    --input-font-size: var(--cairn-text-label-size);
+    --input-line-height: var(--cairn-text-label-line-height);
+  }
+
+  &[data-size="lg"] {
+    --input-height: var(--cairn-control-height-lg);
+    --input-padding: var(--cairn-space-4);
+    --input-font-size: var(--cairn-text-body-large-size);
+    --input-line-height: var(--cairn-text-body-large-line-height);
+  }
+
+  &:focus-within,
+  &[data-popup-open] {
+    --input-border: var(--cairn-accent-solid);
+    outline: var(--cairn-focus-ring-width) solid var(--cairn-color-focus-halo);
+  }
+
+  &[data-invalid] {
+    --input-border: var(--cairn-danger-solid);
+    &:focus-within {
+      outline-color: var(--cairn-danger-subtle-active);
+    }
+  }
+
+  &[data-readonly] {
+    background-color: var(--cairn-color-surface-muted);
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    opacity: var(--cairn-disabled-opacity);
+  }
+}
+
+.cairn-InputControl {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline: none;
+
+  &::placeholder {
+    color: var(--cairn-color-text-muted);
+    opacity: 1;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.cairn-InputSlot {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--cairn-space-2);
+  color: var(--cairn-color-text-muted);
+
+  &[data-side="left"] {
+    order: -1;
+  }
+}
+
+.cairn-TextArea {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  padding-block: var(--cairn-space-2);
+  appearance: none;
+  resize: vertical;
+
+  &::placeholder {
+    color: var(--cairn-color-text-muted);
+    opacity: 1;
+  }
+
+  &[data-size="sm"] {
+    padding-block: var(--cairn-space-1);
+  }
+  &[data-size="lg"] {
+    padding-block: var(--cairn-space-3);
+  }
+
+  &[data-variant="soft"] {
+    border-color: transparent;
+    background-color: var(--cairn-tone-subtle-hover);
+    box-shadow: none;
+    color: var(--cairn-tone-text);
+  }
+
+  &:focus-within {
+    --input-border: var(--cairn-tone-solid);
+    outline-color: var(--cairn-tone-border-strong);
+  }
+
+  &[data-invalid] {
+    --input-border: var(--cairn-danger-solid);
+    border-color: var(--input-border);
+    &:focus-within {
+      outline-color: var(--cairn-danger-border-strong);
+    }
+  }
+
+  &[data-readonly],
+  &[data-disabled] {
+    background-color: var(--cairn-color-surface-muted);
+  }
+
+  &[data-resize="none"] {
+    resize: none;
+  }
+  &[data-resize="horizontal"] {
+    resize: horizontal;
+  }
+  &[data-resize="both"] {
+    resize: both;
+  }
+}

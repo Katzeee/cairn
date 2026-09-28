@@ -90,7 +90,7 @@ function HeadingRegion({ target, editing, inlineExtensions = [], commands = [], 
       tabIndex={0}
       data-ui="outline-title"
       data-item-key={target.key}
-      className="min-w-0 outline-none"
+      className="cairn-NodeHeading"
       style={{ cursor: target.editable === false ? "default" : "text" }}
       onFocus={(event) => {
         if (event.target === event.currentTarget) {

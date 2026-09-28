@@ -1,39 +1,43 @@
 import { ContextMenu as BaseContextMenu } from "@base-ui/react/context-menu";
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 
-import { CairnPortalTheme } from "../cairn-theme.js";
-import { menuItemClassName, menuPopupClassName, type DropdownMenuItem } from "./dropdown-menu.js";
-import { Icon } from "./icon.js";
+import { usePortalContainer } from "./internal/portal-container.js";
+import { CheckboxItem, Group, Item, Label, RadioGroup, RadioItem, Separator, Sub, SubTrigger } from "./internal/menu-parts.js";
 
-export function ContextMenu({
-  children,
-  items,
-}: Readonly<{
-  children: ReactNode;
-  items: readonly DropdownMenuItem[];
-}>) {
+function Root({ children }: Readonly<{ children: ReactNode }>) {
+  return <BaseContextMenu.Root>{children}</BaseContextMenu.Root>;
+}
+
+function Trigger({ children }: Readonly<{ children: ReactElement }>) {
+  return <BaseContextMenu.Trigger render={children} />;
+}
+
+function Content({ children }: Readonly<{ children: ReactNode }>) {
+  const { anchorRef, container } = usePortalContainer();
   return (
-    <BaseContextMenu.Root>
-      <BaseContextMenu.Trigger className="block min-w-0">{children}</BaseContextMenu.Trigger>
-      <BaseContextMenu.Portal>
-        <CairnPortalTheme>
-          <BaseContextMenu.Positioner className="z-50 outline-none">
-            <BaseContextMenu.Popup className={menuPopupClassName}>
-              {items.map((item) => (
-                <BaseContextMenu.Item
-                  className={menuItemClassName(item.tone)}
-                  disabled={item.disabled}
-                  key={item.label}
-                  onClick={item.onSelect}
-                >
-                  {item.icon === undefined ? null : <Icon name={item.icon} size="sm" />}
-                  {item.label}
-                </BaseContextMenu.Item>
-              ))}
-            </BaseContextMenu.Popup>
-          </BaseContextMenu.Positioner>
-        </CairnPortalTheme>
+    <>
+      <span hidden ref={anchorRef} />
+      <BaseContextMenu.Portal container={container}>
+        <BaseContextMenu.Positioner className="cairn-Positioner">
+          <BaseContextMenu.Popup className="cairn-Popup">{children}</BaseContextMenu.Popup>
+        </BaseContextMenu.Positioner>
       </BaseContextMenu.Portal>
-    </BaseContextMenu.Root>
+    </>
   );
 }
+
+export const ContextMenu = {
+  Root,
+  Trigger,
+  Content,
+  Item,
+  CheckboxItem,
+  RadioGroup,
+  RadioItem,
+  Label,
+  Group,
+  Separator,
+  Sub,
+  SubTrigger,
+  SubContent: Content,
+};

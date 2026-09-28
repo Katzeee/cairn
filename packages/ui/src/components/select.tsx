@@ -1,77 +1,114 @@
 import { Select as BaseSelect } from "@base-ui/react/select";
+import { Children, createContext, isValidElement, useContext, type ReactNode } from "react";
 
-import { CairnPortalTheme } from "../cairn-theme.js";
 import { Icon } from "./icon.js";
+import type { ElementProps } from "./internal/element-props.js";
+import { usePortalContainer } from "./internal/portal-container.js";
+import type { ControlSize } from "./internal/variants.js";
 
-export type SelectOption = Readonly<{
+const SizeContext = createContext<ControlSize>("md");
+
+export type SelectRootProps = Readonly<{
+  children: ReactNode;
+  size?: ControlSize;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
-  label: string;
-  value: string;
+  readOnly?: boolean;
+  required?: boolean;
+  name?: string;
 }>;
 
-export function Select({
-  defaultValue,
-  disabled,
-  name,
-  onValueChange,
-  options,
-  placeholder = "Select…",
-  value,
-}: Readonly<{
-  defaultValue?: string;
-  disabled?: boolean;
-  name?: string;
-  onValueChange?: (value: string) => void;
-  options: readonly SelectOption[];
-  placeholder?: string;
-  value?: string;
-}>) {
+export type SelectTriggerProps = ElementProps<"button", "children"> &
+  Readonly<{ placeholder?: string; invalid?: boolean }>;
+
+export type SelectContentProps = Readonly<{ children: ReactNode }>;
+
+export type SelectItemProps = Readonly<{ value: string; disabled?: boolean; children: ReactNode }>;
+
+// Base UI renders the selected label from this list before the popup ever mounts.
+function collectItems(children: ReactNode): { label: ReactNode; value: string }[] {
+  return Children.toArray(children).flatMap((child) => {
+    if (!isValidElement(child)) return [];
+    if (child.type === Item) {
+      const { children: label, value } = child.props as SelectItemProps;
+      return [{ label, value }];
+    }
+    return collectItems((child.props as { children?: ReactNode }).children);
+  });
+}
+
+function Root({ size = "md", children, onValueChange, ...props }: SelectRootProps) {
   return (
-    <BaseSelect.Root
-      defaultValue={defaultValue}
-      disabled={disabled}
-      items={options.map((option) => ({
-        label: option.label,
-        value: option.value,
-      }))}
-      name={name}
-      onValueChange={onValueChange === undefined ? undefined : (next) => onValueChange(next as string)}
-      value={value}
-    >
-      <BaseSelect.Trigger
-        className="flex h-10 w-full items-center justify-between gap-2 rounded-sm border border-input bg-card px-3 text-body text-foreground outline-none transition-[border-color,box-shadow] focus:border-ring focus:ring-2 focus:ring-ring/25 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-placeholder:text-muted-foreground"
+    <SizeContext.Provider value={size}>
+      <BaseSelect.Root
+        {...props}
+        items={collectItems(children)}
+        onValueChange={onValueChange === undefined ? undefined : (value) => onValueChange(String(value))}
       >
-        <BaseSelect.Value className="truncate" placeholder={placeholder} />
-        <BaseSelect.Icon className="shrink-0 text-muted-foreground">
-          <Icon name="chevron-down" size="sm" />
-        </BaseSelect.Icon>
-      </BaseSelect.Trigger>
-      <BaseSelect.Portal>
-        <CairnPortalTheme>
-          {/* Drop below the trigger like every other anchored popup; the
-            macOS-style overlay default would cover the control it came from. */}
-          <BaseSelect.Positioner alignItemWithTrigger={false} className="z-50 outline-none" sideOffset={6}>
-            <BaseSelect.Popup
-              className="cairn-overlay-popup max-h-72 overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md outline-none"
-              style={{ minWidth: "var(--anchor-width)" }}
-            >
-              {options.map((option) => (
-                <BaseSelect.Item
-                  className="grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 rounded-sm px-2.5 py-2 text-label outline-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground"
-                  disabled={option.disabled}
-                  key={option.value}
-                  value={option.value}
-                >
-                  <BaseSelect.ItemIndicator className="col-start-1">
-                    <Icon name="check" size="sm" />
-                  </BaseSelect.ItemIndicator>
-                  <BaseSelect.ItemText className="col-start-2 truncate">{option.label}</BaseSelect.ItemText>
-                </BaseSelect.Item>
-              ))}
-            </BaseSelect.Popup>
-          </BaseSelect.Positioner>
-        </CairnPortalTheme>
-      </BaseSelect.Portal>
-    </BaseSelect.Root>
+        {children}
+      </BaseSelect.Root>
+    </SizeContext.Provider>
   );
 }
+
+function Trigger({ placeholder, invalid, ...props }: SelectTriggerProps) {
+  return (
+    <BaseSelect.Trigger
+      {...props}
+      className="cairn-Input cairn-SelectTrigger cairn-HitArea"
+      data-invalid={invalid || undefined}
+      data-size={useContext(SizeContext)}
+    >
+      <BaseSelect.Value className="cairn-SelectValue" placeholder={placeholder} />
+      <BaseSelect.Icon className="cairn-SelectIcon">
+        <Icon name="chevron-down" size="sm" />
+      </BaseSelect.Icon>
+    </BaseSelect.Trigger>
+  );
+}
+
+function Content({ children }: SelectContentProps) {
+  const { anchorRef, container } = usePortalContainer();
+  return (
+    <>
+      <span hidden ref={anchorRef} />
+      <BaseSelect.Portal container={container}>
+        <BaseSelect.Positioner alignItemWithTrigger={false} className="cairn-Positioner" sideOffset={6}>
+          <BaseSelect.Popup className="cairn-Popup" data-list="">
+            {children}
+          </BaseSelect.Popup>
+        </BaseSelect.Positioner>
+      </BaseSelect.Portal>
+    </>
+  );
+}
+
+function Item({ value, disabled, children }: SelectItemProps) {
+  return (
+    <BaseSelect.Item className="cairn-PopupItem" data-indicator="" disabled={disabled} value={value}>
+      <BaseSelect.ItemIndicator className="cairn-PopupItemIndicator">
+        <Icon name="check" size="sm" />
+      </BaseSelect.ItemIndicator>
+      <BaseSelect.ItemText className="cairn-PopupItemText">{children}</BaseSelect.ItemText>
+    </BaseSelect.Item>
+  );
+}
+
+function Group({ children }: Readonly<{ children: ReactNode }>) {
+  return <BaseSelect.Group>{children}</BaseSelect.Group>;
+}
+
+function Label({ children }: Readonly<{ children: ReactNode }>) {
+  return <BaseSelect.GroupLabel className="cairn-PopupLabel">{children}</BaseSelect.GroupLabel>;
+}
+
+function Separator() {
+  return <BaseSelect.Separator className="cairn-PopupSeparator" />;
+}
+
+export const Select = { Root, Trigger, Content, Item, Group, Label, Separator };

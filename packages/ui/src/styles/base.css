@@ -1,0 +1,87 @@
+@font-face {
+  font-family: "HarmonyOS Sans SC";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: url("./assets/fonts/HarmonyOS_Sans_SC.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("./assets/fonts/JetBrainsMono-Variable.ttf") format("truetype");
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  scrollbar-color: var(--cairn-color-border-strong) transparent;
+  scrollbar-width: thin;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body,
+[data-cairn-theme] {
+  background-color: var(--cairn-color-canvas);
+  color: var(--cairn-color-text);
+  font-family: var(--cairn-font-interface);
+  font-size: var(--cairn-text-body-size);
+  line-height: var(--cairn-text-body-line-height);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--cairn-color-selection);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--cairn-font-code);
+}
+
+@media (pointer: coarse) {
+  :where(button, a[href], [role="menuitem"], [role="switch"]) {
+    position: relative;
+  }
+
+  :where(button, a[href], [role="menuitem"], [role="switch"])::after {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: max(100%, var(--cairn-control-hit-target));
+    block-size: max(100%, var(--cairn-control-hit-target));
+    content: "";
+    pointer-events: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  :where(.cairn-HitArea, textarea) {
+    min-block-size: var(--cairn-control-hit-target);
+  }
+}

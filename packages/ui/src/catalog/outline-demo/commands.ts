@@ -1,4 +1,5 @@
 import type { OutlineCompletionItem } from "../../components/node-editor/outline-tree-edit-contract.js";
+import { Check } from "lucide-react";
 import { createElement } from "react";
 import { Icon } from "../../components/icon.js";
 import { demoInlineToken } from "./inline.js";
@@ -12,7 +13,7 @@ export type DemoOutlineCommand = OutlineCompletionItem &
 export const demoOutlineCommands: readonly DemoOutlineCommand[] = [
   {
     id: "task",
-    leading: createElement(Icon, { name: "check", size: "sm" }),
+    leading: createElement(Icon, { glyph: Check, size: "sm" }),
     label: "Make task",
     description: "Add an actionable checkbox to this node",
     keywords: ["todo"],

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { Button, DropdownMenu, Icon } from "@cairn/ui";
 
 export default function DropdownMenuActions() {
@@ -8,7 +9,7 @@ export default function DropdownMenuActions() {
       <DropdownMenu.Trigger>
         <Button variant="outline">
           Options
-          <Icon name="chevron-down" size="sm" />
+          <Icon glyph={ChevronDown} size="sm" />
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>

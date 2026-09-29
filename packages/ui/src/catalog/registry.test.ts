@@ -34,7 +34,7 @@ describe("catalog registry", () => {
   });
 
   it("shows examples that import only what an application can import", () => {
-    const allowed = /^(react|@cairn\/ui|@cairn\/ui\/editor|\.\.\/\.\.\/outline-demo\/.+)$/;
+    const allowed = /^(react|lucide-react|@cairn\/ui|@cairn\/ui\/editor|\.\.\/\.\.\/outline-demo\/.+)$/;
     for (const [id, source] of examples) {
       const imports = [...source.matchAll(/from "([^"]+)"/g)].map((match) => match[1]!);
       expect(imports.filter((specifier) => !allowed.test(specifier)), id).toEqual([]);

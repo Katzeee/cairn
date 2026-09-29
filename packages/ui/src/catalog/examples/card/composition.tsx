@@ -1,3 +1,4 @@
+import { AppWindow } from "lucide-react";
 import { Badge, Button, Card, Flex, Heading, Icon, Separator, Text } from "@cairn/ui";
 
 export default function CardComposition() {
@@ -5,7 +6,7 @@ export default function CardComposition() {
     <Card as="article">
       <Flex direction="column" gap="4">
         <Flex align="center" gap="3">
-          <Icon name="app-window" />
+          <Icon glyph={AppWindow} />
           <Flex direction="column" flexGrow="1" minWidth="0">
             <Heading as="h3" size="title-small">
               Maya 2025

@@ -1,3 +1,4 @@
+import { Image as ImageGlyph, ImageOff } from "lucide-react";
 import { createContext, useContext, useState, type CSSProperties, type ReactNode } from "react";
 
 import { Icon } from "./icon.js";
@@ -36,7 +37,7 @@ export function Image({ src, alt, aspectRatio, fit = "cover", fallback, loading 
     src === undefined ? "empty" : loaded !== undefined ? "loaded" : failed === src ? "error" : "loading";
   const style: Record<string, string> = {};
   const classes = ["cairn-Image", ...customResponsive("ar", aspectRatio, style)];
-  const placeholder = status === "loaded" || status === "loading" ? null : (fallback ?? <Icon name={status === "error" ? "image-off" : "image"} size="lg" />);
+  const placeholder = status === "loaded" || status === "loading" ? null : (fallback ?? <Icon glyph={status === "error" ? ImageOff : ImageGlyph} size="lg" />);
 
   return (
     <span

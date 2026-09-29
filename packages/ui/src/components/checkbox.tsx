@@ -1,4 +1,5 @@
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox";
+import { Check, Minus } from "lucide-react";
 
 import { Icon } from "./icon.js";
 import { ChoiceLabel, type ChoiceLabelProps } from "./internal/choice-label.js";
@@ -29,7 +30,7 @@ export function Checkbox({ label, description, size = "md", indeterminate, onChe
       onCheckedChange={onCheckedChange === undefined ? undefined : (checked) => onCheckedChange(checked)}
     >
       <BaseCheckbox.Indicator className="cairn-CheckboxIndicator">
-        <Icon name={indeterminate ? "minus" : "check"} size={size === "sm" ? "xs" : "sm"} />
+        <Icon glyph={indeterminate ? Minus : Check} size={size === "sm" ? "xs" : "sm"} />
       </BaseCheckbox.Indicator>
     </BaseCheckbox.Root>
   );

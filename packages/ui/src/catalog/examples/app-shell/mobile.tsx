@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { AppShell, Box, PageBar, Text, type IconName } from "@cairn/ui";
+import { Compass, House, MessagesSquare, Settings } from "lucide-react";
+import { AppShell, Box, PageBar, Text, type IconGlyph } from "@cairn/ui";
 
-const destinations: readonly (readonly [id: string, label: string, icon: IconName])[] = [
-  ["home", "Home", "house"],
-  ["explore", "Explore", "compass"],
-  ["messages", "Messages", "messages-square"],
-  ["settings", "Settings", "settings"],
+const destinations: readonly (readonly [id: string, label: string, icon: IconGlyph])[] = [
+  ["home", "Home", House],
+  ["explore", "Explore", Compass],
+  ["messages", "Messages", MessagesSquare],
+  ["settings", "Settings", Settings],
 ];
 
 export default function AppShellMobile() {

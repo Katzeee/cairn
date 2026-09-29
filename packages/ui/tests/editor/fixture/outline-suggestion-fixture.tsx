@@ -1,3 +1,4 @@
+import { Type } from "lucide-react";
 import { useState } from "react";
 
 import { Icon } from "../../../dist/index.js";
@@ -9,7 +10,7 @@ const candidates: readonly OutlineCompletionItem[] = Array.from({ length: 16 }, 
   description: index % 2 === 0 ? `Additional detail for suggestion ${index}` : undefined,
   leading: (
     <Icon
-      name="type"
+      glyph={Type}
       size="sm"
     />
   ),

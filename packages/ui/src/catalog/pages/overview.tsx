@@ -59,7 +59,7 @@ export function OverviewPage() {
           {catalogSections.map((section) => (
             <a className="cairn-CatalogNavCard" href={`#/design-system/${section.pages[0]!.path}`} key={section.id}>
               <span className="cairn-CatalogNavCardIcon">
-                <Icon name={section.pages[0]!.icon} size="sm" />
+                <Icon glyph={section.pages[0]!.icon} size="sm" />
               </span>
               <span className="cairn-CatalogNavCardTitle">{section.title}</span>
               <span className="cairn-CatalogNavCardMeta">

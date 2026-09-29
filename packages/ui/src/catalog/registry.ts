@@ -1,4 +1,6 @@
-import type { IconName } from "../components/icon.js";
+import { House, Layers, LayoutTemplate, ListTree, Palette, Settings, Shapes, SunMoon, Type } from "lucide-react";
+
+import type { IconGlyph } from "../components/icon.js";
 import type { DeviceSet } from "./docs/devices.js";
 
 // Every public component has one entry. `examples` name files under ./examples; each file is
@@ -76,7 +78,7 @@ export const components = {
   ),
   Image: entry("components", "A picture at a held aspect ratio, cropped or whole, with placeholders while it loads, fails, or is missing.", ["Image"], ["image/states", "image/fit", "image/refresh"]),
   Separator: entry("components", "A quiet boundary between content.", ["Separator"], ["separator/orientation"]),
-  Icon: entry("components", "Named icons in four sizes with optional labels.", ["Icon"], ["icon/gallery"]),
+  Icon: entry("components", "Any SVG icon component at four sizes, decorative or labelled.", ["Icon"], ["icon/sources"]),
   EmptyState: entry("components", "Stand in for a region's missing content, explain why, and offer the next action.", ["EmptyState"], ["empty-state/first-run"]),
   Progress: entry("components", "Progress of measurable and ongoing work.", ["Progress"], ["progress/states"]),
   Spinner: entry("components", "Feedback for short, unmeasurable waits.", ["Spinner"], ["spinner/sizes", "spinner/loading"]),
@@ -117,7 +119,7 @@ export const componentIds = Object.keys(components) as ComponentId[];
 export type FoundationId = "themes" | "color" | "typography" | "space-and-shape" | "elevation-and-motion";
 export type PageId = "overview" | FoundationId | ComponentId;
 
-export type CatalogPage = Readonly<{ id: PageId; path: string; title: string; description: string; icon: IconName }>;
+export type CatalogPage = Readonly<{ id: PageId; path: string; title: string; description: string; icon: IconGlyph }>;
 export type CatalogSection = Readonly<{ id: string; title: string; pages: readonly CatalogPage[] }>;
 
 const kebab = (id: string) => id.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
@@ -131,10 +133,10 @@ export const overviewPage: CatalogPage = {
   path: "",
   title: "Overview",
   description: "Themes, foundations, and components with live examples.",
-  icon: "house",
+  icon: House,
 };
 
-const foundation = (id: FoundationId, title: string, description: string, icon: IconName): CatalogPage => ({
+const foundation = (id: FoundationId, title: string, description: string, icon: IconGlyph): CatalogPage => ({
   id,
   path: `foundations/${id}`,
   title,
@@ -143,11 +145,11 @@ const foundation = (id: FoundationId, title: string, description: string, icon: 
 });
 
 const groups = [
-  { id: "layout", title: "Layout", icon: "layout-template" },
-  { id: "typography", title: "Typography", icon: "type" },
-  { id: "components", title: "Components", icon: "layers" },
-  { id: "editor", title: "Editor", icon: "list-tree" },
-  { id: "utilities", title: "Utilities", icon: "settings" },
+  { id: "layout", title: "Layout", icon: LayoutTemplate },
+  { id: "typography", title: "Typography", icon: Type },
+  { id: "components", title: "Components", icon: Layers },
+  { id: "editor", title: "Editor", icon: ListTree },
+  { id: "utilities", title: "Utilities", icon: Settings },
 ] as const;
 
 export const catalogSections: readonly CatalogSection[] = [
@@ -155,11 +157,11 @@ export const catalogSections: readonly CatalogSection[] = [
     id: "foundations",
     title: "Foundations",
     pages: [
-      foundation("themes", "Themes", "What a theme defines, and how forest and slate differ.", "sun-moon"),
-      foundation("color", "Color", "Color roles, tone roles, and the scales behind them.", "palette"),
-      foundation("typography", "Typography", "Font families and semantic text roles.", "type"),
-      foundation("space-and-shape", "Space & shape", "Spacing, radii, borders, and control sizes.", "shapes"),
-      foundation("elevation-and-motion", "Elevation & motion", "Shadows by layer and transition timing.", "layers"),
+      foundation("themes", "Themes", "What a theme defines, and how forest and slate differ.", SunMoon),
+      foundation("color", "Color", "Color roles, tone roles, and the scales behind them.", Palette),
+      foundation("typography", "Typography", "Font families and semantic text roles.", Type),
+      foundation("space-and-shape", "Space & shape", "Spacing, radii, borders, and control sizes.", Shapes),
+      foundation("elevation-and-motion", "Elevation & motion", "Shadows by layer and transition timing.", Layers),
     ],
   },
   ...groups.map((group) => ({

@@ -1,4 +1,5 @@
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
+import { Check, ChevronDown } from "lucide-react";
 import { useRef, type MouseEvent } from "react";
 
 import { Icon } from "./icon.js";
@@ -80,7 +81,7 @@ export function Combobox({
           ref={input}
         />
         <BaseCombobox.Trigger aria-label="Open options" className="cairn-ComboboxTrigger" tabIndex={-1}>
-          <Icon name="chevron-down" size="sm" />
+          <Icon glyph={ChevronDown} size="sm" />
         </BaseCombobox.Trigger>
       </div>
       <BaseCombobox.Portal container={container}>
@@ -97,7 +98,7 @@ export function Combobox({
                   value={option}
                 >
                   <BaseCombobox.ItemIndicator className="cairn-PopupItemIndicator">
-                    <Icon name="check" size="sm" />
+                    <Icon glyph={Check} size="sm" />
                   </BaseCombobox.ItemIndicator>
                   <span className="cairn-PopupItemText">{option.label}</span>
                 </BaseCombobox.Item>

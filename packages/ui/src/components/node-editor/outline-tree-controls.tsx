@@ -2,6 +2,7 @@ import { OutlineBulletStateProvider } from "./outline-bullet.js";
 import { useLayoutEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 
 import { Menu } from "@base-ui/react/menu";
+import { ChevronRight, Ellipsis, IndentIncrease } from "lucide-react";
 import { Icon } from "./foundation.js";
 import type { OutlineHostCommand } from "./outline-commands.js";
 import type { ResolvedOutlineBulletPresentation } from "./outline-presentation.js";
@@ -79,7 +80,7 @@ export function OutlineSelectionToolbar({
           onMouseDown={(event) => event.preventDefault()}
           onClick={() => onMove("indent")}
         >
-          <Icon name="indent-increase" size="sm" />
+          <Icon glyph={IndentIncrease} size="sm" />
         </button>
       )}
       {commands?.map((command) => (
@@ -96,7 +97,7 @@ export function OutlineSelectionToolbar({
       {onMove === undefined && onDelete === undefined ? null : (
         <Menu.Root>
           <Menu.Trigger className={actionClass} aria-label="More commands">
-            <Icon name="ellipsis" size="sm" />
+            <Icon glyph={Ellipsis} size="sm" />
           </Menu.Trigger>
           <Menu.Portal>
             <>
@@ -173,7 +174,7 @@ export function OutlineRowControls({
           <span
             className="cairn-OutlineDisclosureIcon"
           >
-            <Icon name="chevron-right" size="xs" />
+            <Icon glyph={ChevronRight} size="xs" />
           </span>
         </button>
         {bullet.onActivate === undefined ? (

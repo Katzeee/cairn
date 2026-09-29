@@ -1,4 +1,5 @@
 import { Select as BaseSelect } from "@base-ui/react/select";
+import { Check, ChevronDown } from "lucide-react";
 import { Children, createContext, isValidElement, useContext, type ReactNode } from "react";
 
 import { Icon } from "./icon.js";
@@ -66,7 +67,7 @@ function Trigger({ placeholder, invalid, ...props }: SelectTriggerProps) {
     >
       <BaseSelect.Value className="cairn-SelectValue" placeholder={placeholder} />
       <BaseSelect.Icon className="cairn-SelectIcon">
-        <Icon name="chevron-down" size="sm" />
+        <Icon glyph={ChevronDown} size="sm" />
       </BaseSelect.Icon>
     </BaseSelect.Trigger>
   );
@@ -92,7 +93,7 @@ function Item({ value, disabled, children }: SelectItemProps) {
   return (
     <BaseSelect.Item className="cairn-PopupItem" data-indicator="" disabled={disabled} value={value}>
       <BaseSelect.ItemIndicator className="cairn-PopupItemIndicator">
-        <Icon name="check" size="sm" />
+        <Icon glyph={Check} size="sm" />
       </BaseSelect.ItemIndicator>
       <BaseSelect.ItemText className="cairn-PopupItemText">{children}</BaseSelect.ItemText>
     </BaseSelect.Item>

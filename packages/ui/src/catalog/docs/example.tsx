@@ -1,3 +1,4 @@
+import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "../../components/button.js";
@@ -54,7 +55,7 @@ export function Example({
           <div className="cairn-CatalogExampleToolbar">
             <span className="cairn-CatalogExampleFile">{id.slice(id.indexOf("/") + 1)}.tsx</span>
             <Button onClick={() => void copy()} size="sm" variant="ghost">
-              <Icon name={copied ? "check" : "copy"} size="sm" />
+              <Icon glyph={copied ? Check : Copy} size="sm" />
               {copied ? "Copied" : "Copy"}
             </Button>
           </div>

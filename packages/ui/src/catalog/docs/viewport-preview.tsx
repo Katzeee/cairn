@@ -1,3 +1,4 @@
+import { AppWindow, ChevronDown, LayoutTemplate } from "lucide-react";
 import {
   useEffect,
   useRef,
@@ -219,9 +220,9 @@ export function ViewportPreview({
                   size="sm"
                   variant="outline"
                 >
-                  <Icon name="app-window" size="sm" />
+                  <Icon glyph={AppWindow} size="sm" />
                   {hostChoices.find((choice) => choice.host === host)?.name}
-                  <Icon name="chevron-down" size="xs" />
+                  <Icon glyph={ChevronDown} size="xs" />
                 </Button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content align="end">
@@ -254,9 +255,9 @@ export function ViewportPreview({
             >
               <DropdownMenu.Trigger>
                 <Button aria-label="Device" size="sm" variant="outline">
-                  <Icon name="layout-template" size="sm" />
+                  <Icon glyph={LayoutTemplate} size="sm" />
                   {device?.name ?? "Custom size"}
-                  <Icon name="chevron-down" size="xs" />
+                  <Icon glyph={ChevronDown} size="xs" />
                 </Button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content align="end">

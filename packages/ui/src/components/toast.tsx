@@ -1,8 +1,9 @@
 import { Toast as BaseToast } from "@base-ui/react/toast";
+import { CircleAlert, CircleCheck, Info, TriangleAlert, X } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Button, IconButton } from "./button.js";
-import { Icon, type IconName } from "./icon.js";
+import { Icon, type IconGlyph } from "./icon.js";
 import { usePortalContainer } from "./internal/portal-container.js";
 import type { Tone } from "./internal/variants.js";
 
@@ -17,11 +18,11 @@ type ToastData = Readonly<{ action?: ToastOptions["action"]; tone: Tone }>;
 
 const manager = BaseToast.createToastManager<ToastData>();
 
-const marks: Partial<Record<Tone, IconName>> = {
-  info: "info",
-  success: "circle-check",
-  warning: "triangle-alert",
-  danger: "circle-alert",
+const marks: Partial<Record<Tone, IconGlyph>> = {
+  info: Info,
+  success: CircleCheck,
+  warning: TriangleAlert,
+  danger: CircleAlert,
 };
 
 export function toast({ action, description, title, tone = "neutral" }: ToastOptions): string {
@@ -67,7 +68,7 @@ function ToastList() {
         <BaseToast.Content className="cairn-ToastContent" data-ui="toast-content">
           {mark === undefined ? null : (
             <span aria-hidden className="cairn-ToastMark">
-              <Icon name={mark} size="sm" />
+              <Icon glyph={mark} size="sm" />
             </span>
           )}
           <div className="cairn-ToastText">
@@ -84,7 +85,7 @@ function ToastList() {
               data-ui="toast-close"
               render={<IconButton aria-label="Dismiss notification" size="sm" variant="ghost" />}
             >
-              <Icon name="x" size="sm" />
+              <Icon glyph={X} size="sm" />
             </BaseToast.Close>
           </span>
         </BaseToast.Content>

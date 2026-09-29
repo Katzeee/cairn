@@ -1,4 +1,5 @@
 import { themeNames, themes, type CairnThemeName } from "@cairn/design-tokens";
+import { Moon, Palette, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { AppShell } from "../components/app-shell.js";
@@ -101,7 +102,7 @@ function CatalogShell() {
               <div className="cairn-CatalogHeaderActions">
                 <Tooltip content={`Switch to ${themes[nextTheme].label}`}>
                   <Button onClick={() => setTheme(nextTheme)} size="sm" variant="ghost">
-                    <Icon name="palette" size="sm" />
+                    <Icon glyph={Palette} size="sm" />
                     {themes[theme].label}
                   </Button>
                 </Tooltip>
@@ -111,7 +112,7 @@ function CatalogShell() {
                     onClick={() => setAppearance(appearance === "light" ? "dark" : "light")}
                     variant="ghost"
                   >
-                    <Icon name={appearance === "light" ? "moon" : "sun"} />
+                    <Icon glyph={appearance === "light" ? Moon : Sun} />
                   </IconButton>
                 </Tooltip>
               </div>

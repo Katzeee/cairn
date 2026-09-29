@@ -1,97 +1,28 @@
-import {
-  AppWindow,
-  ArrowLeft,
-  Check,
-  CircleCheck,
-  Info,
-  Minus,
-  Plus,
-  Search,
-  Settings,
-  TriangleAlert,
-  ChevronDown,
-  ChevronRight,
-  CircleAlert,
-  Compass,
-  Copy,
-  Ellipsis,
-  House,
-  Image as ImageIcon,
-  ImageOff,
-  Layers,
-  LayoutTemplate,
-  ListTree,
-  IndentIncrease,
-  Menu,
-  MessagesSquare,
-  Moon,
-  MousePointerClick,
-  Palette,
-  PanelLeft,
-  Pencil,
-  Shapes,
-  Sun,
-  SunMoon,
-  TextCursorInput,
-  Trash2,
-  Type,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import type { ComponentType } from "react";
 
-const icons = {
-  "app-window": AppWindow,
-  "arrow-left": ArrowLeft,
-  check: Check,
-  "circle-check": CircleCheck,
-  info: Info,
-  minus: Minus,
-  plus: Plus,
-  search: Search,
-  settings: Settings,
-  "triangle-alert": TriangleAlert,
-  "chevron-down": ChevronDown,
-  "chevron-right": ChevronRight,
-  "circle-alert": CircleAlert,
-  compass: Compass,
-  copy: Copy,
-  ellipsis: Ellipsis,
-  house: House,
-  image: ImageIcon,
-  "image-off": ImageOff,
-  layers: Layers,
-  "layout-template": LayoutTemplate,
-  "list-tree": ListTree,
-  "indent-increase": IndentIncrease,
-  menu: Menu,
-  "messages-square": MessagesSquare,
-  moon: Moon,
-  "mouse-pointer-click": MousePointerClick,
-  palette: Palette,
-  "panel-left": PanelLeft,
-  pencil: Pencil,
-  shapes: Shapes,
-  sun: Sun,
-  "sun-moon": SunMoon,
-  "text-cursor-input": TextCursorInput,
-  trash: Trash2,
-  type: Type,
-  x: X,
-} as const satisfies Readonly<Record<string, LucideIcon>>;
+// The props Icon passes, which the glyph forwards to its svg. Typed without React's SVG props so a
+// glyph built against another copy of React's types still fits.
+export type IconGlyphProps = Readonly<{
+  className?: string;
+  "data-size"?: string;
+  role?: "img";
+  "aria-hidden"?: "true";
+  "aria-label"?: string;
+}>;
 
-export type IconName = keyof typeof icons;
-export const iconNames = Object.keys(icons) as readonly IconName[];
+// Any SVG icon component, such as those of lucide-react, Heroicons, Phosphor, or Tabler, or one the
+// application draws itself.
+export type IconGlyph = ComponentType<IconGlyphProps>;
 
 export type IconProps = Readonly<{
-  name: IconName;
+  glyph: IconGlyph;
   size?: "xs" | "sm" | "md" | "lg";
   label?: string;
 }>;
 
-export function Icon({ name, size = "md", label }: IconProps) {
-  const Component = icons[name];
+export function Icon({ glyph: Glyph, size = "md", label }: IconProps) {
   return (
-    <Component
+    <Glyph
       aria-hidden={label === undefined ? "true" : undefined}
       aria-label={label}
       className="cairn-Icon"

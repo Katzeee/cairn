@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { AppShell, Box, PageBar, Text, toast, type IconName } from "@cairn/ui";
+import { AppWindow, History, ListTree, Plus, RefreshCw, Settings } from "lucide-react";
+import { AppShell, Box, PageBar, Text, toast, type IconGlyph } from "@cairn/ui";
 
-const groups: readonly { label: string; pages: readonly (readonly [id: string, label: string, icon: IconName])[] }[] = [
+const groups: readonly { label: string; pages: readonly (readonly [id: string, label: string, icon: IconGlyph])[] }[] = [
   {
     label: "Work",
     pages: [
-      ["workflows", "Workflows", "list-tree"],
-      ["instances", "Instances", "app-window"],
+      ["workflows", "Workflows", ListTree],
+      ["instances", "Instances", AppWindow],
     ],
   },
-  { label: "Records", pages: [["history", "History", "layers"]] },
+  { label: "Records", pages: [["history", "History", History]] },
 ];
 
 export default function AppShellDesktop() {
@@ -37,7 +38,7 @@ export default function AppShellDesktop() {
           </AppShell.NavGroup>
         ))}
         <AppShell.SidebarFooter>
-          <AppShell.NavAction icon="settings" onClick={() => toast({ title: "Settings open in their own window." })}>
+          <AppShell.NavAction icon={Settings} onClick={() => toast({ title: "Settings open in their own window." })}>
             Settings
           </AppShell.NavAction>
         </AppShell.SidebarFooter>
@@ -45,8 +46,8 @@ export default function AppShellDesktop() {
       <AppShell.Main>
         <PageBar.Root>
           <PageBar.Title>{title}</PageBar.Title>
-          <PageBar.Action icon="layers" label="Refresh" onSelect={() => toast({ title: "Refreshed" })} />
-          <PageBar.Action icon="plus" label="New workflow" onSelect={() => toast({ title: "New workflow" })} placement="primary" />
+          <PageBar.Action icon={RefreshCw} label="Refresh" onSelect={() => toast({ title: "Refreshed" })} />
+          <PageBar.Action icon={Plus} label="New workflow" onSelect={() => toast({ title: "New workflow" })} placement="primary" />
         </PageBar.Root>
         <Box p="5">
           <Text as="p" tone="muted">

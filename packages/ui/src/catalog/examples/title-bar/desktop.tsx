@@ -1,3 +1,4 @@
+import { ArrowLeft, Search, Settings } from "lucide-react";
 import { Box, Flex, Heading, Icon, IconButton, Text, TextField, TitleBar, Tooltip } from "@cairn/ui";
 
 export default function TitleBarDesktop() {
@@ -7,7 +8,7 @@ export default function TitleBarDesktop() {
         <TitleBar.Leading>
           <Tooltip content="Back">
             <IconButton aria-label="Back" size="sm" variant="ghost">
-              <Icon name="arrow-left" size="sm" />
+              <Icon glyph={ArrowLeft} size="sm" />
             </IconButton>
           </Tooltip>
         </TitleBar.Leading>
@@ -15,14 +16,14 @@ export default function TitleBarDesktop() {
         <TitleBar.Content>
           <TextField.Root aria-label="Search workflows" placeholder="Search workflows" size="sm">
             <TextField.Slot>
-              <Icon name="search" size="sm" />
+              <Icon glyph={Search} size="sm" />
             </TextField.Slot>
           </TextField.Root>
         </TitleBar.Content>
         <TitleBar.Trailing>
           <Tooltip content="Settings">
             <IconButton aria-label="Settings" size="sm" variant="ghost">
-              <Icon name="settings" size="sm" />
+              <Icon glyph={Settings} size="sm" />
             </IconButton>
           </Tooltip>
         </TitleBar.Trailing>

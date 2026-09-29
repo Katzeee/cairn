@@ -1,10 +1,11 @@
+import { AppWindow } from "lucide-react";
 import { Button, EmptyState, Icon } from "@cairn/ui";
 
 export default function EmptyStateFirstRun() {
   return (
     <EmptyState>
       <EmptyState.Illustration>
-        <Icon name="app-window" size="lg" />
+        <Icon glyph={AppWindow} size="lg" />
       </EmptyState.Illustration>
       <EmptyState.Title>No connected instances yet</EmptyState.Title>
       <EmptyState.Description>

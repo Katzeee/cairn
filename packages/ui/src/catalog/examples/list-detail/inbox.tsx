@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import { AppShell, Box, EmptyState, List, ListDetail, PageBar, Text, toast, type ListDetailPane } from "@cairn/ui";
 
 const threads = [
@@ -19,7 +20,7 @@ export default function ListDetailInbox() {
           <ListDetail.List label="Inbox">
             <PageBar.Root>
               <PageBar.Title>Inbox</PageBar.Title>
-              <PageBar.Action icon="pencil" label="New message" onSelect={() => toast({ title: "New message" })} placement="primary" />
+              <PageBar.Action icon={Pencil} label="New message" onSelect={() => toast({ title: "New message" })} placement="primary" />
             </PageBar.Root>
             <List.Root>
               {threads.map(({ id, title, from, date }) => (
@@ -42,7 +43,7 @@ export default function ListDetailInbox() {
                 <PageBar.Root>
                   <PageBar.Title>{thread.title}</PageBar.Title>
                   <PageBar.Subtitle>{thread.from}</PageBar.Subtitle>
-                  <PageBar.Action icon="trash" label="Delete" onSelect={() => toast({ title: "Deleted" })} />
+                  <PageBar.Action icon={Trash2} label="Delete" onSelect={() => toast({ title: "Deleted" })} />
                 </PageBar.Root>
                 <Box p="5">
                   <Text as="p">{thread.body}</Text>

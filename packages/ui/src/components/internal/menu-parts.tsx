@@ -1,4 +1,5 @@
 import { Menu } from "@base-ui/react/menu";
+import { Check, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Icon } from "../icon.js";
@@ -56,7 +57,7 @@ export function CheckboxItem({ children, shortcut, onCheckedChange, ...props }: 
       onCheckedChange={onCheckedChange === undefined ? undefined : (checked) => onCheckedChange(checked)}
     >
       <Menu.CheckboxItemIndicator className="cairn-PopupItemIndicator">
-        <Icon name="check" size="sm" />
+        <Icon glyph={Check} size="sm" />
       </Menu.CheckboxItemIndicator>
       <span className="cairn-PopupItemText">{children}</span>
       <Shortcut keys={shortcut} />
@@ -79,7 +80,7 @@ export function RadioItem({ children, value, disabled }: MenuRadioItemProps) {
   return (
     <Menu.RadioItem className="cairn-PopupItem" data-indicator="" disabled={disabled} value={value}>
       <Menu.RadioItemIndicator className="cairn-PopupItemIndicator">
-        <Icon name="check" size="sm" />
+        <Icon glyph={Check} size="sm" />
       </Menu.RadioItemIndicator>
       <span className="cairn-PopupItemText">{children}</span>
     </Menu.RadioItem>
@@ -107,7 +108,7 @@ export function SubTrigger({ children, disabled }: Readonly<{ children: ReactNod
     <Menu.SubmenuTrigger className="cairn-PopupItem" disabled={disabled}>
       {children}
       <span aria-hidden className="cairn-PopupItemTrailing">
-        <Icon name="chevron-right" size="xs" />
+        <Icon glyph={ChevronRight} size="xs" />
       </span>
     </Menu.SubmenuTrigger>
   );

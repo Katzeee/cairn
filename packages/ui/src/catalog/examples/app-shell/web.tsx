@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Pencil, Search } from "lucide-react";
 import { AppShell, Box, Flex, Icon, IconButton, PageBar, Text, Tooltip, toast } from "@cairn/ui";
 
 const groups: readonly { label: string; pages: readonly (readonly [id: string, label: string])[] }[] = [
@@ -18,7 +19,7 @@ export default function AppShellWeb() {
         <Flex flexGrow="1" justify="end">
           <Tooltip content="Search">
             <IconButton aria-label="Search" variant="ghost">
-              <Icon name="search" />
+              <Icon glyph={Search} />
             </IconButton>
           </Tooltip>
         </Flex>
@@ -45,7 +46,7 @@ export default function AppShellWeb() {
       <AppShell.Main>
         <PageBar.Root>
           <PageBar.Title>{title}</PageBar.Title>
-          <PageBar.Action icon="pencil" label="Edit on GitHub" onSelect={() => toast({ title: "Opening the source" })} />
+          <PageBar.Action icon={Pencil} label="Edit on GitHub" onSelect={() => toast({ title: "Opening the source" })} />
         </PageBar.Root>
         <Box p="5">
           <Text as="p" tone="muted">

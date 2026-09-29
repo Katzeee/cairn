@@ -1,6 +1,7 @@
+import { ChevronRight } from "lucide-react";
 import { useContext, type ReactNode } from "react";
 
-import { Icon, type IconName } from "./icon.js";
+import { Icon, type IconGlyph } from "./icon.js";
 import type { ElementProps } from "./internal/element-props.js";
 import { ListPane } from "./list-detail.js";
 
@@ -24,7 +25,7 @@ export type ListItemProps = ElementProps<"button", "type" | "children"> &
     description?: ReactNode;
     // Supporting text at the trailing edge, such as a date or a count.
     trailing?: ReactNode;
-    icon?: IconName;
+    icon?: IconGlyph;
     // The item whose detail is shown.
     selected?: boolean;
   }>;
@@ -47,13 +48,13 @@ function Item({ children, description, trailing, icon, selected = false, onClick
         }}
         type="button"
       >
-        {icon === undefined ? null : <Icon name={icon} size="sm" />}
+        {icon === undefined ? null : <Icon glyph={icon} size="sm" />}
         <span className="cairn-ListItemText">
           <span className="cairn-ListItemTitle">{children}</span>
           {description == null ? null : <span className="cairn-ListItemDescription">{description}</span>}
         </span>
         {trailing == null ? null : <span className="cairn-ListItemTrailing">{trailing}</span>}
-        {onward ? <Icon name="chevron-right" size="sm" /> : null}
+        {onward ? <Icon glyph={ChevronRight} size="sm" /> : null}
       </button>
     </li>
   );

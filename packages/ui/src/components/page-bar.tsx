@@ -10,11 +10,12 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { ArrowLeft, Ellipsis } from "lucide-react";
 
 import { WindowChrome } from "./app-shell.js";
 import { Button, IconButton } from "./button.js";
 import { DropdownMenu } from "./dropdown-menu.js";
-import { Icon, type IconName } from "./icon.js";
+import { Icon, type IconGlyph } from "./icon.js";
 import { useWindowActive } from "./internal/window-active.js";
 import { PaneBack } from "./list-detail.js";
 import { Tooltip } from "./tooltip.js";
@@ -27,7 +28,7 @@ export type PageBarActionPlacement = "primary" | "default" | "secondary";
 type ActionEntry = Readonly<{
   id: string;
   label: string;
-  icon: IconName;
+  icon: IconGlyph;
   placement: PageBarActionPlacement;
   disabled: boolean;
   marker: HTMLElement;
@@ -96,7 +97,7 @@ function arrange(actions: readonly ActionEntry[], widths: Widths, more: number, 
 
 const moreButton = (
   <IconButton aria-label="More actions" size="sm" variant="ghost">
-    <Icon name="ellipsis" size="sm" />
+    <Icon glyph={Ellipsis} size="sm" />
   </IconButton>
 );
 
@@ -106,7 +107,7 @@ function ActionButton({ action, compact, measuring = false }: Readonly<{ action:
   if (placement === "primary" && !compact) {
     return (
       <Button disabled={disabled} onClick={onClick} size="sm" variant="ghost">
-        <Icon name={icon} size="sm" />
+        <Icon glyph={icon} size="sm" />
         {label}
       </Button>
     );
@@ -119,7 +120,7 @@ function ActionButton({ action, compact, measuring = false }: Readonly<{ action:
       size="sm"
       variant="ghost"
     >
-      <Icon name={icon} size="sm" />
+      <Icon glyph={icon} size="sm" />
     </IconButton>
   );
   return measuring ? button : <Tooltip content={label}>{button}</Tooltip>;
@@ -268,7 +269,7 @@ function BackButton({ label, onSelect }: Readonly<{ label: string; onSelect: () 
     <span className="cairn-PageBarBack">
       <Tooltip content={label}>
         <IconButton aria-label={label} onClick={onSelect} size="sm" variant="ghost">
-          <Icon name="arrow-left" size="sm" />
+          <Icon glyph={ArrowLeft} size="sm" />
         </IconButton>
       </Tooltip>
     </span>
@@ -288,7 +289,7 @@ function Subtitle({ children }: Readonly<{ children: ReactNode }>) {
 export type PageBarActionProps = Readonly<{
   label: string;
   // The icon shows in the bar and the label in More, so every action carries both.
-  icon: IconName;
+  icon: IconGlyph;
   onSelect: () => void;
   placement?: PageBarActionPlacement;
   disabled?: boolean;

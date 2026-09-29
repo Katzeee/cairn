@@ -81,7 +81,7 @@ export { default } from "@cairn/lint/stylelint";
 
 The repository is an npm workspace. `@cairn/design-tokens` owns the token contract, the themes, the palette generator, and the font assets. `@cairn/ui` owns the React components, their stylesheets, and the catalog. `@cairn/lint` owns the rules applications and Cairn's own stylesheets run. `apps/showcase` builds the catalog without a host application.
 
-The catalog lives in `packages/ui/src/catalog`. `registry.ts` lists each component's group, description, documented exports, and examples. Each example is one file under `examples/<component>/<name>.tsx` that imports only from `@cairn/ui` or `@cairn/ui/editor`; the build renders that file as the preview and shows the same file as the code, so the two cannot drift. `outline-demo/` is the reference host behind the OutlineTree example and the editor acceptance tests.
+The catalog lives in `packages/ui/src/catalog`. `registry.ts` lists each component's group, description, documented exports, and examples. Each example is one file under `examples/<component>/<name>.tsx` that imports only from `react`, `lucide-react`, `@cairn/ui`, or `@cairn/ui/editor`; the build renders that file as the preview and shows the same file as the code, so the two cannot drift. `outline-demo/` is the reference host behind the OutlineTree example and the editor acceptance tests.
 
 The [repository guidance](AGENTS.md) records the design boundaries and completion criteria. Run the root `typecheck`, `lint`, and `test` scripts before finishing implementation work; `test` builds the showcase, checks catalog coverage and that the root entry never reaches the editor, and runs the token, lint-rule, unit, and editor browser tests.
 

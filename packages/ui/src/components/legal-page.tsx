@@ -1,4 +1,5 @@
 import { fontNotices } from "@cairn/design-tokens";
+import { ArrowLeft } from "lucide-react";
 
 import { Icon } from "./icon.js";
 import { Link } from "./link.js";
@@ -15,7 +16,7 @@ export function LegalPage({
         {embedded ? null : (
           <span className="cairn-LegalBack">
             <Link href={backHref} underline="hover">
-              <Icon name="arrow-left" size="xs" /> {backLabel}
+              <Icon glyph={ArrowLeft} size="xs" /> {backLabel}
             </Link>
           </span>
         )}

@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { Fragment } from "react";
 
 import { Icon } from "./icon.js";
@@ -17,7 +18,7 @@ export function Breadcrumbs({ items }: Readonly<{ items: readonly BreadcrumbItem
           <Fragment key={`${item.label}-${String(index)}`}>
             {index === 0 ? null : (
               <li aria-hidden className="cairn-BreadcrumbsSeparator">
-                <Icon name="chevron-right" size="xs" />
+                <Icon glyph={ChevronRight} size="xs" />
               </li>
             )}
             <li className="cairn-BreadcrumbsItem">

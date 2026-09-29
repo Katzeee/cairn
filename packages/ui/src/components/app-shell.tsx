@@ -10,9 +10,10 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { Menu, PanelLeft } from "lucide-react";
 
 import { IconButton } from "./button.js";
-import { Icon, type IconName } from "./icon.js";
+import { Icon, type IconGlyph } from "./icon.js";
 import type { ElementProps } from "./internal/element-props.js";
 import { useWindowActive } from "./internal/window-active.js";
 import type { ControlSize } from "./internal/variants.js";
@@ -327,7 +328,7 @@ function SidebarToggle({ size = "md" }: Readonly<{ size?: ControlSize }>) {
         size={size}
         variant="ghost"
       >
-        <Icon name={sidebar.collapsible ? "panel-left" : "menu"} size={size === "sm" ? "sm" : "md"} />
+        <Icon glyph={sidebar.collapsible ? PanelLeft : Menu} size={size === "sm" ? "sm" : "md"} />
       </IconButton>
     </Tooltip>
   );
@@ -351,11 +352,11 @@ function NavGroup({ label, children }: Readonly<{ label?: string; children: Reac
   );
 }
 
-type NavEntry = Readonly<{ icon?: IconName; decoration?: ReactNode; children: ReactNode }>;
+type NavEntry = Readonly<{ icon?: IconGlyph; decoration?: ReactNode; children: ReactNode }>;
 
 function NavGlyph({ icon, decoration }: Omit<NavEntry, "children">) {
   if (decoration != null) return <span className="cairn-AppShellNavGlyph">{decoration}</span>;
-  return icon === undefined ? null : <Icon name={icon} size="sm" />;
+  return icon === undefined ? null : <Icon glyph={icon} size="sm" />;
 }
 
 export type AppShellNavItemProps = ElementProps<"a"> & NavEntry & Readonly<{ active?: boolean }>;
@@ -413,13 +414,13 @@ function TabBar({ label = "Primary", children }: Readonly<{ label?: string; chil
   );
 }
 
-export type AppShellTabBarItemProps = ElementProps<"a"> & Readonly<{ active?: boolean; icon: IconName; children: ReactNode }>;
+export type AppShellTabBarItemProps = ElementProps<"a"> & Readonly<{ active?: boolean; icon: IconGlyph; children: ReactNode }>;
 
 function TabBarItem({ active = false, icon, children, ...props }: AppShellTabBarItemProps) {
   useShell("TabBarItem");
   return (
     <a {...props} aria-current={active ? "page" : undefined} className="cairn-AppShellTabBarItem cairn-Focusable">
-      <Icon name={icon} />
+      <Icon glyph={icon} />
       <span className="cairn-AppShellTabBarLabel">{children}</span>
     </a>
   );

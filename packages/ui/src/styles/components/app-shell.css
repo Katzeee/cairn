@@ -1,218 +1,268 @@
 .cairn-AppShell {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding-block: var(--cairn-safe-area-top) var(--cairn-safe-area-bottom);
-  padding-inline: var(--cairn-safe-area-left) var(--cairn-safe-area-right);
+  --cairn-app-shell-header-height: calc(var(--cairn-control-height-md) + var(--cairn-space-2) * 2);
+  --app-shell-sidebar-width: var(--cairn-sidebar-width);
+  --app-shell-tabs-width: calc(var(--cairn-control-height-lg) + var(--cairn-space-5) * 2);
+  --app-shell-overlay-top: var(--cairn-safe-area-top);
+
+  /* No container type here: containment would make the shell, not the viewport, hold the overlay. */
   background-color: var(--cairn-color-canvas);
-  container: app-shell / inline-size;
-}
 
-.cairn-AppShellBody {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-}
-
-.cairn-AppShellContent {
-  flex: 1;
-  min-width: 0;
-}
-
-.cairn-AppShellCompactHeader,
-.cairn-AppShellBottomBar,
-.cairn-AppShellRail,
-.cairn-AppShellSidebar,
-.cairn-AppShellDrawer {
-  background-color: var(--cairn-color-surface);
-}
-
-.cairn-AppShellCompactHeader {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--cairn-space-1) * 2.5);
-  padding: var(--cairn-space-2);
-  border-bottom: var(--cairn-border-width) solid var(--cairn-color-border);
-}
-
-.cairn-AppShellBottomBar {
-  --app-shell-items: 1;
-
-  display: grid;
-  grid-template-columns: repeat(var(--app-shell-items), minmax(0, 1fr));
-  padding: var(--cairn-space-2);
-  border-top: var(--cairn-border-width) solid var(--cairn-color-border);
-}
-
-.cairn-AppShellBottomItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--cairn-space-1);
-  min-width: 0;
-  padding: var(--cairn-space-2) var(--cairn-space-1);
-  border-radius: var(--cairn-radius-item);
-  color: var(--cairn-color-text-muted);
-  font-size: var(--cairn-text-caption-size);
-  font-weight: var(--cairn-weight-medium);
-  line-height: var(--cairn-text-caption-line-height);
-  text-decoration: none;
-  transition: background-color var(--cairn-duration-fast) var(--cairn-ease-standard);
-
-  &:hover,
-  &[aria-current="page"] {
-    background-color: var(--cairn-accent-subtle);
-    color: var(--cairn-accent-text);
+  &:has(> .cairn-AppShellFrame > .cairn-AppShellHeader) {
+    --app-shell-overlay-top: calc(var(--cairn-app-shell-header-height) + var(--cairn-safe-area-top));
   }
 
-  & > span {
-    max-width: 100%;
+  &:has(> .cairn-AppShellFrame > .cairn-AppShellTitleBar) {
+    --app-shell-overlay-top: var(--cairn-titlebar-height);
+  }
+
+  &:has(> .cairn-AppShellFrame > .cairn-AppShellTitleBar):has(> .cairn-AppShellFrame > .cairn-AppShellHeader) {
+    --app-shell-overlay-top: calc(var(--cairn-titlebar-height) + var(--cairn-app-shell-header-height));
+  }
+
+  /* With window chrome the top row belongs to the shell; the overlay opens below it. The toggle's
+     icon lines up with the item icons, or follows window controls on the leading edge. */
+  &[data-window-chrome] {
+    --app-shell-overlay-top: var(--cairn-titlebar-height);
+    --app-shell-toggle-start: max(
+      calc(var(--cairn-space-4) + var(--cairn-space-1) * 2.5 - (var(--cairn-control-height-sm) - 16px) / 2),
+      calc(var(--cairn-titlebar-inset-left) + var(--cairn-space-2))
+    );
+    --app-shell-chrome-leading: var(--cairn-titlebar-inset-left);
+  }
+
+  &[data-chrome-toggle] {
+    --app-shell-chrome-leading: calc(var(--app-shell-toggle-start) + var(--cairn-control-height-sm));
+  }
+}
+
+/* The strip spans the top row beneath the page bars, which cover their panes; above the sidebar it
+   shows through. The toggle sits above everything the shell draws, so it closes what it opened. */
+.cairn-AppShellChrome,
+.cairn-AppShellChromeToggle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  height: var(--cairn-titlebar-height);
+}
+
+.cairn-AppShellChrome {
+  z-index: 19;
+  right: 0;
+}
+
+.cairn-AppShellChromeToggle {
+  z-index: 33;
+  padding-inline: var(--app-shell-toggle-start) var(--cairn-space-2);
+  transition: padding-left var(--cairn-duration-panel) var(--cairn-ease-standard);
+}
+
+.cairn-AppShell[data-window-chrome] {
+  & .cairn-AppShellSidebar[data-presentation="docked"] {
+    padding-top: calc(var(--cairn-titlebar-height) + var(--cairn-space-3));
+  }
+
+  & .cairn-PageBar {
+    --cairn-app-shell-bar-height: var(--cairn-titlebar-height);
+
+    padding-block: 0;
+    padding-right: calc(var(--cairn-titlebar-inset-right) + var(--cairn-space-5));
+    padding-left: max(
+      var(--cairn-space-5),
+      calc(var(--app-shell-chrome-leading) + var(--cairn-space-4) - var(--app-shell-column))
+    );
+  }
+}
+
+.cairn-AppShellFrame {
+  --cairn-app-shell-sticky-top: 0px;
+  --app-shell-column: 0px;
+
+  display: grid;
+  grid-template:
+    "titlebar titlebar" auto
+    "header header" auto
+    "navigation main" 1fr
+    "bottom bottom" auto
+    / var(--app-shell-column) minmax(0, 1fr);
+  min-height: 100dvh;
+  padding-inline: var(--cairn-safe-area-left) var(--cairn-safe-area-right);
+  transition: grid-template-columns var(--cairn-duration-panel) var(--cairn-ease-standard);
+
+  &[data-column="sidebar"] {
+    --app-shell-column: var(--app-shell-sidebar-width);
+  }
+
+  &[data-column="tabs"] {
+    --app-shell-column: var(--app-shell-tabs-width);
+  }
+
+  &:has(> .cairn-AppShellHeader) {
+    --cairn-app-shell-sticky-top: calc(var(--cairn-app-shell-header-height) + var(--cairn-safe-area-top));
+  }
+
+  &:not(:has(> .cairn-AppShellHeader, > .cairn-AppShellTitleBar)) {
+    padding-top: var(--cairn-safe-area-top);
+  }
+}
+
+/* The shell's own layers stay below dialogs and popups. */
+.cairn-AppShellTitleBar {
+  position: relative;
+  z-index: 32;
+  grid-area: titlebar;
+}
+
+.cairn-AppShellHeader {
+  position: sticky;
+  z-index: 32;
+  top: 0;
+  display: flex;
+  grid-area: header;
+  align-items: center;
+  gap: var(--cairn-space-2);
+  height: calc(var(--cairn-app-shell-header-height) + var(--cairn-safe-area-top));
+  padding: var(--cairn-safe-area-top) var(--cairn-space-4) 0;
+  border-bottom: var(--cairn-border-width) solid var(--cairn-color-border);
+  background-color: var(--cairn-color-canvas);
+}
+
+/* Hidden until a keyboard reaches it, then it sits above the shell's top row. */
+.cairn-AppShellSkipLink {
+  position: fixed;
+  z-index: 40;
+  top: var(--cairn-space-2);
+  left: calc(var(--cairn-safe-area-left) + var(--cairn-space-2));
+  padding: var(--cairn-space-2) var(--cairn-space-3);
+  border-radius: var(--cairn-radius-control);
+  background-color: var(--cairn-color-overlay);
+  box-shadow: var(--cairn-elevation-popover);
+  color: var(--cairn-color-text);
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-medium);
+  text-decoration: none;
+  translate: 0 calc(-100% - var(--cairn-space-4));
+
+  &:focus-visible {
+    translate: none;
+  }
+}
+
+/* The main area is a layout region: responsive props inside it follow its width, not the window's. */
+.cairn-AppShellMain {
+  outline: none;
+  container: cairn-region / inline-size;
+  grid-area: main;
+  min-width: 0;
+  min-height: 0;
+  padding-bottom: var(--cairn-safe-area-bottom);
+}
+
+/* Sidebar: one tree, docked beside the content or shown above it. The overlay keeps
+   the docked width and surface, so narrowing changes only where the sidebar sits. */
+
+.cairn-AppShellSidebar {
+  position: sticky;
+  top: var(--cairn-app-shell-sticky-top);
+  display: flex;
+  grid-area: navigation;
+  flex-direction: column;
+  gap: var(--cairn-space-5);
+  align-self: start;
+  min-width: 0;
+  height: calc(100dvh - var(--cairn-app-shell-sticky-top));
+  overflow: hidden auto;
+  padding: var(--cairn-space-5) var(--cairn-space-4);
+  border-right: var(--cairn-border-width) solid var(--cairn-color-border);
+  background-color: var(--cairn-color-surface);
+  outline: none;
+
+  &:is([data-presentation="overlay"], [data-presentation="hidden"]) {
+    position: fixed;
+    z-index: 31;
+    top: var(--app-shell-overlay-top);
+    bottom: 0;
+    left: var(--cairn-safe-area-left);
+    align-self: stretch;
+    width: min(var(--app-shell-sidebar-width), calc(100% - var(--cairn-space-8)));
+    height: auto;
+    padding-bottom: calc(var(--cairn-space-5) + var(--cairn-safe-area-bottom));
+    box-shadow: var(--cairn-elevation-dialog);
+    transition:
+      translate var(--cairn-duration-panel) var(--cairn-ease-standard),
+      visibility 0s linear var(--cairn-duration-panel);
+  }
+
+  &[data-presentation="hidden"] {
+    visibility: hidden;
+    translate: calc(-100% - var(--cairn-safe-area-left)) 0;
+    box-shadow: none;
+  }
+
+  &[data-presentation="overlay"] {
+    transition-delay: 0s;
+  }
+}
+
+.cairn-AppShell[data-scroll="panes"] {
+  height: 100dvh;
+
+  & > .cairn-AppShellFrame {
+    --cairn-app-shell-sticky-top: 0px;
+
+    height: 100%;
+    min-height: 0;
+  }
+
+  & .cairn-AppShellMain {
+    overflow-y: auto;
+  }
+
+  & .cairn-AppShellSidebar[data-presentation="docked"],
+  & .cairn-AppShellTabBar {
+    position: static;
+    align-self: stretch;
+    height: auto;
+    min-height: 0;
+  }
+}
+
+.cairn-AppShellSidebarHeader,
+.cairn-AppShellSidebarFooter {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--cairn-space-1) / 2);
+  min-width: 0;
+}
+
+.cairn-AppShellSidebarFooter {
+  margin-top: auto;
+}
+
+.cairn-AppShellNavGroup,
+.cairn-AppShellNavItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.cairn-AppShellNavItems {
+  gap: calc(var(--cairn-space-1) / 2);
+}
+
+.cairn-AppShellNavItem {
+  position: relative;
+  min-width: 0;
+
+  & > .cairn-AppShellNavLabel {
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 }
 
-.cairn-AppShellDrawer {
-  position: fixed;
-  z-index: 51;
-  inset-block: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  width: 18rem;
-  max-width: 100%;
-  min-height: 100dvh;
-  overflow-y: auto;
-  padding: var(--cairn-space-5) var(--cairn-space-4);
-  border-right: var(--cairn-border-width) solid var(--cairn-color-border);
-  box-shadow: var(--cairn-elevation-dialog);
-  outline: none;
-  transition: translate var(--cairn-duration-panel) var(--cairn-ease-standard);
-
-  &[data-starting-style],
-  &[data-ending-style] {
-    translate: -100% 0;
-  }
-}
-
-.cairn-AppShellDrawerClose {
-  position: absolute;
-  top: var(--cairn-space-3);
-  right: var(--cairn-space-3);
-}
-
-.cairn-AppShellBrand {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: calc(var(--cairn-space-1) * 2.5);
-  min-width: 0;
-  color: var(--cairn-color-text);
-  font-weight: var(--cairn-weight-bold);
-  letter-spacing: var(--cairn-heading-letter-spacing);
-  text-decoration: none;
-}
-
-.cairn-AppShellBrandText {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.cairn-AppShellBrandMark {
-  display: grid;
-  flex-shrink: 0;
-  place-items: center;
-  width: var(--cairn-control-height-sm);
-  height: var(--cairn-control-height-sm);
-  border-radius: var(--cairn-radius-control);
-  background-color: var(--cairn-accent-solid);
-  color: var(--cairn-accent-on-solid);
-  font-size: var(--cairn-text-label-size);
-  font-weight: var(--cairn-weight-bold);
-}
-
-.cairn-AppShellRail,
-.cairn-AppShellSidebar {
-  position: sticky;
-  top: 0;
-  display: none;
-  flex-direction: column;
-  flex-shrink: 0;
-  height: 100vh;
-  overflow-y: auto;
-  border-right: var(--cairn-border-width) solid var(--cairn-color-border);
-}
-
-.cairn-AppShellRail {
-  align-items: center;
-  gap: var(--cairn-space-2);
-  width: 4.5rem;
-  padding-block: var(--cairn-space-5);
-}
-
-.cairn-AppShellSidebar {
-  width: var(--cairn-nav-rail-width);
-  padding: var(--cairn-space-5) var(--cairn-space-4);
-}
-
-.cairn-AppShellExpand {
-  display: none;
-}
-
-.cairn-AppShellRailNav,
-.cairn-AppShellRailGroup,
-.cairn-AppShellRailUtilities {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--cairn-space-1);
-  width: 100%;
-}
-
-.cairn-AppShellRailNav {
-  margin-top: var(--cairn-space-3);
-}
-
-.cairn-AppShellRailSeparator {
-  width: var(--cairn-space-6);
-  margin: var(--cairn-space-2) auto;
-}
-
-.cairn-AppShellRailUtilities {
-  margin-top: auto;
-  padding-top: var(--cairn-space-4);
-}
-
-.cairn-AppShellSidebarHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--cairn-space-1);
-}
-
-.cairn-AppShellSectionedNav {
-  display: flex;
-  flex-direction: column;
-  gap: var(--cairn-space-5);
-  margin-top: var(--cairn-space-6);
-}
-
-.cairn-AppShellNavItems,
-.cairn-AppShellUtilities {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--cairn-space-1) / 2);
-}
-
-.cairn-AppShellUtilities {
-  margin-top: auto;
-  padding-top: var(--cairn-space-5);
-}
-
-.cairn-AppShellUtilityButton {
+.cairn-AppShellNavAction {
   width: 100%;
   margin: 0;
   border: 0;
@@ -221,43 +271,124 @@
   text-align: start;
 }
 
-@container app-shell (min-width: 600px) {
-  .cairn-AppShellBottomBar,
-  .cairn-AppShellCompactHeader[data-rail="true"] {
-    display: none;
-  }
+.cairn-AppShellNavGlyph {
+  display: contents;
+}
 
-  .cairn-AppShellRail {
-    display: flex;
+/* The overlay's scrim and scroll lock. The header and title bar stay above it. */
+
+.cairn-AppShellBackdrop {
+  position: fixed;
+  z-index: 30;
+  inset: var(--app-shell-overlay-top) 0 0;
+  visibility: hidden;
+  background-color: var(--cairn-color-backdrop);
+  opacity: 0;
+  transition:
+    opacity var(--cairn-duration-panel) var(--cairn-ease-standard),
+    visibility 0s linear var(--cairn-duration-panel);
+
+  &[data-open="true"] {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
   }
 }
 
-@container app-shell (min-width: 840px) {
-  .cairn-AppShellCompactHeader {
-    display: none;
+:root:has(.cairn-AppShellSidebar[data-presentation="overlay"]) {
+  overflow: hidden;
+}
+
+/* Tab bar: a bottom bar in narrow, upright shells; a labelled column beside the content in wide or short ones. */
+
+.cairn-AppShellTabBar {
+  position: sticky;
+  z-index: 20;
+  bottom: 0;
+  display: grid;
+  grid-area: bottom;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  justify-content: center;
+  padding: var(--cairn-space-1) var(--cairn-space-2) calc(var(--cairn-space-1) + var(--cairn-safe-area-bottom));
+  border-top: var(--cairn-border-width) solid var(--cairn-color-border);
+  background-color: var(--cairn-color-surface);
+
+  .cairn-AppShell[data-tier="medium"] & {
+    grid-auto-columns: minmax(0, calc(var(--cairn-space-9) * 2));
   }
 
-  .cairn-AppShellRail[data-preferred="false"] {
-    display: none;
+  .cairn-AppShell[data-tabs="beside"] & {
+    top: var(--cairn-app-shell-sticky-top);
+    bottom: auto;
+    grid-area: navigation;
+    grid-auto-columns: auto;
+    grid-auto-flow: row;
+    align-content: start;
+    align-self: start;
+    gap: var(--cairn-space-2);
+    height: calc(100dvh - var(--cairn-app-shell-sticky-top));
+    padding: var(--cairn-space-4) var(--cairn-space-2) calc(var(--cairn-space-4) + var(--cairn-safe-area-bottom));
+    border-top: 0;
+    border-right: var(--cairn-border-width) solid var(--cairn-color-border);
+  }
+}
+
+.cairn-AppShell[data-tabs="bottom"] .cairn-AppShellFrame > .cairn-AppShellMain {
+  padding-bottom: 0;
+}
+
+.cairn-AppShellTabBarItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--cairn-space-1) / 2);
+  min-width: 0;
+  min-height: var(--cairn-control-height-lg);
+  padding: var(--cairn-space-1);
+  border-radius: var(--cairn-radius-item);
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-caption-line-height);
+  text-decoration: none;
+  transition-duration: var(--cairn-duration-fast);
+  transition-property: background-color, color;
+  transition-timing-function: var(--cairn-ease-standard);
+
+  &:hover {
+    color: var(--cairn-color-text);
   }
 
-  .cairn-AppShellRail[data-preferred="true"] .cairn-AppShellExpand {
-    display: inline-flex;
+  &[aria-current="page"] {
+    color: var(--cairn-accent-text);
   }
 
-  .cairn-AppShellSidebar[data-preferred="false"] {
-    display: flex;
+  .cairn-AppShell[data-tabs="beside"] & {
+    padding-block: var(--cairn-space-2);
+
+    &:hover {
+      background-color: var(--cairn-accent-subtle);
+    }
+
+    &[aria-current="page"] {
+      background-color: var(--cairn-accent-subtle-hover);
+    }
   }
+}
+
+.cairn-AppShellTabBarLabel {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cairn-AppShellDrawer {
-    transition-property: opacity;
-
-    &[data-starting-style],
-    &[data-ending-style] {
-      translate: 0 0;
-      opacity: 0;
-    }
+  .cairn-AppShellFrame,
+  .cairn-AppShellSidebar,
+  .cairn-AppShellChromeToggle {
+    transition: none;
   }
 }

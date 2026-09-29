@@ -163,3 +163,24 @@
     translate: calc(var(--switch-width) - var(--switch-height)) 0;
   }
 }
+
+/* A labelled choice is one touch target: the row grows to it and the control inside drops its own
+   enlarged hit area, which would otherwise overlap the neighboring rows. */
+@media (pointer: coarse) {
+  .cairn-ChoiceLabel {
+    align-items: center;
+    min-height: var(--cairn-control-hit-target);
+  }
+
+  .cairn-ChoiceControl :is(button, [role="switch"])::after {
+    content: none;
+  }
+
+  .cairn-RadioGroup {
+    gap: 0;
+
+    &[data-orientation="horizontal"] {
+      gap: 0 var(--cairn-space-5);
+    }
+  }
+}

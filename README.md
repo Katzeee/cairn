@@ -40,7 +40,7 @@ export function App() {
 
 Components expose semantic choices rather than visual ones: `variant="primary" | "secondary" | "outline" | "ghost" | "destructive"` for actions, `tone="neutral" | "accent" | "info" | "success" | "warning" | "danger"` for status, `size="sm" | "md" | "lg"` for controls, and text roles such as `size="label"` for typography. What each choice looks like belongs to the theme. Components accept native attributes and event handlers but no `className` or `style`, so an application cannot restyle them; when an application needs a different appearance, add a semantic variant here.
 
-Compose pages with `Box`, `Flex`, `Grid`, `Container`, and `Section`. Their spacing props take steps `"0"` to `"9"` of the theme's space scale or CSS lengths, and responsive props accept objects such as `{ initial: "1", md: "3" }` keyed by xs 520px, sm 768px, md 1024px, lg 1280px, and xl 1640px. Siblings are separated by the parent's `gap`; there are no margin props.
+Compose pages with `Box`, `Flex`, `Grid`, `Container`, and `Section`. Their spacing props take steps `"0"` to `"9"` of the theme's space scale or CSS lengths, and responsive props accept objects such as `{ initial: "1", md: "3" }` keyed by sm 600px, md 840px, lg 1200px, and xl 1600px, the widths at which `AppShell` also changes its navigation (sm and md). Inside `AppShell.Main` they measure the main area's width; elsewhere, the window's. Siblings are separated by the parent's `gap`; there are no margin props.
 
 ```tsx
 import { Badge, Button, Flex } from "@cairn/ui";

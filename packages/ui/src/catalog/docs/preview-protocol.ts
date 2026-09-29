@@ -5,10 +5,25 @@ export const previewRoute = "preview/";
 
 export type PreviewTheme = Readonly<{ theme: string | null; appearance: string | null }>;
 
+// A simulated window host: the insets its system controls take and a drawing of them. The catalog
+// draws the controls; Cairn only keeps content clear of them.
+export const previewHosts = ["web", "macos", "windows"] as const;
+export type PreviewHost = (typeof previewHosts)[number];
+
+export function applyHost(host: PreviewHost) {
+  if (host === "web") delete document.documentElement.dataset.catalogHost;
+  else document.documentElement.dataset.catalogHost = host;
+}
+
+export function hostFromQuery(query: URLSearchParams): PreviewHost {
+  return previewHosts.find((host) => host === query.get("host")) ?? "web";
+}
+
 export type PreviewMessage =
   | Readonly<{ type: "cairn-preview:ready" }>
   | Readonly<{ type: "cairn-preview:height"; height: number }>
-  | Readonly<{ type: "cairn-preview:theme"; theme: PreviewTheme }>;
+  | Readonly<{ type: "cairn-preview:theme"; theme: PreviewTheme }>
+  | Readonly<{ type: "cairn-preview:host"; host: PreviewHost }>;
 
 const themeAttributes = { theme: "data-cairn-theme", appearance: "data-cairn-appearance" } as const;
 

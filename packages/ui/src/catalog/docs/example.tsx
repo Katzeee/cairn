@@ -4,13 +4,18 @@ import { Button } from "../../components/button.js";
 import { Icon } from "../../components/icon.js";
 import { examples } from "../generated/examples.js";
 import { exampleTitle, type ExampleViewport } from "../registry.js";
+import type { DeviceSet } from "./devices.js";
 import { containExampleNavigation } from "./example-document.js";
 import { HighlightedCode } from "./highlighted-code.js";
 import { ViewportPreview } from "./viewport-preview.js";
 
 const collapsedLines = 28;
 
-export function Example({ id, viewport }: Readonly<{ id: string; viewport?: ExampleViewport }>) {
+export function Example({
+  id,
+  viewport,
+  devices = "any",
+}: Readonly<{ id: string; viewport?: ExampleViewport; devices?: DeviceSet }>) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const example = examples[id];
@@ -43,7 +48,7 @@ export function Example({ id, viewport }: Readonly<{ id: string; viewport?: Exam
             <Component />
           </div>
         ) : (
-          <ViewportPreview id={id} title={title} viewport={viewport} />
+          <ViewportPreview devices={devices} id={id} title={title} viewport={viewport} />
         )}
         <div className="cairn-CatalogExampleSource" data-collapsed={collapsible && !expanded ? "" : undefined}>
           <div className="cairn-CatalogExampleToolbar">

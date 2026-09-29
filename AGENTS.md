@@ -1,6 +1,6 @@
 # Cairn development guidance
 
-Cairn is the shared visual and interaction layer for the React applications built with it. Make reusable UI decisions here so those applications keep one recognizable style, and let each product's character come from its theme. Keep domain models, routing, persistence, and Electron, Tauri, or other host APIs in the applications; components receive host data and report user intent through their public contracts.
+Cairn is the shared visual and interaction layer for the React applications built with it. Make reusable UI decisions here so those applications keep one recognizable style, and let each product's character come from its theme. Keep domain models, routing, and persistence in the applications; components receive host data and report user intent through their public contracts. `@cairn/ui` never imports Electron, Tauri, or other host APIs. A package under `packages/hosts/` connects one host's window chrome to Cairn's contracts, such as the title bar tokens and drag region, and prefers the host's own or an established plugin's behavior to reimplementing it.
 
 ## Layers
 
@@ -11,6 +11,10 @@ A stylistic decision belongs to a theme. Flat cards, shadows only on floating la
 ## Components
 
 Public components declare their own prop types from native element attributes and semantic choices: `variant` for action emphasis, `tone` for status, `size` of `sm`, `md`, or `lg` for controls, and text roles for typography. They never accept `className`, `style`, or `render`, and never expose Base UI types. Behavior props follow native attributes: `disabled`, `required`, `readOnly`, `invalid`, `value` / `defaultValue` / `onValueChange`, and `open` / `defaultOpen` / `onOpenChange`. Compound components expose parts as `Name.Part`. Base UI provides the interaction primitives; WAI-ARIA APG decides keyboard behavior. Cairn's own composition positions a component through a wrapper element, never by styling the component from outside.
+
+Every component has **counterparts** in established design systems: Apple's and HarmonyOS's, and for web-only patterns, Material, Polaris, or Primer. Before proposing a component, part, or prop, name at least two counterparts and match the **capability** they share: the responsibility, the behavior users rely on, and how it adapts to space and input. Express that capability in React and web idiom, the way Cairn's other components do, never in one framework's syntax: SwiftUI's toolbar modifiers become compound parts, and its `ToolbarSpacer` becomes the parent's `gap`. One responsibility has one home. When a proposal overlaps an existing component, merge them or move the responsibility, and delete what is left. Without two counterparts, keep the pattern in the application.
+
+Applications declare intent, and components choose the presentation. A prop names a responsibility, a priority, or a relationship, such as a primary action, a collapsible sidebar, or a modal task; the component presents it from conditions it can measure: the space its region gets, the region's shape, the input modality, and what the host provides, such as window-control insets. No component branches on a platform name, so a narrow desktop window and a phone of the same shape get the same layout, and only host-provided chrome differs.
 
 Keyboard behavior is expressed as component actions with a default key table, as the suggestion list does. Key handlers resolve keys to actions, ignore input while composition is active, and let unhandled keys propagate, so an application-level command layer can bind or override them later.
 

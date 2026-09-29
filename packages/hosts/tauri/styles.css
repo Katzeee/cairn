@@ -1,0 +1,30 @@
+:root,
+[data-cairn-theme] {
+  --cairn-titlebar-inset-left: var(--tauri-plugin-decoration-left-clearance, 0px);
+  --cairn-titlebar-inset-right: var(--tauri-plugin-decoration-right-clearance, 0px);
+}
+
+:root {
+  --tauri-plugin-decoration-titlebar-height: var(--cairn-titlebar-height);
+}
+
+/* tauri-plugin-decoration draws HTML window controls on Windows only; macOS keeps AppKit's buttons
+   and Linux follows the GTK theme. The :root prefix outranks the plugin's own selectors. */
+:root [data-tauri-plugin-decoration-root] [data-tauri-decoration-platform="windows"] [data-tauri-decoration-control] {
+  height: var(--tauri-plugin-decoration-titlebar-height);
+  color: var(--cairn-color-text);
+  transition:
+    background-color var(--cairn-duration-fast) var(--cairn-ease-standard),
+    color var(--cairn-duration-fast) var(--cairn-ease-standard);
+
+  &:not([data-tauri-decoration-control="close"]):is(:hover, [data-tauri-decoration-hover]) {
+    background: var(--cairn-color-surface-muted);
+  }
+}
+
+:root:has([data-window-drag-region][data-window-active="false"])
+  [data-tauri-plugin-decoration-root]
+  [data-tauri-decoration-platform="windows"]
+  [data-tauri-decoration-control]:not(:hover, [data-tauri-decoration-hover]) {
+  color: var(--cairn-color-text-muted);
+}

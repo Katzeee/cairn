@@ -150,3 +150,10 @@
     }
   }
 }
+
+/* Stacked rows take the full touch target, so enlarged hit areas never overlap a neighbor. */
+@media (pointer: coarse) {
+  .cairn-PopupItem {
+    min-height: var(--cairn-control-hit-target);
+  }
+}

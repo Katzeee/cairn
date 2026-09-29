@@ -1,0 +1,65 @@
+.cairn-TitleBar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--cairn-space-2);
+  height: var(--cairn-titlebar-height);
+  padding-right: calc(var(--cairn-titlebar-inset-right) + var(--cairn-space-2));
+  padding-left: calc(var(--cairn-titlebar-inset-left) + var(--cairn-space-2));
+  border-bottom: var(--cairn-border-width) solid var(--cairn-color-border);
+  background-color: var(--cairn-color-canvas);
+  color: var(--cairn-color-text);
+}
+
+/* Every element that moves the window: a title bar, or a shell's top row. */
+[data-window-drag-region] {
+  user-select: none;
+  -webkit-app-region: drag;
+  app-region: drag;
+
+  & :is(a, button, input, select, textarea, label, [role], [tabindex], .cairn-HitArea) {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+}
+
+/* Window controls align to the viewport edge, so a window that draws its own top row reserves no
+   gutter for a document scrollbar; its panes scroll instead. */
+:root:has([data-window-drag-region]) {
+  scrollbar-gutter: auto;
+}
+
+.cairn-TitleBarLeading,
+.cairn-TitleBarTrailing {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--cairn-space-1);
+}
+
+.cairn-TitleBarTitle {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-label-line-height);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color var(--cairn-duration-fast) var(--cairn-ease-standard);
+
+  [data-window-active="false"] > & {
+    color: var(--cairn-color-text-muted);
+  }
+}
+
+.cairn-TitleBarContent {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, var(--cairn-container-1));
+  justify-content: center;
+  min-width: 0;
+}
+
+.cairn-TitleBarTrailing {
+  margin-left: auto;
+}

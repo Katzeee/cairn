@@ -1,3 +1,37 @@
+/* Header */
+
+.cairn-CatalogBrand {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--cairn-space-1) * 2.5);
+  min-width: 0;
+  padding: var(--cairn-space-1);
+  border-radius: var(--cairn-radius-control);
+  color: var(--cairn-color-text);
+  font-weight: var(--cairn-weight-bold);
+  letter-spacing: var(--cairn-heading-letter-spacing);
+  text-decoration: none;
+}
+
+.cairn-CatalogBrandMark {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--cairn-control-height-sm);
+  height: var(--cairn-control-height-sm);
+  border-radius: var(--cairn-radius-control);
+  background-color: var(--cairn-accent-solid);
+  color: var(--cairn-accent-on-solid);
+  font-size: var(--cairn-text-label-size);
+}
+
+.cairn-CatalogHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: var(--cairn-space-1);
+  margin-left: auto;
+}
+
 /* Page */
 
 .cairn-CatalogContent {
@@ -7,10 +41,8 @@
   padding: var(--cairn-space-6) var(--cairn-space-4) var(--cairn-space-9);
 }
 
-@container app-shell (min-width: 840px) {
-  .cairn-CatalogContent {
-    padding: var(--cairn-space-7) var(--cairn-space-7) var(--cairn-space-9);
-  }
+.cairn-AppShell[data-tier="expanded"] .cairn-CatalogContent {
+  padding: var(--cairn-space-7) var(--cairn-space-7) var(--cairn-space-9);
 }
 
 .cairn-CatalogHeader,
@@ -82,7 +114,7 @@
 .cairn-CatalogSection,
 .cairn-CatalogExample {
   margin-top: var(--cairn-space-8);
-  scroll-margin-top: var(--cairn-space-6);
+  scroll-margin-top: calc(var(--cairn-app-shell-sticky-top, 0px) + var(--cairn-space-6));
 }
 
 .cairn-CatalogSectionTitle,
@@ -217,7 +249,11 @@
   background-color: var(--cairn-color-surface-muted);
 }
 
+/* One row of equal-height controls: the environment the example runs in, then its size. Groups wrap
+   whole when the row runs out of room. */
 .cairn-CatalogViewportToolbar {
+  --viewport-control-height: calc(var(--cairn-control-height-sm) - 4px);
+
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -239,7 +275,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: var(--cairn-space-1);
-  height: calc(var(--cairn-control-height-sm) - 4px);
+  height: var(--viewport-control-height);
   padding-inline: var(--cairn-space-2);
   border: 0;
   border-radius: calc(var(--cairn-radius-control) - 2px);
@@ -247,7 +283,7 @@
   color: var(--cairn-color-text-muted);
   font-size: var(--cairn-text-label-size);
   font-weight: var(--cairn-weight-medium);
-  line-height: calc(var(--cairn-control-height-sm) - 4px);
+  line-height: var(--viewport-control-height);
   cursor: pointer;
   transition:
     background-color var(--cairn-duration-fast) var(--cairn-ease-standard),
@@ -271,11 +307,18 @@
   font-weight: var(--cairn-weight-regular);
 }
 
+/* The trailing group grows leftward, so a longer device name never moves the size controls. */
+.cairn-CatalogViewportTrailing {
+  display: flex;
+  align-items: center;
+  gap: var(--cairn-space-3);
+  margin-inline-start: auto;
+}
+
 .cairn-CatalogViewportSize {
   display: inline-flex;
   align-items: center;
   gap: var(--cairn-space-2);
-  margin-inline-start: auto;
   color: var(--cairn-color-text-muted);
   font-family: var(--cairn-font-code);
   font-size: var(--cairn-text-caption-size);
@@ -680,12 +723,12 @@
   }
 }
 
-@container app-shell (max-width: 839px) {
-  .cairn-CatalogSwatchList {
+.cairn-AppShell:not([data-tier="expanded"]) {
+  & .cairn-CatalogSwatchList {
     grid-template-columns: auto minmax(0, 1fr);
   }
 
-  .cairn-CatalogSwatchRow > :nth-child(n + 3) {
+  & .cairn-CatalogSwatchRow > :nth-child(n + 3) {
     grid-column: 2;
   }
 }
@@ -880,5 +923,73 @@
 
   .cairn-CatalogMotion:is(:hover, :focus-visible) & {
     left: calc(100% - var(--cairn-space-3));
+  }
+}
+
+/* Simulated window hosts in viewport previews. The catalog draws the system controls that a real
+   host draws, and assigns the insets a host adapter would. */
+
+:root[data-catalog-host="macos"] {
+  --cairn-titlebar-inset-left: 78px;
+}
+
+:root[data-catalog-host="windows"] {
+  --cairn-titlebar-inset-right: 138px;
+}
+
+.cairn-CatalogHostControls {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  display: none;
+  align-items: center;
+  height: var(--cairn-titlebar-height);
+  pointer-events: none;
+
+  :root[data-catalog-host="macos"] & {
+    left: 20px;
+    display: flex;
+    gap: 8px;
+
+    & > span {
+      width: 12px;
+      height: 12px;
+      border-radius: var(--cairn-radius-pill);
+      background-color: var(--cairn-danger-solid);
+    }
+
+    & > span:nth-child(2) {
+      background-color: var(--cairn-warning-solid);
+    }
+
+    & > span:nth-child(3) {
+      background-color: var(--cairn-success-solid);
+    }
+  }
+
+  :root[data-catalog-host="windows"] & {
+    right: 0;
+    display: flex;
+    color: var(--cairn-color-text-muted);
+    font-size: var(--cairn-text-label-size);
+
+    & > span {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 100%;
+    }
+
+    & > span:nth-child(1)::before {
+      content: "\2014";
+    }
+
+    & > span:nth-child(2)::before {
+      content: "\2610";
+    }
+
+    & > span:nth-child(3)::before {
+      content: "\2715";
+    }
   }
 }

@@ -1,0 +1,52 @@
+.cairn-SegmentedControl {
+  --segmented-height: var(--cairn-control-height-md);
+
+  display: inline-flex;
+  gap: calc(var(--cairn-space-1) / 2);
+  padding: calc(var(--cairn-space-1) / 2);
+  border-radius: var(--cairn-radius-control);
+  background-color: var(--cairn-color-surface-muted);
+
+  &[data-size="sm"] {
+    --segmented-height: var(--cairn-control-height-sm);
+  }
+}
+
+.cairn-SegmentedControlItem {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cairn-space-1);
+  height: calc(var(--segmented-height) - var(--cairn-space-1));
+  margin: 0;
+  padding-inline: var(--cairn-space-3);
+  border: 0;
+  border-radius: calc(var(--cairn-radius-control) - var(--cairn-space-1) / 2);
+  background: transparent;
+  color: var(--cairn-color-text-muted);
+  font-family: inherit;
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-label-line-height);
+  white-space: nowrap;
+  cursor: pointer;
+  transition-duration: var(--cairn-duration-fast);
+  transition-property: background-color, color, box-shadow;
+  transition-timing-function: var(--cairn-ease-standard);
+
+  &:hover {
+    color: var(--cairn-color-text);
+  }
+
+  &[data-pressed] {
+    background-color: var(--cairn-color-surface);
+    box-shadow: var(--cairn-elevation-control);
+    color: var(--cairn-color-text);
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    opacity: var(--cairn-disabled-opacity);
+  }
+}

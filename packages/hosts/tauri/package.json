@@ -1,0 +1,13 @@
+{
+  "name": "@cairn/host-tauri",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./styles.css": "./styles.css"
+  }
+}

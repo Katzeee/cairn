@@ -1,4 +1,5 @@
 import type { IconName } from "../components/icon.js";
+import type { DeviceSet } from "./docs/devices.js";
 
 // Every public component has one entry. `examples` name files under ./examples; each file is
 // both the rendered preview and the code shown beside it.
@@ -13,10 +14,10 @@ type ComponentEntry = Readonly<{
 // and fixed layers respond to the preview. Content examples size the viewport to their height;
 // screen examples fill a viewport whose height the reader sets.
 export type ExampleViewport = "content" | "screen";
-export type ExampleEntry = Readonly<{ id: string; viewport?: ExampleViewport }>;
+export type ExampleEntry = Readonly<{ id: string; viewport?: ExampleViewport; devices?: DeviceSet }>;
 
-const responsive = (id: string): ExampleEntry => ({ id, viewport: "content" });
-const screen = (id: string): ExampleEntry => ({ id, viewport: "screen" });
+const responsive = (id: string): ExampleEntry => ({ id, viewport: "content", devices: "any" });
+const screen = (id: string, devices: DeviceSet = "any"): ExampleEntry => ({ id, viewport: "screen", devices });
 
 const entry = (
   group: ComponentEntry["group"],
@@ -36,9 +37,20 @@ export const components = {
   Grid: entry("layout", "Arrange children in rows and columns that respond to width.", ["Grid"], ["grid/columns", responsive("grid/responsive")]),
   Container: entry("layout", "Constrain content to one of four shared measures.", ["Container"], ["container/sizes", "container/alignment"]),
   Section: entry("layout", "Set vertical rhythm between page regions.", ["Section"], ["section/rhythm"]),
-  AppShell: entry("layout", "Application navigation that adapts to its container.", ["AppShell"], [screen("app-shell/bottom-bar"), screen("app-shell/sidebar")]),
-  PageScaffold: entry("layout", "A page template with a heading, actions, content width, and gutters.", ["PageScaffold"], [responsive("page-scaffold/standard")]),
+  AppShell: entry(
+    "layout",
+    "Header, navigation, and main regions. A sidebar docks where it fits and shows above the content where it does not; a tab bar moves from the bottom edge to the side.",
+    ["AppShell"],
+    [screen("app-shell/web"), screen("app-shell/mobile", "mobile"), screen("app-shell/desktop", "desktop")],
+  ),
+  PageBar: entry(
+    "layout",
+    "The bar at the top of each page: back, title, and the page's actions; actions that do not fit move into More.",
+    ["PageBar"],
+    [responsive("page-bar/actions")],
+  ),
   ListDetail: entry("layout", "A list beside its selected detail, or one pane at a time in narrow containers.", ["ListDetail"], [responsive("list-detail/inbox")]),
+  TitleBar: entry("layout", "Window title bar content for desktop hosts, kept clear of the system window controls.", ["TitleBar"], [screen("title-bar/desktop", "desktop")]),
 
   Text: entry("typography", "Body text in the shared type roles, weights, and tones.", ["Text"], ["text/roles", "text/tones"]),
   Heading: entry("typography", "Semantic headings in the title roles.", ["Heading"], ["heading/roles"]),
@@ -66,8 +78,8 @@ export const components = {
   Select: entry("components", "Choose from a fixed set of options.", ["Select"], ["select/groups"]),
   Combobox: entry("components", "Filter a set of options by typing.", ["Combobox"], ["combobox/filter"]),
   Tabs: entry("components", "Peer views within one subject.", ["Tabs"], ["tabs/views"]),
+  SegmentedControl: entry("components", "Choose one of a few options that stay visible side by side.", ["SegmentedControl"], ["segmented-control/views"]),
   Breadcrumbs: entry("components", "The ancestors of the current location.", ["Breadcrumbs"], ["breadcrumbs/trail"]),
-  NavItem: entry("components", "Links for sidebars and compact rails.", ["NavItem", "NavRailItem", "NavSectionLabel"], ["nav-item/sidebar", "nav-item/rail"]),
   DropdownMenu: entry("components", "Actions and choices behind a trigger.", ["DropdownMenu"], ["dropdown-menu/actions"]),
   ContextMenu: entry("components", "Actions anchored to a pointer or long press.", ["ContextMenu"], ["context-menu/canvas"]),
   Popover: entry("components", "Non-modal content anchored to a trigger.", ["Popover"], ["popover/details"]),

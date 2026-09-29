@@ -194,7 +194,7 @@ function tokensCss() {
   ];
   const system = [
     ["cairn-control-hit-target", "48px"],
-    ["cairn-nav-rail-width", "252px"],
+    ["cairn-sidebar-width", "252px"],
     ["cairn-content-width-reading", "720px"],
     ["cairn-content-width-document", "800px"],
     ["cairn-content-width-standard", "1120px"],
@@ -205,6 +205,11 @@ function tokensCss() {
     ["cairn-container-4", "1136px"],
     ["cairn-content-inset", "16px"],
     ...["top", "right", "bottom", "left"].map((edge) => [`cairn-safe-area-${edge}`, `env(safe-area-inset-${edge}, 0px)`]),
+    // Window Controls Overlay describes the title bar area left to the page; host adapters without it
+    // assign these three tokens from their own window chrome.
+    ["cairn-titlebar-height", "env(titlebar-area-height, 48px)"],
+    ["cairn-titlebar-inset-left", "env(titlebar-area-x, 0px)"],
+    ["cairn-titlebar-inset-right", "calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))"],
   ];
   const toneScopes = tones
     .map((tone) => `[data-tone="${tone}"] {\n${declarations(Object.keys(toneRoles).map((role) => [`cairn-tone-${role}`, `var(--cairn-${tone}-${role})`]))}\n}`)

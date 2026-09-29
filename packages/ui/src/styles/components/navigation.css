@@ -1,5 +1,4 @@
-.cairn-NavItem,
-.cairn-NavRailItem {
+.cairn-NavItem {
   display: flex;
   align-items: center;
   border-radius: var(--cairn-radius-item);
@@ -29,11 +28,11 @@
   line-height: var(--cairn-text-label-line-height);
 }
 
-.cairn-NavRailItem {
-  justify-content: center;
-  width: var(--cairn-control-height-md);
-  height: var(--cairn-control-height-md);
-  border-radius: var(--cairn-radius-panel);
+/* Stacked rows take the full touch target, so enlarged hit areas never overlap a neighbor. */
+@media (pointer: coarse) {
+  .cairn-NavItem {
+    min-height: var(--cairn-control-hit-target);
+  }
 }
 
 .cairn-NavSectionLabel {

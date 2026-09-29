@@ -13,3 +13,4 @@ import "./outline-transactions.acceptance.mjs";
 import "./outline-inline-editing.acceptance.mjs";
 import "./outline-readonly.acceptance.mjs";
 import "./suggestions.acceptance.mjs";
+import "./app-shell.acceptance.mjs";

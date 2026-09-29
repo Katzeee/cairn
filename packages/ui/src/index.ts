@@ -17,9 +17,18 @@ export {
   type SectionProps,
   type Space,
 } from "./components/layout.js";
-export { AppShell, type AppShellItem, type AppShellSection, type AppShellUtility } from "./components/app-shell.js";
-export { PageScaffold } from "./components/page-scaffold.js";
+export {
+  AppShell,
+  type AppShellDragRegion,
+  type AppShellNavActionProps,
+  type AppShellNavItemProps,
+  type AppShellRootProps,
+  type AppShellSidebarProps,
+  type AppShellTabBarItemProps,
+} from "./components/app-shell.js";
+export { PageBar, type PageBarActionPlacement, type PageBarActionProps } from "./components/page-bar.js";
 export { ListDetail } from "./components/list-detail.js";
+export { TitleBar } from "./components/title-bar.js";
 
 export { Code, Heading, Kbd, Text, type CodeProps, type HeadingProps, type KbdProps, type TextProps } from "./components/typography.js";
 export { Link, type LinkProps } from "./components/link.js";
@@ -45,7 +54,6 @@ export {
 export { EmptyState } from "./components/empty-state.js";
 export { Field, FieldDescription, FieldError, FieldLabel, type FieldProps } from "./components/field.js";
 export { Icon, iconNames, type IconName, type IconProps } from "./components/icon.js";
-export { NavItem, NavRailItem, NavSectionLabel, type NavItemProps, type NavRailItemProps } from "./components/nav.js";
 export { Popover, type PopoverContentProps, type PopoverRootProps } from "./components/popover.js";
 export { Progress, type ProgressProps } from "./components/progress.js";
 export { RadioGroup, type RadioGroupItemProps, type RadioGroupRootProps } from "./components/radio-group.js";
@@ -60,6 +68,11 @@ export { Separator, type SeparatorProps } from "./components/separator.js";
 export { Skeleton, type SkeletonProps } from "./components/skeleton.js";
 export { Spinner, type SpinnerProps } from "./components/spinner.js";
 export { Switch, type SwitchProps } from "./components/switch.js";
+export {
+  SegmentedControl,
+  type SegmentedControlItemProps,
+  type SegmentedControlRootProps,
+} from "./components/segmented-control.js";
 export { Tabs, type TabsContentProps, type TabsListProps, type TabsRootProps, type TabsTriggerProps } from "./components/tabs.js";
 export { TextArea, type TextAreaProps } from "./components/text-area.js";
 export { TextField, type TextFieldRootProps, type TextFieldSlotProps } from "./components/text-field.js";

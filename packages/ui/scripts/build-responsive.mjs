@@ -5,7 +5,8 @@ import { fileURLToPath } from "node:url";
 import breakpoints from "../src/components/breakpoints.json" with { type: "json" };
 
 // Layout props compile to breakpoint-prefixed utility classes; values outside a fixed
-// scale flow through a custom property set inline by the component.
+// scale flow through a custom property set inline by the component. Breakpoints query the nearest
+// layout region (the shell's main area, a pane, or the page), not the viewport.
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "src", "styles", "generated");
 
@@ -86,17 +87,27 @@ const custom = {
   gtr: "grid-template-rows",
 };
 
+// Regions are named containers, never the root: containment on html keeps body's overflow from
+// reaching the viewport, so a scroll lock would detach sticky bars. Outside a region the window decides.
+const outsideRegion = ":where(:not(.cairn-AppShellMain *))";
+
 let css = "";
 for (const [point, min] of Object.entries(breakpoints)) {
   const prefix = point === "initial" ? "" : `${point}\\:`;
-  let block = "";
-  for (const [prop, values] of Object.entries(rules)) {
-    for (const [value, declaration] of Object.entries(values)) block += `.${prefix}cairn-r-${prop}-${value}{${declaration}}\n`;
-  }
-  for (const [prop, property] of Object.entries(custom)) {
-    block += `.${prefix}cairn-r-${prop}{${property}:var(--${prop}${point === "initial" ? "" : `-${point}`})}\n`;
-  }
-  css += min === 0 ? block : `@media (min-width:${min}px){\n${block}}\n`;
+  const rulesFor = (scope) => {
+    let block = "";
+    for (const [prop, values] of Object.entries(rules)) {
+      for (const [value, declaration] of Object.entries(values)) block += `.${prefix}cairn-r-${prop}-${value}${scope}{${declaration}}\n`;
+    }
+    for (const [prop, property] of Object.entries(custom)) {
+      block += `.${prefix}cairn-r-${prop}${scope}{${property}:var(--${prop}${point === "initial" ? "" : `-${point}`})}\n`;
+    }
+    return block;
+  };
+  css +=
+    min === 0
+      ? rulesFor("")
+      : `@container cairn-region (min-width:${min}px){\n${rulesFor("")}}\n@media (min-width:${min}px){\n${rulesFor(outsideRegion)}}\n`;
 }
 
 await mkdir(output, { recursive: true });

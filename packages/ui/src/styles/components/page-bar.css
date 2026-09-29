@@ -1,0 +1,86 @@
+/* The bar shares the page gutter, so its title lines up with the content below. */
+.cairn-PageBar {
+  position: sticky;
+  z-index: 20;
+  top: var(--cairn-app-shell-sticky-top, 0px);
+  display: grid;
+  grid-template:
+    "title actions" auto
+    "subtitle actions" auto
+    / minmax(0, 1fr) auto;
+  align-content: center;
+  align-items: center;
+  column-gap: var(--cairn-space-2);
+  min-height: var(--cairn-app-shell-bar-height, calc(var(--cairn-control-height-md) + var(--cairn-space-2) * 2));
+  padding: var(--cairn-space-2) var(--cairn-space-5);
+  border-bottom: var(--cairn-border-width) solid transparent;
+  background-color: var(--cairn-color-canvas);
+  transition: border-color var(--cairn-duration-fast) var(--cairn-ease-standard);
+
+  &:has(> .cairn-PageBarBack) {
+    grid-template:
+      "back title actions" auto
+      "back subtitle actions" auto
+      / auto minmax(0, 1fr) auto;
+  }
+
+  &[data-scrolled="true"] {
+    border-bottom-color: var(--cairn-color-border);
+  }
+}
+
+/* The back button sits in the gutter's edge, so the title keeps the content's line. */
+.cairn-PageBarBack {
+  display: flex;
+  grid-area: back;
+  margin-left: calc(var(--cairn-space-2) - var(--cairn-space-5));
+}
+
+.cairn-PageBarTitle,
+.cairn-PageBarSubtitle {
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cairn-PageBarTitle {
+  grid-area: title;
+  font-size: var(--cairn-text-body-large-size);
+  font-weight: var(--cairn-weight-semibold);
+  line-height: var(--cairn-text-body-large-line-height);
+  letter-spacing: var(--cairn-heading-letter-spacing);
+
+  .cairn-PageBar:not(:has(> .cairn-PageBarSubtitle)) > & {
+    grid-row: 1 / span 2;
+  }
+}
+
+.cairn-PageBarSubtitle {
+  grid-area: subtitle;
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+}
+
+.cairn-PageBarActions {
+  display: flex;
+  grid-area: actions;
+  align-items: center;
+  gap: var(--cairn-space-1);
+}
+
+.cairn-PageBarMeasure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: var(--cairn-space-1);
+  visibility: hidden;
+  pointer-events: none;
+
+  & > span {
+    display: flex;
+    gap: var(--cairn-space-1);
+  }
+}

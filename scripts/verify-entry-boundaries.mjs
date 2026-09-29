@@ -11,7 +11,7 @@ const boundaries = [
   {
     entry: "index.ts",
     forbiddenFiles: [/^components\/node-editor\//u, /^catalog\//u],
-    forbiddenPackages: [/^@tiptap\//u],
+    forbiddenPackages: [/^@tiptap\//u, /^@tauri-apps\//u, /^electron$/u, /^@cairn\/host-/u],
   },
 ];
 

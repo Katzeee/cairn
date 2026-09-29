@@ -27,8 +27,8 @@ export function ComponentPage({ id }: Readonly<{ id: ComponentId }>) {
           <a href={`${section}api-reference`}>API reference</a>
         </nav>
       </PageHeader>
-      {entry.examples.map(({ id: example, viewport }) => (
-        <Example id={example} key={example} viewport={viewport} />
+      {entry.examples.map(({ id: example, viewport, devices }) => (
+        <Example devices={devices} id={example} key={example} viewport={viewport} />
       ))}
       <section aria-labelledby="api-reference-title" className="cairn-CatalogExample" id="api-reference">
         <h2 className="cairn-CatalogExampleTitle" id="api-reference-title">

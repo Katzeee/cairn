@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useRef, type MouseEvent } from "react";
 import { ToastProvider } from "../../components/toast.js";
 import { examples } from "../generated/examples.js";
 import { exampleViewport } from "../registry.js";
-import { applyTheme, isPreviewMessage, type PreviewMessage, type PreviewTheme } from "./preview-protocol.js";
+import { applyHost, applyTheme, isPreviewMessage, type PreviewHost, type PreviewMessage, type PreviewTheme } from "./preview-protocol.js";
 
 export function containExampleNavigation(event: MouseEvent<HTMLElement>) {
   if (event.target instanceof Element && event.target.closest("a[href]") !== null) event.preventDefault();
@@ -11,17 +11,22 @@ export function containExampleNavigation(event: MouseEvent<HTMLElement>) {
 
 const postToHost = (message: PreviewMessage) => window.parent.postMessage(message, "*");
 
-export function ExampleDocument({ id, initialTheme }: Readonly<{ id: string; initialTheme: PreviewTheme }>) {
+export function ExampleDocument({
+  id,
+  initialTheme,
+  initialHost,
+}: Readonly<{ id: string; initialTheme: PreviewTheme; initialHost: PreviewHost }>) {
   const root = useRef<HTMLDivElement>(null);
   const viewport = exampleViewport(id) ?? "content";
 
   useLayoutEffect(() => applyTheme(initialTheme), [initialTheme]);
+  useLayoutEffect(() => applyHost(initialHost), [initialHost]);
 
   useEffect(() => {
     const receive = (event: MessageEvent) => {
-      if (event.source === window.parent && isPreviewMessage(event.data) && event.data.type === "cairn-preview:theme") {
-        applyTheme(event.data.theme);
-      }
+      if (event.source !== window.parent || !isPreviewMessage(event.data)) return;
+      if (event.data.type === "cairn-preview:theme") applyTheme(event.data.theme);
+      else if (event.data.type === "cairn-preview:host") applyHost(event.data.host);
     };
     window.addEventListener("message", receive);
     const element = root.current;
@@ -50,6 +55,11 @@ export function ExampleDocument({ id, initialTheme }: Readonly<{ id: string; ini
         ref={root}
       >
         <Component />
+      </div>
+      <div aria-hidden className="cairn-CatalogHostControls">
+        <span />
+        <span />
+        <span />
       </div>
     </ToastProvider>
   );

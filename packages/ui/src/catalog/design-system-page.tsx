@@ -1,12 +1,15 @@
 import { themeNames, themes, type CairnThemeName } from "@cairn/design-tokens";
 import { useEffect, useState } from "react";
 
-import { AppShell, type AppShellSection, type AppShellUtility } from "../components/app-shell.js";
+import { AppShell } from "../components/app-shell.js";
+import { Button, IconButton } from "../components/button.js";
 import { CairnTheme } from "../components/cairn-theme.js";
+import { Icon } from "../components/icon.js";
 import { ToastProvider } from "../components/toast.js";
+import { Tooltip } from "../components/tooltip.js";
 import { ComponentPage } from "./docs/component-page.js";
 import { ExampleDocument } from "./docs/example-document.js";
-import { previewRoute, themeFromQuery } from "./docs/preview-protocol.js";
+import { hostFromQuery, previewRoute, themeFromQuery } from "./docs/preview-protocol.js";
 import {
   ColorPage,
   ElevationAndMotionPage,
@@ -24,25 +27,18 @@ const route = () => {
   return { path: path.replace(/^\/+|\/+$/g, ""), query: new URLSearchParams(query) };
 };
 
-const shellSections: readonly AppShellSection[] = [
-  { id: "overview", items: [{ id: overviewPage.id, label: overviewPage.title, target: "#/design-system" }] },
-  ...catalogSections.map((section) => ({
-    id: section.id,
-    label: section.title,
-    items: section.pages.map((page) => ({
-      id: page.id,
-      label: page.title,
-      target: `#/design-system/${page.path}`,
-    })),
-  })),
-];
-
 export function DesignSystemPage() {
   const [preview] = useState(() => {
     const { path, query } = route();
-    return path.startsWith(previewRoute) ? { id: path.slice(previewRoute.length), theme: themeFromQuery(query) } : undefined;
+    return path.startsWith(previewRoute)
+      ? { id: path.slice(previewRoute.length), theme: themeFromQuery(query), host: hostFromQuery(query) }
+      : undefined;
   });
-  return preview === undefined ? <CatalogShell /> : <ExampleDocument id={preview.id} initialTheme={preview.theme} />;
+  return preview === undefined ? (
+    <CatalogShell />
+  ) : (
+    <ExampleDocument id={preview.id} initialHost={preview.host} initialTheme={preview.theme} />
+  );
 }
 
 function CatalogShell() {
@@ -87,30 +83,61 @@ function CatalogShell() {
   }, []);
 
   const nextTheme = themeNames[(themeNames.indexOf(theme) + 1) % themeNames.length]!;
-  const utilities: readonly AppShellUtility[] = [
-    {
-      icon: "palette",
-      id: "theme",
-      label: `Switch to ${themes[nextTheme].label}`,
-      onSelect: () => setTheme(nextTheme),
-    },
-    {
-      icon: appearance === "light" ? "moon" : "sun",
-      id: "appearance",
-      label: appearance === "light" ? "Switch to dark" : "Switch to light",
-      onSelect: () => setAppearance(appearance === "light" ? "dark" : "light"),
-    },
-  ];
+  const appearanceLabel = appearance === "light" ? "Switch to dark" : "Switch to light";
 
   return (
     <CairnTheme appearance={appearance}>
       <ToastProvider>
         <div data-ui="design-system">
-          <AppShell activeItemId={page.id} brand="Cairn" sections={shellSections} utilities={utilities}>
-            <main className="cairn-CatalogContent">
-              <PageContent key={page.id} page={page} theme={theme} />
-            </main>
-          </AppShell>
+          <AppShell.Root>
+            <AppShell.Header>
+              <AppShell.SidebarToggle />
+              <a className="cairn-CatalogBrand cairn-Focusable" href="#/design-system">
+                <span aria-hidden className="cairn-CatalogBrandMark">
+                  C
+                </span>
+                Cairn
+              </a>
+              <div className="cairn-CatalogHeaderActions">
+                <Tooltip content={`Switch to ${themes[nextTheme].label}`}>
+                  <Button onClick={() => setTheme(nextTheme)} size="sm" variant="ghost">
+                    <Icon name="palette" size="sm" />
+                    {themes[theme].label}
+                  </Button>
+                </Tooltip>
+                <Tooltip content={appearanceLabel}>
+                  <IconButton
+                    aria-label={appearanceLabel}
+                    onClick={() => setAppearance(appearance === "light" ? "dark" : "light")}
+                    variant="ghost"
+                  >
+                    <Icon name={appearance === "light" ? "moon" : "sun"} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </AppShell.Header>
+            <AppShell.Sidebar label="Design system">
+              <AppShell.NavGroup>
+                <AppShell.NavItem active={page.id === overviewPage.id} href="#/design-system">
+                  {overviewPage.title}
+                </AppShell.NavItem>
+              </AppShell.NavGroup>
+              {catalogSections.map((section) => (
+                <AppShell.NavGroup key={section.id} label={section.title}>
+                  {section.pages.map((candidate) => (
+                    <AppShell.NavItem active={candidate.id === page.id} href={`#/design-system/${candidate.path}`} key={candidate.id}>
+                      {candidate.title}
+                    </AppShell.NavItem>
+                  ))}
+                </AppShell.NavGroup>
+              ))}
+            </AppShell.Sidebar>
+            <AppShell.Main>
+              <div className="cairn-CatalogContent">
+                <PageContent key={page.id} page={page} theme={theme} />
+              </div>
+            </AppShell.Main>
+          </AppShell.Root>
         </div>
       </ToastProvider>
     </CairnTheme>

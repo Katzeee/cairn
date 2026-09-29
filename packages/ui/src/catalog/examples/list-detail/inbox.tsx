@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Flex, Heading, ListDetail, NavItem, Text } from "@cairn/ui";
+import { Box, Button, Flex, Heading, ListDetail, Text } from "@cairn/ui";
 
 const threads = [
   { id: "launch", title: "Launch checklist", body: "Final review is scheduled for Thursday." },
@@ -25,17 +25,14 @@ export default function ListDetailInbox() {
       list={
         <Flex direction="column" gap="1" p="3">
           {threads.map(({ id, title }) => (
-            <NavItem
-              active={id === thread.id}
-              href={`#${id}`}
+            <Button
+              aria-pressed={id === thread.id}
               key={id}
-              onClick={(event) => {
-                event.preventDefault();
-                setSelected(id);
-              }}
+              onClick={() => setSelected(id)}
+              variant={id === thread.id ? "secondary" : "ghost"}
             >
               {title}
-            </NavItem>
+            </Button>
           ))}
         </Flex>
       }

@@ -16,6 +16,7 @@ import { Button, IconButton } from "./button.js";
 import { DropdownMenu } from "./dropdown-menu.js";
 import { Icon, type IconName } from "./icon.js";
 import { useWindowActive } from "./internal/window-active.js";
+import { PaneBack } from "./list-detail.js";
 import { Tooltip } from "./tooltip.js";
 
 // Primary actions keep their label and the trailing edge, and give up the label first; default
@@ -38,6 +39,7 @@ type Arrangement = Readonly<{ compact: boolean; shown: readonly string[] }>;
 type PageBarState = Readonly<{
   register: (entry: ActionEntry) => void;
   unregister: (id: string) => void;
+  claimBack: () => () => void;
 }>;
 
 const PageBarContext = createContext<PageBarState | null>(null);
@@ -132,6 +134,13 @@ function Root({ children }: Readonly<{ children: ReactNode }>) {
   const scrolled = useScrolledUnder(bar);
   const [entries, setEntries] = useState<ReadonlyMap<string, ActionEntry>>(new Map());
   const [arrangement, setArrangement] = useState<Arrangement>();
+  // A stacked detail pane offers its way back unless the page declares its own.
+  const paneBack = useContext(PaneBack);
+  const [declaredBacks, setDeclaredBacks] = useState(0);
+  const claimBack = useCallback(() => {
+    setDeclaredBacks((count) => count + 1);
+    return () => setDeclaredBacks((count) => count - 1);
+  }, []);
 
   const register = useCallback((entry: ActionEntry) => setEntries((current) => new Map(current).set(entry.id, entry)), []);
   const unregister = useCallback(
@@ -203,7 +212,7 @@ function Root({ children }: Readonly<{ children: ReactNode }>) {
   const overflow = actions.filter((action) => !shown.includes(action));
 
   return (
-    <PageBarContext.Provider value={{ register, unregister }}>
+    <PageBarContext.Provider value={{ register, unregister, claimBack }}>
       <header
         {...dragRegion}
         className="cairn-PageBar"
@@ -212,6 +221,7 @@ function Root({ children }: Readonly<{ children: ReactNode }>) {
         data-window-drag-region={dragRegion === null ? undefined : ""}
         ref={bar}
       >
+        {paneBack === null || declaredBacks > 0 ? null : <BackButton label={paneBack.label} onSelect={paneBack.onSelect} />}
         {children}
         {actions.length === 0 ? null : (
           <div className="cairn-PageBarActions">
@@ -246,8 +256,14 @@ function Root({ children }: Readonly<{ children: ReactNode }>) {
   );
 }
 
+// Inside a list-detail's detail pane the bar adds this itself where the panes stack.
 function Back({ label, onSelect }: Readonly<{ label: string; onSelect: () => void }>) {
-  usePageBar("Back");
+  const { claimBack } = usePageBar("Back");
+  useLayoutEffect(claimBack, [claimBack]);
+  return <BackButton label={label} onSelect={onSelect} />;
+}
+
+function BackButton({ label, onSelect }: Readonly<{ label: string; onSelect: () => void }>) {
   return (
     <span className="cairn-PageBarBack">
       <Tooltip content={label}>

@@ -1,6 +1,6 @@
 /* The floating panel and its rows, shared by menus, popovers, select lists, and comboboxes. */
 .cairn-Positioner {
-  z-index: 50;
+  z-index: var(--cairn-layer-popup);
   outline: none;
 }
 

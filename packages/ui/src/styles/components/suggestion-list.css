@@ -1,6 +1,6 @@
 .cairn-SuggestionPopup {
   position: fixed;
-  z-index: 52;
+  z-index: calc(var(--cairn-layer-popup) + 2);
   display: flex;
   flex-direction: column;
   width: 18rem;

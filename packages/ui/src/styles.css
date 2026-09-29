@@ -12,6 +12,7 @@
 @import "./styles/components/badge.css" layer(cairn.components);
 @import "./styles/components/callout.css" layer(cairn.components);
 @import "./styles/components/card.css" layer(cairn.components);
+@import "./styles/components/image.css" layer(cairn.components);
 @import "./styles/components/separator.css" layer(cairn.components);
 @import "./styles/components/spinner.css" layer(cairn.components);
 @import "./styles/components/skeleton.css" layer(cairn.components);
@@ -35,6 +36,7 @@
 @import "./styles/components/title-bar.css" layer(cairn.components);
 @import "./styles/components/page-bar.css" layer(cairn.components);
 @import "./styles/components/segmented-control.css" layer(cairn.components);
+@import "./styles/components/list-detail.css" layer(cairn.components);
 @import "./styles/components/page.css" layer(cairn.components);
 @import "./styles/components/editor.css" layer(cairn.components);
 

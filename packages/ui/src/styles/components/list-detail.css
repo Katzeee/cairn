@@ -1,0 +1,173 @@
+/* A list and its detail fill the region they are given and scroll on their own, each under its own
+   page bar. Where the region is expanded they sit side by side; otherwise they stack and one shows. */
+.cairn-ListDetail {
+  --list-detail-list-width: 20rem;
+
+  display: grid;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+
+  &[data-layout="split"] {
+    grid-template-columns: var(--list-detail-list-width) minmax(0, 1fr);
+  }
+
+  &[data-layout="stack"] {
+    grid-template-areas: "pane";
+  }
+}
+
+.cairn-ListDetailList,
+.cairn-ListDetailDetail {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  outline: none;
+  background-color: var(--cairn-color-canvas);
+  overscroll-behavior: contain;
+}
+
+.cairn-ListDetail[data-layout="split"] > .cairn-ListDetailList {
+  border-right: var(--cairn-border-width) solid var(--cairn-color-border);
+}
+
+/* The hidden pane keeps its layout, so the list returns where the reader left it. The detail pushes
+   in from the trailing edge and the list recedes behind it. */
+.cairn-ListDetail[data-layout="stack"] > :is(.cairn-ListDetailList, .cairn-ListDetailDetail) {
+  grid-area: pane;
+  transition:
+    translate var(--cairn-duration-panel) var(--cairn-ease-standard),
+    visibility 0s linear var(--cairn-duration-panel);
+
+  &[data-shown="true"] {
+    transition-delay: 0s;
+  }
+
+  &[data-shown="false"] {
+    visibility: hidden;
+  }
+}
+
+.cairn-ListDetail[data-layout="stack"] > .cairn-ListDetailList[data-shown="false"] {
+  translate: -30% 0;
+}
+
+.cairn-ListDetail[data-layout="stack"] > .cairn-ListDetailDetail {
+  z-index: 1;
+
+  &[data-shown="false"] {
+    translate: 100% 0;
+  }
+}
+
+/* In the window's top row, only the bar at the leading edge clears the window controls there, and
+   only the one at the trailing edge clears those on the right. */
+.cairn-AppShell[data-window-chrome] .cairn-ListDetail[data-layout="split"] {
+  & > .cairn-ListDetailList .cairn-PageBar {
+    padding-right: var(--cairn-space-5);
+  }
+
+  & > .cairn-ListDetailDetail .cairn-PageBar {
+    padding-left: var(--cairn-space-5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cairn-ListDetail[data-layout="stack"] > :is(.cairn-ListDetailList, .cairn-ListDetailDetail) {
+    transition: none;
+  }
+}
+
+/* List rows: title with optional icon, description, and trailing text. */
+
+.cairn-List {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--cairn-space-1) / 2);
+  margin: 0;
+  padding: var(--cairn-space-2) var(--cairn-space-3);
+  list-style: none;
+}
+
+.cairn-ListItem {
+  min-width: 0;
+}
+
+.cairn-ListItemButton {
+  display: flex;
+  align-items: center;
+  gap: var(--cairn-space-3);
+  width: 100%;
+  margin: 0;
+  padding: var(--cairn-space-2) calc(var(--cairn-space-1) * 2.5);
+  border: 0;
+  border-radius: var(--cairn-radius-item);
+  background: transparent;
+  color: var(--cairn-color-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition-duration: var(--cairn-duration-fast);
+  transition-property: background-color, color;
+  transition-timing-function: var(--cairn-ease-standard);
+
+  & > .cairn-Icon {
+    flex: none;
+    color: var(--cairn-color-text-muted);
+  }
+
+  &:hover {
+    background-color: var(--cairn-accent-subtle);
+  }
+
+  &[aria-current="true"] {
+    background-color: var(--cairn-accent-subtle-hover);
+
+    & .cairn-ListItemTitle {
+      color: var(--cairn-accent-text);
+    }
+  }
+
+  &:disabled {
+    opacity: var(--cairn-disabled-opacity);
+    cursor: default;
+  }
+}
+
+.cairn-ListItemText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cairn-ListItemTitle,
+.cairn-ListItemDescription {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cairn-ListItemTitle {
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-label-line-height);
+}
+
+.cairn-ListItemDescription,
+.cairn-ListItemTrailing {
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+}
+
+.cairn-ListItemTrailing {
+  flex: none;
+  align-self: start;
+}
+
+@media (pointer: coarse) {
+  .cairn-ListItemButton {
+    min-height: var(--cairn-control-hit-target);
+  }
+}

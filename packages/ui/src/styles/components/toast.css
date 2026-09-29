@@ -1,6 +1,6 @@
 .cairn-ToastViewport {
   position: fixed;
-  z-index: 60;
+  z-index: var(--cairn-layer-toast);
   inset: var(--cairn-space-4) var(--cairn-space-4) auto;
   display: flex;
   flex-direction: column;
@@ -8,6 +8,11 @@
   gap: var(--cairn-space-2);
   outline: none;
   pointer-events: none;
+
+  /* Toasts open below a top row the window's controls share. */
+  :root:has([data-window-drag-region]) & {
+    top: calc(var(--cairn-titlebar-height) + var(--cairn-space-2));
+  }
 }
 
 .cairn-Toast {

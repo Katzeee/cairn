@@ -1,7 +1,7 @@
 /* The bar shares the page gutter, so its title lines up with the content below. */
 .cairn-PageBar {
   position: sticky;
-  z-index: 20;
+  z-index: var(--cairn-layer-sticky);
   top: var(--cairn-app-shell-sticky-top, 0px);
   display: grid;
   grid-template:

@@ -35,8 +35,9 @@
   }
 }
 
-/* The strip spans the top row beneath the page bars, which cover their panes; above the sidebar it
-   shows through. The toggle sits above everything the shell draws, so it closes what it opened. */
+/* The strip is the top row above the navigation column; over the content, each page bar is the top
+   row, so nothing in a pane has to outrank the strip. The toggle sits above everything the shell
+   draws, so it closes what it opened. */
 .cairn-AppShellChrome,
 .cairn-AppShellChromeToggle {
   position: fixed;
@@ -48,12 +49,21 @@
 }
 
 .cairn-AppShellChrome {
-  z-index: 19;
-  right: 0;
+  z-index: var(--cairn-layer-sticky);
+  width: 0;
+  transition: width var(--cairn-duration-panel) var(--cairn-ease-standard);
+
+  .cairn-AppShell:has(> .cairn-AppShellFrame[data-column="sidebar"]) > & {
+    width: var(--app-shell-sidebar-width);
+  }
+
+  .cairn-AppShell:has(> .cairn-AppShellFrame[data-column="tabs"]) > & {
+    width: var(--app-shell-tabs-width);
+  }
 }
 
 .cairn-AppShellChromeToggle {
-  z-index: 33;
+  z-index: calc(var(--cairn-layer-shell) + 3);
   padding-inline: var(--app-shell-toggle-start) var(--cairn-space-2);
   transition: padding-left var(--cairn-duration-panel) var(--cairn-ease-standard);
 }
@@ -110,13 +120,13 @@
 /* The shell's own layers stay below dialogs and popups. */
 .cairn-AppShellTitleBar {
   position: relative;
-  z-index: 32;
+  z-index: calc(var(--cairn-layer-shell) + 2);
   grid-area: titlebar;
 }
 
 .cairn-AppShellHeader {
   position: sticky;
-  z-index: 32;
+  z-index: calc(var(--cairn-layer-shell) + 2);
   top: 0;
   display: flex;
   grid-area: header;
@@ -131,7 +141,7 @@
 /* Hidden until a keyboard reaches it, then it sits above the shell's top row. */
 .cairn-AppShellSkipLink {
   position: fixed;
-  z-index: 40;
+  z-index: var(--cairn-layer-popup);
   top: var(--cairn-space-2);
   left: calc(var(--cairn-safe-area-left) + var(--cairn-space-2));
   padding: var(--cairn-space-2) var(--cairn-space-3);
@@ -180,7 +190,7 @@
 
   &:is([data-presentation="overlay"], [data-presentation="hidden"]) {
     position: fixed;
-    z-index: 31;
+    z-index: calc(var(--cairn-layer-shell) + 1);
     top: var(--app-shell-overlay-top);
     bottom: 0;
     left: var(--cairn-safe-area-left);
@@ -279,7 +289,7 @@
 
 .cairn-AppShellBackdrop {
   position: fixed;
-  z-index: 30;
+  z-index: var(--cairn-layer-shell);
   inset: var(--app-shell-overlay-top) 0 0;
   visibility: hidden;
   background-color: var(--cairn-color-backdrop);
@@ -303,7 +313,7 @@
 
 .cairn-AppShellTabBar {
   position: sticky;
-  z-index: 20;
+  z-index: var(--cairn-layer-sticky);
   bottom: 0;
   display: grid;
   grid-area: bottom;
@@ -388,6 +398,7 @@
 @media (prefers-reduced-motion: reduce) {
   .cairn-AppShellFrame,
   .cairn-AppShellSidebar,
+  .cairn-AppShellChrome,
   .cairn-AppShellChromeToggle {
     transition: none;
   }

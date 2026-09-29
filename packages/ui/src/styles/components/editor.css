@@ -499,7 +499,7 @@
 }
 .cairn-OutlineDragPreview {
   position: fixed;
-  z-index: 50;
+  z-index: var(--cairn-layer-popup);
   max-width: var(--cairn-space-9);
   padding: var(--cairn-space-2) var(--cairn-space-3);
   border: 1px solid var(--cairn-color-border);
@@ -519,7 +519,7 @@
 
 .cairn-OutlineToolbar {
   position: absolute;
-  z-index: 20;
+  z-index: var(--cairn-layer-sticky);
   display: flex;
   max-width: 100%;
   flex-wrap: wrap;
@@ -560,7 +560,7 @@
   color: var(--cairn-color-text-disabled);
 }
 .cairn-OutlineMenuPositioner {
-  z-index: 50;
+  z-index: var(--cairn-layer-popup);
 }
 
 .cairn-NodeHeading {

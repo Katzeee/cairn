@@ -27,7 +27,14 @@ export {
   type AppShellTabBarItemProps,
 } from "./components/app-shell.js";
 export { PageBar, type PageBarActionPlacement, type PageBarActionProps } from "./components/page-bar.js";
-export { ListDetail } from "./components/list-detail.js";
+export {
+  ListDetail,
+  type ListDetailDetailProps,
+  type ListDetailListProps,
+  type ListDetailPane,
+  type ListDetailRootProps,
+} from "./components/list-detail.js";
+export { List, type ListItemProps, type ListRootProps } from "./components/list.js";
 export { TitleBar } from "./components/title-bar.js";
 
 export { Code, Heading, Kbd, Text, type CodeProps, type HeadingProps, type KbdProps, type TextProps } from "./components/typography.js";
@@ -37,7 +44,8 @@ export { Badge, type BadgeProps } from "./components/badge.js";
 export { Breadcrumbs, type BreadcrumbItem } from "./components/breadcrumbs.js";
 export { Button, IconButton, type ButtonProps, type ButtonVariant, type IconButtonProps } from "./components/button.js";
 export { Callout, type CalloutRootProps } from "./components/callout.js";
-export { Card, type CardProps, type CardVariant } from "./components/card.js";
+export { Card, type CardLinkProps, type CardProps, type CardVariant } from "./components/card.js";
+export { Image, type ImageFit, type ImageProps } from "./components/image.js";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.js";
 export { Combobox, type ComboboxOption, type ComboboxProps } from "./components/combobox.js";
 export { ContextMenu } from "./components/context-menu.js";

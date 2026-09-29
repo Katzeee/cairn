@@ -4,8 +4,10 @@
   --cairn-titlebar-inset-right: var(--tauri-plugin-decoration-right-clearance, 0px);
 }
 
+/* The plugin's controls are the window's own, so they sit above every layer Cairn draws. */
 :root {
   --tauri-plugin-decoration-titlebar-height: var(--cairn-titlebar-height);
+  --tauri-plugin-decoration-z-index: var(--cairn-layer-window-controls);
 }
 
 /* tauri-plugin-decoration draws HTML window controls on Windows only; macOS keeps AppKit's buttons

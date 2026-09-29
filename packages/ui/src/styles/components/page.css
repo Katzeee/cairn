@@ -17,50 +17,6 @@
   text-wrap: balance;
 }
 
-.cairn-ListDetail {
-  overflow: hidden;
-  border: var(--cairn-border-width) solid var(--cairn-color-border);
-  border-radius: var(--cairn-radius-card);
-  background-color: var(--cairn-color-surface);
-  container: list-detail / inline-size;
-}
-
-.cairn-ListDetailList,
-.cairn-ListDetailPane {
-  min-width: 0;
-
-  &[data-visible="false"] {
-    display: none;
-  }
-}
-
-.cairn-ListDetailBack {
-  padding: var(--cairn-space-3);
-  border-bottom: var(--cairn-border-width) solid var(--cairn-color-border);
-}
-
-@container list-detail (min-width: 840px) {
-  .cairn-ListDetailGrid {
-    display: grid;
-    grid-template-columns: minmax(16rem, 0.72fr) minmax(0, 1.28fr);
-  }
-
-  .cairn-ListDetailList,
-  .cairn-ListDetailPane {
-    &[data-visible="false"] {
-      display: block;
-    }
-  }
-
-  .cairn-ListDetailList {
-    border-right: var(--cairn-border-width) solid var(--cairn-color-border);
-  }
-
-  .cairn-ListDetailBack {
-    display: none;
-  }
-}
-
 .cairn-LegalPage {
   width: 100%;
   max-width: 60rem;

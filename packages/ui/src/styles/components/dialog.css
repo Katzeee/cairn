@@ -1,6 +1,6 @@
 .cairn-DialogBackdrop {
   position: fixed;
-  z-index: 50;
+  z-index: var(--cairn-layer-popup);
   inset: 0;
   min-height: 100dvh;
   background-color: var(--cairn-color-backdrop);
@@ -14,7 +14,7 @@
 
 .cairn-DialogViewport {
   position: fixed;
-  z-index: 50;
+  z-index: var(--cairn-layer-popup);
   inset: 0;
   display: grid;
   place-items: center;

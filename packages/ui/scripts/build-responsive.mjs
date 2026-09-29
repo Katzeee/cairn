@@ -67,6 +67,7 @@ const custom = {
   h: "height",
   "min-h": "min-height",
   "max-h": "max-height",
+  ar: "aspect-ratio",
   inset: "inset",
   top: "top",
   right: "right",

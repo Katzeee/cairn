@@ -204,6 +204,13 @@ function tokensCss() {
     ["cairn-container-3", "880px"],
     ["cairn-container-4", "1136px"],
     ["cairn-content-inset", "16px"],
+    // Stacking order across regions, lowest first. Host window controls stay above everything the
+    // page draws, as native controls do.
+    ["cairn-layer-sticky", "20"],
+    ["cairn-layer-shell", "30"],
+    ["cairn-layer-popup", "50"],
+    ["cairn-layer-toast", "60"],
+    ["cairn-layer-window-controls", "70"],
     ...["top", "right", "bottom", "left"].map((edge) => [`cairn-safe-area-${edge}`, `env(safe-area-inset-${edge}, 0px)`]),
     // Window Controls Overlay describes the title bar area left to the page; host adapters without it
     // assign these three tokens from their own window chrome.

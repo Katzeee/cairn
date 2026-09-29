@@ -47,6 +47,8 @@ type LayoutProps = NativeProps &
     height?: Responsive<string>;
     minHeight?: Responsive<string>;
     maxHeight?: Responsive<string>;
+    // Width over height, such as "16/10"; the box keeps it while its width follows the layout.
+    aspectRatio?: Responsive<string>;
     position?: Responsive<"static" | "relative" | "absolute" | "fixed" | "sticky">;
     overflow?: Responsive<"visible" | "hidden" | "clip" | "scroll" | "auto">;
     overflowX?: Responsive<"visible" | "hidden" | "clip" | "scroll" | "auto">;
@@ -84,6 +86,7 @@ const layoutNames = {
   height: "h",
   minHeight: "min-h",
   maxHeight: "max-h",
+  aspectRatio: "ar",
   position: "position",
   overflow: "overflow",
   overflowX: "ox",
@@ -121,6 +124,7 @@ const customNames = new Set([
   "h",
   "min-h",
   "max-h",
+  "ar",
   "inset",
   "top",
   "right",

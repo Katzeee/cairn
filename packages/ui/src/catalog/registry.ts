@@ -34,7 +34,7 @@ const entry = (
 export const components = {
   Box: entry("layout", "A block container for padding, size, and display rules.", ["Box"], ["box/size", "box/padding"]),
   Flex: entry("layout", "Arrange children in a row or column with alignment and gaps.", ["Flex"], ["flex/alignment", responsive("flex/responsive")]),
-  Grid: entry("layout", "Arrange children in rows and columns that respond to width.", ["Grid"], ["grid/columns", responsive("grid/responsive")]),
+  Grid: entry("layout", "Arrange children in rows and columns that respond to width.", ["Grid"], ["grid/columns", responsive("grid/responsive"), responsive("grid/aspect-ratio")]),
   Container: entry("layout", "Constrain content to one of four shared measures.", ["Container"], ["container/sizes", "container/alignment"]),
   Section: entry("layout", "Set vertical rhythm between page regions.", ["Section"], ["section/rhythm"]),
   AppShell: entry(
@@ -49,7 +49,12 @@ export const components = {
     ["PageBar"],
     [responsive("page-bar/actions")],
   ),
-  ListDetail: entry("layout", "A list beside its selected detail, or one pane at a time in narrow containers.", ["ListDetail"], [responsive("list-detail/inbox")]),
+  ListDetail: entry(
+    "layout",
+    "A list beside the detail of its selected item where the region is expanded; one at a time, with a way back, where it is not.",
+    ["ListDetail"],
+    [screen("list-detail/inbox"), screen("list-detail/desktop", "desktop")],
+  ),
   TitleBar: entry("layout", "Window title bar content for desktop hosts, kept clear of the system window controls.", ["TitleBar"], [screen("title-bar/desktop", "desktop")]),
 
   Text: entry("typography", "Body text in the shared type roles, weights, and tones.", ["Text"], ["text/roles", "text/tones"]),
@@ -62,7 +67,14 @@ export const components = {
   IconButton: entry("components", "An icon-only action with an accessible name.", ["IconButton"], ["icon-button/variants"]),
   Badge: entry("components", "Compact status labels and inline tags.", ["Badge"], ["badge/tones", "badge/sizes"]),
   Callout: entry("components", "Inline feedback composed from an icon, title, and text.", ["Callout"], ["callout/tones"]),
-  Card: entry("components", "A stationary surface for grouped content.", ["Card"], ["card/variants", "card/composition"]),
+  List: entry("components", "Rows of items to choose from; beside a detail the chosen one is marked.", ["List"], ["list/rows"]),
+  Card: entry(
+    "components",
+    "A surface for grouped content. A card with a link opens it from anywhere on the card; media meets its edges.",
+    ["Card"],
+    ["card/variants", "card/composition", "card/media", responsive("card/link")],
+  ),
+  Image: entry("components", "A picture at a held aspect ratio, cropped or whole, with placeholders while it loads, fails, or is missing.", ["Image"], ["image/states", "image/fit", "image/refresh"]),
   Separator: entry("components", "A quiet boundary between content.", ["Separator"], ["separator/orientation"]),
   Icon: entry("components", "Named icons in four sizes with optional labels.", ["Icon"], ["icon/gallery"]),
   EmptyState: entry("components", "Explain missing content and offer the next action.", ["EmptyState"], ["empty-state/first-run"]),

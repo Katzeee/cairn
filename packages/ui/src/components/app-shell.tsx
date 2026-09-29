@@ -11,19 +11,13 @@ import {
   type RefObject,
 } from "react";
 
-import breakpoints from "./breakpoints.json" with { type: "json" };
 import { IconButton } from "./button.js";
 import { Icon, type IconName } from "./icon.js";
 import type { ElementProps } from "./internal/element-props.js";
 import { useWindowActive } from "./internal/window-active.js";
 import type { ControlSize } from "./internal/variants.js";
+import { widthTierFor, type WidthTier as Tier } from "./internal/width-tier.js";
 import { Tooltip } from "./tooltip.js";
-
-type Tier = "compact" | "medium" | "expanded";
-
-// Tiers follow the shell's own width on the shared breakpoint scale, so a shell inside a resizable
-// preview adapts the way a window does.
-const tierFor = (width: number): Tier => (width < breakpoints.sm ? "compact" : width < breakpoints.md ? "medium" : "expanded");
 
 // The vertical tier follows the shell's shape, height over width: short below 0.8 (a phone on its
 // side, a half-open foldable), square up to 1.2 (a wide foldable's cover screen), tall beyond.
@@ -111,7 +105,7 @@ function Root({ children, scroll = "page", windowChrome, titleBar }: AppShellRoo
     // A page-scrolling shell grows with its content, so its visible height is the viewport's.
     const update = () => {
       const { width, height } = element.getBoundingClientRect();
-      setTier(tierFor(width));
+      setTier(widthTierFor(width));
       setHeightTier(heightTierFor(width, Math.min(height, window.innerHeight)));
     };
     update();

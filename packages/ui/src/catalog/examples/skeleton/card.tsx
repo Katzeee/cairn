@@ -5,18 +5,16 @@ export default function SkeletonCard() {
   const [loading, setLoading] = useState(true);
   return (
     <Flex direction="column" gap="3">
-      <Card>
+      <Card aria-busy={loading}>
         <Flex direction="column" gap="2">
-          <Skeleton loading={loading}>
-            <Heading as="h3" size="title-small">
-              Design review
-            </Heading>
-          </Skeleton>
-          <Skeleton loading={loading}>
-            <Text as="p" tone="muted">
+          <Heading as="h3" size="title-small">
+            <Skeleton loading={loading}>Design review</Skeleton>
+          </Heading>
+          <Text as="p" tone="muted">
+            <Skeleton loading={loading}>
               Twelve components are ready for the forest theme review on Thursday.
-            </Text>
-          </Skeleton>
+            </Skeleton>
+          </Text>
         </Flex>
       </Card>
       <Flex>

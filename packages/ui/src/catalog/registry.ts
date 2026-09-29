@@ -80,7 +80,7 @@ export const components = {
   EmptyState: entry("components", "Stand in for a region's missing content, explain why, and offer the next action.", ["EmptyState"], ["empty-state/first-run"]),
   Progress: entry("components", "Progress of measurable and ongoing work.", ["Progress"], ["progress/states"]),
   Spinner: entry("components", "Feedback for short, unmeasurable waits.", ["Spinner"], ["spinner/sizes", "spinner/loading"]),
-  Skeleton: entry("components", "Hold the geometry of known content while it loads.", ["Skeleton"], ["skeleton/card"]),
+  Skeleton: entry("components", "Hold the geometry of known content while it loads.", ["Skeleton"], ["skeleton/card", "skeleton/list"]),
   Field: entry("components", "Connect a label, description, and validation message to a control.", ["Field", "FieldLabel", "FieldDescription", "FieldError"], ["field/validation"]),
   TextField: entry("components", "Single-line text input with optional slots.", ["TextField"], ["text-field/sizes", "text-field/slots", "text-field/states"]),
   TextArea: entry("components", "Multiline text input.", ["TextArea"], ["text-area/comment", "text-area/sizes", "text-area/variants", "text-area/resize", "text-area/states"]),

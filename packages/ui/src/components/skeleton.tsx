@@ -1,5 +1,3 @@
-import { cloneElement, isValidElement, type CSSProperties, type HTMLAttributes, type ReactElement } from "react";
-
 import type { ElementProps } from "./internal/element-props.js";
 import { customResponsive, type Responsive } from "./layout.js";
 
@@ -10,28 +8,18 @@ export type SkeletonProps = ElementProps<"span"> &
     height?: Responsive<string>;
   }>;
 
-// A skeleton either wraps the element it stands in for, keeping its geometry, or draws a sized block.
+// A skeleton stands in for text inside the component that will show it, so the text's own role sets
+// its geometry; without text it draws a block of the given size.
 export function Skeleton({ loading = true, children, width, height, ...props }: SkeletonProps) {
   if (!loading) return children;
   const style: Record<string, string> = {};
   const classes = ["cairn-Skeleton", ...customResponsive("w", width, style), ...customResponsive("h", height, style)];
-  if (isValidElement(children) && typeof children.type === "string") {
-    const child = children as ReactElement<HTMLAttributes<HTMLElement>>;
-    return cloneElement(child, {
-      ...props,
-      "aria-hidden": true,
-      className: [...classes, child.props.className].filter(Boolean).join(" "),
-      inert: true,
-      style: { ...child.props.style, ...style } as CSSProperties,
-      tabIndex: -1,
-    });
-  }
   return (
     <span
       {...props}
       aria-hidden
       className={classes.join(" ")}
-      data-inline={isValidElement(children) || children === undefined ? undefined : ""}
+      data-inline={children == null ? undefined : ""}
       inert
       style={style}
       tabIndex={-1}

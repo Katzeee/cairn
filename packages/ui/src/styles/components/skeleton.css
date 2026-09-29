@@ -16,14 +16,18 @@
     visibility: hidden;
   }
 
+  /* Each wrapped line is its own rounded bar. */
   &[data-inline] {
     line-height: 0;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
+}
 
-  &:empty {
-    display: block;
-    height: var(--cairn-text-body-line-height);
-  }
+/* Unspecified so the width and height props override the default block. */
+:where(.cairn-Skeleton:not([data-inline])) {
+  display: block;
+  height: var(--cairn-text-body-line-height);
 }
 
 @keyframes cairn-skeleton-pulse {

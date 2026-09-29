@@ -65,6 +65,11 @@ function Root({ children, pane: controlledPane, defaultPane = "list", onPaneChan
   const [uncontrolledPane, setUncontrolledPane] = useState(defaultPane);
   const [listLabel, registerListLabel] = useState<string>();
   const pane = controlledPane ?? uncontrolledPane;
+  // Pane navigation animates; measuring or resizing the region settles immediately.
+  const [motion, setMotion] = useState({ layout, pane, enabled: false });
+  if (motion.layout !== layout || motion.pane !== pane) {
+    setMotion({ layout, pane, enabled: motion.layout === layout && layout === "stack" && motion.pane !== pane });
+  }
 
   const latest = useRef({ pane, controlledPane, onPaneChange });
   useLayoutEffect(() => {
@@ -114,6 +119,7 @@ function Root({ children, pane: controlledPane, defaultPane = "list", onPaneChan
     >
       <div
         className="cairn-ListDetail"
+        data-animate={motion.enabled ? "" : undefined}
         data-layout={layout}
         data-ui="list-detail"
         onBlur={(event) => {

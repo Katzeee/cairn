@@ -35,16 +35,19 @@
    in from the trailing edge and the list recedes behind it. */
 .cairn-ListDetail[data-layout="stack"] > :is(.cairn-ListDetailList, .cairn-ListDetailDetail) {
   grid-area: pane;
+
+  &[data-shown="false"] {
+    visibility: hidden;
+  }
+}
+
+.cairn-ListDetail[data-layout="stack"][data-animate] > :is(.cairn-ListDetailList, .cairn-ListDetailDetail) {
   transition:
     translate var(--cairn-duration-panel) var(--cairn-ease-standard),
     visibility 0s linear var(--cairn-duration-panel);
 
   &[data-shown="true"] {
     transition-delay: 0s;
-  }
-
-  &[data-shown="false"] {
-    visibility: hidden;
   }
 }
 
@@ -73,7 +76,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cairn-ListDetail[data-layout="stack"] > :is(.cairn-ListDetailList, .cairn-ListDetailDetail) {
+  .cairn-ListDetail[data-layout="stack"][data-animate] > :is(.cairn-ListDetailList, .cairn-ListDetailDetail) {
     transition: none;
   }
 }

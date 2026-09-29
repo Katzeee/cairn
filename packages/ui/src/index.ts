@@ -59,7 +59,7 @@ export {
   type MenuRadioGroupProps,
   type MenuRadioItemProps,
 } from "./components/dropdown-menu.js";
-export { EmptyState } from "./components/empty-state.js";
+export { EmptyState, type EmptyStateTitleProps } from "./components/empty-state.js";
 export { Field, FieldDescription, FieldError, FieldLabel, type FieldProps } from "./components/field.js";
 export { Icon, iconNames, type IconName, type IconProps } from "./components/icon.js";
 export { Popover, type PopoverContentProps, type PopoverRootProps } from "./components/popover.js";

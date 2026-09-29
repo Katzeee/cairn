@@ -11,7 +11,7 @@ npm install
 npm run showcase
 ```
 
-The catalog is served at `http://127.0.0.1:4173`. Its sidebar switches between the forest and slate themes and between light and dark appearance. Foundations pages render the token contract and each theme's values directly from `@cairn/design-tokens`. Every component page pairs live examples with their source and an API reference generated from the public TypeScript entries.
+The catalog is served at `http://127.0.0.1:4173` from Cairn's sources and reloads when a component, stylesheet, example, or theme changes. Its sidebar switches between the forest and slate themes and between light and dark appearance. Foundations pages render the token contract and each theme's values directly from `@cairn/design-tokens`. Every component page pairs live examples with their source and an API reference generated from the public TypeScript entries.
 
 ## Layers
 

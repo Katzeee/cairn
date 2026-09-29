@@ -43,7 +43,7 @@ export function DesignSystemPage() {
 
 function CatalogShell() {
   const [page, setPage] = useState(() => findCatalogPage(route().path) ?? overviewPage);
-  const [appearance, setAppearance] = useState<Appearance>(() => (route().query.get("mode") === "dark" ? "dark" : "light"));
+  const [appearance, setAppearance] = useState<Appearance>(() => (route().query.get("mode") === "light" ? "light" : "dark"));
   const [theme, setTheme] = useState<CairnThemeName>(() => {
     const requested = route().query.get("theme");
     return themeNames.find((name) => name === requested) ?? "forest";

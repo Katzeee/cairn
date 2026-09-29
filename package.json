@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspace=@cairn/design-tokens && npm run build --workspace=@cairn/ui && npm run build --workspace=@cairn/showcase",
-    "showcase": "npm run build && npm run preview --workspace=@cairn/showcase",
+    "showcase": "npm run dev --workspace=@cairn/showcase",
     "test": "npm run build && npm run verify:entries && npm run test --workspaces --if-present",
     "verify:entries": "node scripts/verify-entry-boundaries.mjs",
     "typecheck": "npm run build && npm run typecheck --workspaces --if-present && npm run typecheck:test --workspaces --if-present",

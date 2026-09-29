@@ -61,5 +61,5 @@ export function previewUrl(example: string, theme: PreviewTheme): string {
 }
 
 export function themeFromQuery(query: URLSearchParams): PreviewTheme {
-  return { theme: query.get("theme"), appearance: query.get("appearance") };
+  return { theme: query.get("theme"), appearance: query.get("appearance") ?? "dark" };
 }

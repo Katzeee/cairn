@@ -77,7 +77,7 @@ export const components = {
   Image: entry("components", "A picture at a held aspect ratio, cropped or whole, with placeholders while it loads, fails, or is missing.", ["Image"], ["image/states", "image/fit", "image/refresh"]),
   Separator: entry("components", "A quiet boundary between content.", ["Separator"], ["separator/orientation"]),
   Icon: entry("components", "Named icons in four sizes with optional labels.", ["Icon"], ["icon/gallery"]),
-  EmptyState: entry("components", "Explain missing content and offer the next action.", ["EmptyState"], ["empty-state/first-run"]),
+  EmptyState: entry("components", "Stand in for a region's missing content, explain why, and offer the next action.", ["EmptyState"], ["empty-state/first-run"]),
   Progress: entry("components", "Progress of measurable and ongoing work.", ["Progress"], ["progress/states"]),
   Spinner: entry("components", "Feedback for short, unmeasurable waits.", ["Spinner"], ["spinner/sizes", "spinner/loading"]),
   Skeleton: entry("components", "Hold the geometry of known content while it loads.", ["Skeleton"], ["skeleton/card"]),

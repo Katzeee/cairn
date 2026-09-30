@@ -41,9 +41,9 @@ export const components = {
   Section: entry("layout", "Set vertical rhythm between page regions.", ["Section"], ["section/rhythm"]),
   AppShell: entry(
     "layout",
-    "Header, navigation, and main regions. A sidebar docks where it fits and shows above the content where it does not; a tab bar moves from the bottom edge to the side.",
+    "Header, navigation, and main regions. The navigation docks as a sidebar where it fits; narrower, a few destinations form a bar and more open as a drawer.",
     ["AppShell"],
-    [screen("app-shell/web"), screen("app-shell/mobile", "mobile"), screen("app-shell/desktop", "desktop")],
+    [screen("app-shell/web"), screen("app-shell/mobile", "mobile"), screen("app-shell/desktop", "desktop"), screen("app-shell/banner", "desktop")],
   ),
   PageBar: entry(
     "layout",
@@ -67,8 +67,9 @@ export const components = {
 
   Button: entry("components", "Actions ranked by emphasis, in three sizes.", ["Button"], ["button/variants", "button/sizes", "button/states"]),
   IconButton: entry("components", "An icon-only action with an accessible name.", ["IconButton"], ["icon-button/variants"]),
-  Badge: entry("components", "Compact status labels and inline tags.", ["Badge"], ["badge/tones", "badge/sizes"]),
-  Callout: entry("components", "Inline feedback composed from an icon, title, and text.", ["Callout"], ["callout/tones"]),
+  Badge: entry("components", "Compact labels and tags on content, such as a record's review state.", ["Badge"], ["badge/tones", "badge/sizes"]),
+  Status: entry("components", "The ongoing state of a process or service, such as a connection.", ["Status"], ["status/tones"]),
+  Callout: entry("components", "Feedback composed from an icon, title, text, and actions; in AppShell.Banner it spans the content's top edge.", ["Callout"], ["callout/tones", responsive("callout/actions")]),
   List: entry("components", "Rows of items to choose from; beside a detail the chosen one is marked.", ["List"], ["list/rows"]),
   Card: entry(
     "components",

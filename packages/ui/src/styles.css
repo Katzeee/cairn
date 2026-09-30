@@ -11,6 +11,7 @@
 @import "./styles/components/icon.css" layer(cairn.components);
 @import "./styles/components/button.css" layer(cairn.components);
 @import "./styles/components/badge.css" layer(cairn.components);
+@import "./styles/components/status.css" layer(cairn.components);
 @import "./styles/components/callout.css" layer(cairn.components);
 @import "./styles/components/card.css" layer(cairn.components);
 @import "./styles/components/image.css" layer(cairn.components);

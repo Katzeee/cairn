@@ -1,0 +1,29 @@
+.cairn-Status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cairn-space-2);
+  min-width: 0;
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-label-size);
+  line-height: var(--cairn-text-label-line-height);
+}
+
+/* A row that lays out a column of glyphs, such as the navigation, sets --cairn-glyph-column-size so
+   the dot centers in that column and the label lines up with the rows' labels. */
+.cairn-StatusIndicator {
+  --status-dot-size: calc(var(--cairn-space-1) * 2);
+
+  flex: none;
+  width: var(--status-dot-size);
+  height: var(--status-dot-size);
+  margin-inline: calc((var(--cairn-glyph-column-size, var(--status-dot-size)) - var(--status-dot-size)) / 2);
+  border-radius: var(--cairn-radius-pill);
+  background-color: var(--cairn-tone-solid);
+}
+
+.cairn-StatusLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

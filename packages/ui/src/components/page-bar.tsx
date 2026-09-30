@@ -19,17 +19,17 @@ import { Icon, type IconGlyph } from "./icon.js";
 import { useWindowActive } from "./internal/window-active.js";
 import { PaneBack } from "./list-detail.js";
 import { Tooltip } from "./tooltip.js";
+import type { ActionPriority } from "./internal/variants.js";
 
 // Primary actions keep their label and the trailing edge, and give up the label first; default
 // actions move into More, last declared first, when space runs out; secondary actions always live in
 // More. Every action has the same quiet style: emphasis in a bar comes from position, not fill.
-export type PageBarActionPlacement = "primary" | "default" | "secondary";
 
 type ActionEntry = Readonly<{
   id: string;
   label: string;
   icon: IconGlyph;
-  placement: PageBarActionPlacement;
+  priority: ActionPriority;
   disabled: boolean;
   marker: HTMLElement;
   select: RefObject<() => void>;
@@ -78,11 +78,11 @@ type Widths = ReadonlyMap<string, Readonly<{ full: number; compact: number }>>;
 // Space runs out in three steps: primary actions drop their labels, default actions move into More,
 // and only then does the title truncate.
 function arrange(actions: readonly ActionEntry[], widths: Widths, more: number, gap: number, room: number): Arrangement {
-  const inBar = actions.filter((action) => action.placement !== "secondary");
+  const inBar = actions.filter((action) => action.priority !== "secondary");
   const needed = (shown: readonly ActionEntry[], compact: boolean) => {
     const items = shown.map((action) => {
       const width = widths.get(action.id);
-      return action.placement === "primary" && !compact ? (width?.full ?? 0) : (width?.compact ?? 0);
+      return action.priority === "primary" && !compact ? (width?.full ?? 0) : (width?.compact ?? 0);
     });
     if (shown.length < actions.length) items.push(more);
     return items.reduce((sum, width) => sum + width, 0) + gap * Math.max(0, items.length - 1);
@@ -90,7 +90,7 @@ function arrange(actions: readonly ActionEntry[], widths: Widths, more: number, 
   const ids = (shown: readonly ActionEntry[]) => shown.map((action) => action.id);
   if (needed(inBar, false) <= room) return { compact: false, shown: ids(inBar) };
   const shown = [...inBar];
-  const collapsible = shown.filter((action) => action.placement === "default");
+  const collapsible = shown.filter((action) => action.priority === "default");
   while (collapsible.length > 0 && needed(shown, true) > room) shown.splice(shown.indexOf(collapsible.pop()!), 1);
   return { compact: true, shown: ids(shown) };
 }
@@ -102,9 +102,9 @@ const moreButton = (
 );
 
 function ActionButton({ action, compact, measuring = false }: Readonly<{ action: ActionEntry; compact: boolean; measuring?: boolean }>) {
-  const { label, icon, placement, disabled, select } = action;
+  const { label, icon, priority, disabled, select } = action;
   const onClick = () => select.current();
-  if (placement === "primary" && !compact) {
+  if (priority === "primary" && !compact) {
     return (
       <Button disabled={disabled} onClick={onClick} size="sm" variant="ghost">
         <Icon glyph={icon} size="sm" />
@@ -156,8 +156,8 @@ function Root({ children }: Readonly<{ children: ReactNode }>) {
 
   const declared = [...entries.values()].sort(byDeclaration);
   const actions = [
-    ...declared.filter((action) => action.placement !== "primary"),
-    ...declared.filter((action) => action.placement === "primary"),
+    ...declared.filter((action) => action.priority !== "primary"),
+    ...declared.filter((action) => action.priority === "primary"),
   ];
   const dragRegion = useContext(WindowChrome);
   const windowActive = useWindowActive();
@@ -208,7 +208,7 @@ function Root({ children }: Readonly<{ children: ReactNode }>) {
     return () => observer.disconnect();
   }, [update]);
 
-  const inBar = actions.filter((action) => action.placement !== "secondary");
+  const inBar = actions.filter((action) => action.priority !== "secondary");
   const shown = arrangement === undefined ? inBar : inBar.filter((action) => arrangement.shown.includes(action.id));
   const overflow = actions.filter((action) => !shown.includes(action));
 
@@ -291,12 +291,12 @@ export type PageBarActionProps = Readonly<{
   // The icon shows in the bar and the label in More, so every action carries both.
   icon: IconGlyph;
   onSelect: () => void;
-  placement?: PageBarActionPlacement;
+  priority?: ActionPriority;
   disabled?: boolean;
 }>;
 
 // The bar renders actions itself so it can move them into More; the marker keeps their declared order.
-function Action({ label, icon, onSelect, placement = "default", disabled = false }: PageBarActionProps) {
+function Action({ label, icon, onSelect, priority = "default", disabled = false }: PageBarActionProps) {
   const { register, unregister } = usePageBar("Action");
   const id = useId();
   const marker = useRef<HTMLSpanElement>(null);
@@ -305,8 +305,8 @@ function Action({ label, icon, onSelect, placement = "default", disabled = false
     select.current = onSelect;
   });
   useLayoutEffect(() => {
-    register({ id, label, icon, placement, disabled, marker: marker.current!, select });
-  }, [register, id, label, icon, placement, disabled]);
+    register({ id, label, icon, priority, disabled, marker: marker.current!, select });
+  }, [register, id, label, icon, priority, disabled]);
   useLayoutEffect(() => () => unregister(id), [unregister, id]);
   return <span hidden ref={marker} />;
 }

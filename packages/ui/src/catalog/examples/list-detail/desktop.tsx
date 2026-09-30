@@ -14,7 +14,7 @@ export default function ListDetailDesktop() {
   const note = notes.find(({ id }) => id === selected)!;
   return (
     <AppShell.Root scroll="panes" windowChrome={{}}>
-      <AppShell.Sidebar collapsible>
+      <AppShell.Navigation collapsible>
         <AppShell.NavGroup label="Library">
           <AppShell.NavItem active href="#/notes" icon={NotebookText} onClick={(event) => event.preventDefault()}>
             Notes
@@ -23,13 +23,13 @@ export default function ListDetailDesktop() {
             Archive
           </AppShell.NavItem>
         </AppShell.NavGroup>
-      </AppShell.Sidebar>
+      </AppShell.Navigation>
       <AppShell.Main>
         <ListDetail.Root onPaneChange={setPane} pane={pane}>
           <ListDetail.List label="Notes">
             <PageBar.Root>
               <PageBar.Title>Notes</PageBar.Title>
-              <PageBar.Action icon={Plus} label="New note" onSelect={() => toast({ title: "New note" })} placement="primary" />
+              <PageBar.Action icon={Plus} label="New note" onSelect={() => toast({ title: "New note" })} priority="primary" />
             </PageBar.Root>
             <List.Root>
               {notes.map(({ id, title, edited }) => (
@@ -43,7 +43,7 @@ export default function ListDetailDesktop() {
             <PageBar.Root>
               <PageBar.Title>{note.title}</PageBar.Title>
               <PageBar.Action icon={Copy} label="Duplicate" onSelect={() => toast({ title: "Duplicated" })} />
-              <PageBar.Action icon={Trash2} label="Delete" onSelect={() => toast({ title: "Deleted" })} placement="secondary" />
+              <PageBar.Action icon={Trash2} label="Delete" onSelect={() => toast({ title: "Deleted" })} priority="secondary" />
             </PageBar.Root>
             <Box p="5">
               <Text as="p">{note.body}</Text>

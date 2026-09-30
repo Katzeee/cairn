@@ -1,7 +1,7 @@
 .cairn-AppShell {
   --cairn-app-shell-header-height: calc(var(--cairn-control-height-md) + var(--cairn-space-2) * 2);
   --app-shell-sidebar-width: var(--cairn-sidebar-width);
-  --app-shell-tabs-width: calc(var(--cairn-control-height-lg) + var(--cairn-space-5) * 2);
+  --app-shell-rail-width: calc(var(--cairn-control-height-lg) + var(--cairn-space-5) * 2);
   --app-shell-overlay-top: var(--cairn-safe-area-top);
 
   /* No container type here: containment would make the shell, not the viewport, hold the overlay. */
@@ -57,8 +57,8 @@
     width: var(--app-shell-sidebar-width);
   }
 
-  .cairn-AppShell:has(> .cairn-AppShellFrame[data-column="tabs"]) > & {
-    width: var(--app-shell-tabs-width);
+  .cairn-AppShell:has(> .cairn-AppShellFrame[data-column="rail"]) > & {
+    width: var(--app-shell-rail-width);
   }
 }
 
@@ -69,7 +69,7 @@
 }
 
 .cairn-AppShell[data-window-chrome] {
-  & .cairn-AppShellSidebar[data-presentation="docked"] .cairn-AppShellSidebarContent {
+  & .cairn-AppShellNavigation[data-presentation="docked"] .cairn-AppShellNavigationContent {
     padding-top: calc(var(--cairn-titlebar-height) + var(--cairn-space-3));
   }
 
@@ -93,6 +93,7 @@
   grid-template:
     "titlebar titlebar" auto
     "header header" auto
+    "navigation banner" auto
     "navigation main" 1fr
     "bottom bottom" auto
     / var(--app-shell-column) minmax(0, 1fr);
@@ -104,8 +105,8 @@
     --app-shell-column: var(--app-shell-sidebar-width);
   }
 
-  &[data-column="tabs"] {
-    --app-shell-column: var(--app-shell-tabs-width);
+  &[data-column="rail"] {
+    --app-shell-column: var(--app-shell-rail-width);
   }
 
   &:has(> .cairn-AppShellHeader) {
@@ -169,10 +170,10 @@
   padding-bottom: var(--cairn-safe-area-bottom);
 }
 
-/* Sidebar: one tree, docked beside the content or shown above it. The overlay keeps
-   the docked width and surface, so narrowing changes only where the sidebar sits. */
+/* Navigation: one tree of destinations. A sidebar docks beside the content; a drawer keeps its width
+   and surface and shows above the content; a bar lays the destinations along an edge. */
 
-.cairn-AppShellSidebar {
+.cairn-AppShellNavigation {
   position: sticky;
   top: var(--cairn-app-shell-sticky-top);
   display: flex;
@@ -216,16 +217,25 @@
   }
 }
 
-/* The sidebar's content scrolls with its padding and keeps its footer at the bottom edge. */
-.cairn-AppShellSidebarContent {
+/* A sidebar's or a drawer's content scrolls with its padding; its end groups and footer sit at the
+   bottom edge. */
+.cairn-AppShellNavigationContent {
   display: flex;
   flex-direction: column;
   gap: var(--cairn-space-5);
   min-height: 100%;
   padding: var(--cairn-space-5) var(--cairn-space-4);
 
-  .cairn-AppShellSidebar:is([data-presentation="overlay"], [data-presentation="hidden"]) & {
+  .cairn-AppShellNavigation:is([data-presentation="overlay"], [data-presentation="hidden"]) & {
     padding-bottom: calc(var(--cairn-space-5) + var(--cairn-safe-area-bottom));
+  }
+
+  & > :is(.cairn-AppShellNavGroup[data-placement="end"], .cairn-AppShellNavFooter) {
+    margin-top: auto;
+  }
+
+  & > :is(.cairn-AppShellNavGroup[data-placement="end"], .cairn-AppShellNavFooter) ~ :is(.cairn-AppShellNavGroup, .cairn-AppShellNavFooter) {
+    margin-top: 0;
   }
 }
 
@@ -239,8 +249,7 @@
     min-height: 0;
   }
 
-  & .cairn-AppShellSidebar[data-presentation="docked"],
-  & .cairn-AppShellTabBar {
+  & .cairn-AppShellNavigation:is([data-presentation="docked"], [data-presentation="bar"]) {
     position: static;
     align-self: stretch;
     height: auto;
@@ -248,16 +257,25 @@
   }
 }
 
-.cairn-AppShellSidebarHeader,
-.cairn-AppShellSidebarFooter {
+/* Content that is not a destination lines up with the destinations: the same inset, and the same
+   glyph column for a Status. */
+.cairn-AppShellNavHeader,
+.cairn-AppShellNavFooter {
+  --cairn-glyph-column-size: 16px;
+
   display: flex;
   flex-direction: column;
-  gap: calc(var(--cairn-space-1) / 2);
+  gap: var(--cairn-space-2);
   min-width: 0;
+  padding-inline: calc(var(--cairn-space-1) * 2.5);
 }
 
-.cairn-AppShellSidebarFooter {
-  margin-top: auto;
+/* The footer is a strip across the navigation's bottom edge, set apart from the destinations so it
+   never reads as one. */
+.cairn-AppShellNavFooter {
+  margin-inline: calc(var(--cairn-space-4) * -1);
+  padding: var(--cairn-space-3) calc(var(--cairn-space-4) + var(--cairn-space-1) * 2.5) 0;
+  border-top: var(--cairn-border-width) solid var(--cairn-color-border);
 }
 
 .cairn-AppShellNavGroup,
@@ -275,11 +293,20 @@
   min-width: 0;
 
   & > .cairn-AppShellNavLabel {
+    flex: 1;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+.cairn-AppShellNavBadge {
+  flex: none;
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--cairn-text-caption-line-height);
 }
 
 .cairn-AppShellNavAction {
@@ -291,8 +318,37 @@
   text-align: start;
 }
 
+/* A decoration takes the icon's box, so labels align whether a row shows an icon or a decoration. */
 .cairn-AppShellNavGlyph {
-  display: contents;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+}
+
+/* Banner: a region across the top of the content, above every page. Under window chrome each page's
+   bar is the window's top row, so the banner sits just below it and the bars keep its height clear. */
+.cairn-AppShellBanner {
+  position: sticky;
+  z-index: calc(var(--cairn-layer-sticky) + 1);
+  top: var(--cairn-app-shell-sticky-top);
+  display: flex;
+  grid-area: banner;
+  flex-direction: column;
+  min-width: 0;
+
+  .cairn-AppShell[data-window-chrome] & {
+    top: var(--cairn-titlebar-height);
+    grid-area: main;
+    align-self: start;
+    margin-top: var(--cairn-titlebar-height);
+  }
+}
+
+.cairn-AppShell[data-window-chrome] .cairn-PageBar {
+  margin-bottom: var(--cairn-app-shell-banner-height, 0px);
 }
 
 /* The overlay's scrim and scroll lock. The header and title bar stay above it. */
@@ -315,99 +371,113 @@
   }
 }
 
-:root:has(.cairn-AppShellSidebar[data-presentation="overlay"]) {
+:root:has(.cairn-AppShellNavigation[data-presentation="overlay"]) {
   overflow: hidden;
 }
 
-/* Tab bar: a bottom bar in narrow, upright shells; a labelled column beside the content in wide or short ones. */
+/* Bar: the destinations along the bottom edge in a compact, upright shell, or as a rail beside the
+   content otherwise. It holds destinations only; group labels, headers, and footers stay out. */
 
-.cairn-AppShellTabBar {
+.cairn-AppShellNavigation[data-presentation="bar"] {
   position: sticky;
   z-index: var(--cairn-layer-sticky);
   bottom: 0;
-  display: grid;
   grid-area: bottom;
-  grid-auto-columns: minmax(0, 1fr);
-  grid-auto-flow: column;
-  justify-content: center;
-  padding: var(--cairn-space-1) var(--cairn-space-2) calc(var(--cairn-space-1) + var(--cairn-safe-area-bottom));
+  height: auto;
   border-top: var(--cairn-border-width) solid var(--cairn-color-border);
-  background-color: var(--cairn-color-surface);
+  border-right: 0;
 
-  .cairn-AppShell[data-tier="medium"] & {
-    grid-auto-columns: minmax(0, calc(var(--cairn-space-9) * 2));
+  & .cairn-AppShellNavigationContent {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 0;
+    min-height: 0;
+    padding: var(--cairn-space-1) var(--cairn-space-2) calc(var(--cairn-space-1) + var(--cairn-safe-area-bottom));
   }
 
-  .cairn-AppShell[data-tabs="beside"] & {
+  & :is(.cairn-AppShellNavHeader, .cairn-AppShellNavFooter, .cairn-AppShellNavGroupLabel) {
+    display: none;
+  }
+
+  & :is(.cairn-AppShellNavGroup, .cairn-AppShellNavItems) {
+    display: contents;
+  }
+
+  .cairn-AppShell[data-bar="rail"] & {
     top: var(--cairn-app-shell-sticky-top);
     bottom: auto;
     grid-area: navigation;
-    grid-auto-columns: auto;
-    grid-auto-flow: row;
-    align-content: start;
     align-self: start;
-    gap: var(--cairn-space-2);
     height: calc(100dvh - var(--cairn-app-shell-sticky-top));
-    padding: var(--cairn-space-4) var(--cairn-space-2) calc(var(--cairn-space-4) + var(--cairn-safe-area-bottom));
     border-top: 0;
     border-right: var(--cairn-border-width) solid var(--cairn-color-border);
+
+    & .cairn-AppShellNavigationContent {
+      display: flex;
+      flex-direction: column;
+      gap: var(--cairn-space-2);
+      height: 100%;
+      padding: var(--cairn-space-4) var(--cairn-space-2) calc(var(--cairn-space-4) + var(--cairn-safe-area-bottom));
+    }
+
+    /* End groups sit at the rail's bottom edge, as they do in a sidebar. */
+    & .cairn-AppShellNavGroup[data-placement="end"] .cairn-AppShellNavItem:first-child {
+      margin-top: auto;
+    }
   }
 }
 
-.cairn-AppShell[data-tabs="bottom"] .cairn-AppShellFrame > .cairn-AppShellMain {
+.cairn-AppShell[data-window-chrome][data-bar="rail"] .cairn-AppShellNavigation[data-presentation="bar"] .cairn-AppShellNavigationContent {
+  padding-top: calc(var(--cairn-titlebar-height) + var(--cairn-space-2));
+}
+
+.cairn-AppShell[data-bar="bottom"] .cairn-AppShellFrame > .cairn-AppShellMain {
   padding-bottom: 0;
 }
 
-.cairn-AppShellTabBarItem {
-  display: flex;
+/* In a bar, each destination stacks its icon over its label, and its badge sits on the icon. */
+.cairn-AppShellNavigation[data-presentation="bar"] .cairn-AppShellNavItem {
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   gap: calc(var(--cairn-space-1) / 2);
-  min-width: 0;
   min-height: var(--cairn-control-height-lg);
   padding: var(--cairn-space-1);
-  border-radius: var(--cairn-radius-item);
-  color: var(--cairn-color-text-muted);
   font-size: var(--cairn-text-caption-size);
-  font-weight: var(--cairn-weight-medium);
   line-height: var(--cairn-text-caption-line-height);
-  text-decoration: none;
-  transition-duration: var(--cairn-duration-fast);
-  transition-property: background-color, color;
-  transition-timing-function: var(--cairn-ease-standard);
 
-  &:hover {
-    color: var(--cairn-color-text);
+  & > .cairn-AppShellNavLabel {
+    flex: none;
+    max-width: 100%;
   }
 
-  &[aria-current="page"] {
-    color: var(--cairn-accent-text);
+  & > .cairn-AppShellNavBadge {
+    position: absolute;
+    top: calc(var(--cairn-space-1) / 2);
+    left: calc(50% + var(--cairn-space-1) * 1.5);
+    min-width: calc(var(--cairn-space-1) * 4);
+    padding-inline: var(--cairn-space-1);
+    border-radius: var(--cairn-radius-pill);
+    background-color: var(--cairn-accent-solid);
+    color: var(--cairn-accent-on-solid);
+    text-align: center;
   }
 
-  .cairn-AppShell[data-tabs="beside"] & {
-    padding-block: var(--cairn-space-2);
-
-    &:hover {
-      background-color: var(--cairn-accent-subtle);
-    }
-
+  .cairn-AppShell[data-bar="bottom"] & {
+    &:hover,
     &[aria-current="page"] {
-      background-color: var(--cairn-accent-subtle-hover);
+      background-color: transparent;
     }
   }
-}
 
-.cairn-AppShellTabBarLabel {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  .cairn-AppShell[data-bar="rail"] & {
+    padding-block: var(--cairn-space-2);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cairn-AppShellFrame,
-  .cairn-AppShellSidebar,
+  .cairn-AppShellNavigation,
   .cairn-AppShellChrome,
   .cairn-AppShellChromeToggle {
     transition: none;

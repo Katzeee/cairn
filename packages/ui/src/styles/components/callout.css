@@ -1,7 +1,11 @@
+/* The callout measures itself: where it has room the actions follow the body on its line, and below
+   Primer's 500 pixels they sit under the body, aligned with its text. */
 .cairn-Callout {
+  container: cairn-callout / inline-size;
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
-  gap: var(--cairn-space-3);
+  gap: var(--cairn-space-2) var(--cairn-space-3);
   width: 100%;
   padding: var(--cairn-space-3) var(--cairn-space-4);
   border: var(--cairn-border-width) solid var(--cairn-tone-border);
@@ -16,21 +20,40 @@
     background-color: var(--cairn-color-surface);
     color: var(--cairn-color-text);
   }
+
+  /* In AppShell.Banner: a strip across the content's top edge, over which the content scrolls, so it
+     is opaque; its inset matches the page bars'. */
+  &[data-placement="banner"] {
+    align-items: center;
+    padding: var(--cairn-space-2) var(--cairn-space-5);
+    border-width: 0 0 var(--cairn-border-width);
+    border-radius: 0;
+    background-color: var(--cairn-color-canvas);
+    background-image: linear-gradient(var(--cairn-tone-subtle), var(--cairn-tone-subtle));
+    font-size: var(--cairn-text-label-size);
+    line-height: var(--cairn-text-label-line-height);
+
+    &[data-tone="neutral"] {
+      background-color: var(--cairn-color-surface);
+      background-image: none;
+    }
+  }
 }
 
 .cairn-CalloutIcon {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  height: var(--cairn-text-body-line-height);
+  height: 1lh;
 }
 
 .cairn-CalloutBody {
   display: flex;
-  flex: 1;
+  flex: 1 1 0;
   flex-direction: column;
   gap: var(--cairn-space-1);
-  min-width: 0;
+  /* Beside an icon the body never wraps below it. */
+  min-width: min(16rem, calc(100% - var(--cairn-space-3) - 16px));
 }
 
 .cairn-CalloutTitle {
@@ -40,4 +63,31 @@
 
 .cairn-CalloutText {
   margin: 0;
+}
+
+.cairn-CalloutActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cairn-space-2);
+  margin-inline-start: auto;
+}
+
+/* The primary action sits last at the trailing edge, first below the text. */
+.cairn-CalloutAction[data-priority="primary"] {
+  order: 1;
+}
+
+@container cairn-callout (max-width: 31.25rem) {
+  .cairn-CalloutActions {
+    flex-basis: 100%;
+    margin-inline-start: 0;
+
+    .cairn-Callout:has(> .cairn-CalloutIcon) > & {
+      padding-inline-start: calc(16px + var(--cairn-space-3));
+    }
+  }
+
+  .cairn-CalloutAction[data-priority="primary"] {
+    order: -1;
+  }
 }

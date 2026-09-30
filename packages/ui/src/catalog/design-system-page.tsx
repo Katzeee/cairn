@@ -92,7 +92,7 @@ function CatalogShell() {
         <div data-ui="design-system">
           <AppShell.Root>
             <AppShell.Header>
-              <AppShell.SidebarToggle />
+              <AppShell.NavigationToggle />
               <a className="cairn-CatalogBrand cairn-Focusable" href="#/design-system">
                 <span aria-hidden className="cairn-CatalogBrandMark">
                   C
@@ -117,7 +117,7 @@ function CatalogShell() {
                 </Tooltip>
               </div>
             </AppShell.Header>
-            <AppShell.Sidebar label="Design system">
+            <AppShell.Navigation label="Design system">
               <AppShell.NavGroup>
                 <AppShell.NavItem active={page.id === overviewPage.id} href="#/design-system">
                   {overviewPage.title}
@@ -132,7 +132,7 @@ function CatalogShell() {
                   ))}
                 </AppShell.NavGroup>
               ))}
-            </AppShell.Sidebar>
+            </AppShell.Navigation>
             <AppShell.Main>
               <div className="cairn-CatalogContent">
                 <PageContent key={page.id} page={page} theme={theme} />

@@ -20,7 +20,7 @@ export default function ListDetailInbox() {
           <ListDetail.List label="Inbox">
             <PageBar.Root>
               <PageBar.Title>Inbox</PageBar.Title>
-              <PageBar.Action icon={Pencil} label="New message" onSelect={() => toast({ title: "New message" })} placement="primary" />
+              <PageBar.Action icon={Pencil} label="New message" onSelect={() => toast({ title: "New message" })} priority="primary" />
             </PageBar.Root>
             <List.Root>
               {threads.map(({ id, title, from, date }) => (

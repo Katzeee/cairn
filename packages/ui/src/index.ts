@@ -1,5 +1,5 @@
 export { CairnTheme, type CairnAppearance, type CairnThemeProps } from "./components/cairn-theme.js";
-export type { ControlSize, TextRole, TextTone, Tone, Weight } from "./components/internal/variants.js";
+export type { ActionPriority, ControlSize, TextRole, TextTone, Tone, Weight } from "./components/internal/variants.js";
 
 export {
   Box,
@@ -19,14 +19,15 @@ export {
 } from "./components/layout.js";
 export {
   AppShell,
+  type AppShellBannerProps,
   type AppShellDragRegion,
   type AppShellNavActionProps,
+  type AppShellNavGroupProps,
+  type AppShellNavigationProps,
   type AppShellNavItemProps,
   type AppShellRootProps,
-  type AppShellSidebarProps,
-  type AppShellTabBarItemProps,
 } from "./components/app-shell.js";
-export { PageBar, type PageBarActionPlacement, type PageBarActionProps } from "./components/page-bar.js";
+export { PageBar, type PageBarActionProps } from "./components/page-bar.js";
 export {
   ListDetail,
   type ListDetailDetailProps,
@@ -41,9 +42,10 @@ export { Code, Heading, Kbd, Text, type CodeProps, type HeadingProps, type KbdPr
 export { Link, type LinkProps } from "./components/link.js";
 
 export { Badge, type BadgeProps } from "./components/badge.js";
+export { Status, type StatusProps } from "./components/status.js";
 export { Breadcrumbs, type BreadcrumbItem } from "./components/breadcrumbs.js";
 export { Button, IconButton, type ButtonProps, type ButtonVariant, type IconButtonProps } from "./components/button.js";
-export { Callout, type CalloutRootProps } from "./components/callout.js";
+export { Callout, type CalloutActionProps, type CalloutRootProps } from "./components/callout.js";
 export { Card, type CardLinkProps, type CardProps, type CardVariant } from "./components/card.js";
 export { Image, type ImageFit, type ImageProps } from "./components/image.js";
 export { Checkbox, type CheckboxProps } from "./components/checkbox.js";

@@ -14,7 +14,7 @@ export default function AppShellWeb() {
   return (
     <AppShell.Root>
       <AppShell.Header>
-        <AppShell.SidebarToggle />
+        <AppShell.NavigationToggle />
         <Text weight="semibold">Acme Docs</Text>
         <Flex flexGrow="1" justify="end">
           <Tooltip content="Search">
@@ -24,7 +24,7 @@ export default function AppShellWeb() {
           </Tooltip>
         </Flex>
       </AppShell.Header>
-      <AppShell.Sidebar>
+      <AppShell.Navigation>
         {groups.map((group) => (
           <AppShell.NavGroup key={group.label} label={group.label}>
             {group.pages.map(([id, label]) => (
@@ -42,7 +42,7 @@ export default function AppShellWeb() {
             ))}
           </AppShell.NavGroup>
         ))}
-      </AppShell.Sidebar>
+      </AppShell.Navigation>
       <AppShell.Main>
         <PageBar.Root>
           <PageBar.Title>{title}</PageBar.Title>

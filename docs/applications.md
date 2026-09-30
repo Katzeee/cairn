@@ -1,6 +1,6 @@
 # Build an application with Cairn
 
-Cairn owns how an application looks and how its controls behave; the application owns its data, routing, domain behavior, and platform integration. An application composes Cairn's components and declares what it means, such as a primary action, a collapsible sidebar, or a danger status, and the components choose the presentation from the space and input they measure. When a view needs something Cairn lacks, the change belongs in Cairn, so every application gains it; see [Develop Cairn](development.md).
+Cairn owns how an application looks and how its controls behave, and the application owns its data, routing, domain behavior, and platform integration; the [glossary](../CONTEXT.md) defines the terms this guide uses. An application composes Cairn's components and declares what it means, such as a primary action, a collapsible sidebar, or a danger status, and the components choose the presentation from the space and input they measure. Domain views, such as a card that describes one of the application's records, are compositions of Cairn's parts and stay in the application. When a view needs a visual rule Cairn lacks, the rule belongs in Cairn, so every application gains it; see [Develop Cairn](development.md).
 
 ## Add Cairn to an application
 
@@ -26,6 +26,12 @@ The Outline and Node Editor components live in the separate `@cairn/ui/editor` e
 
 The catalog is the reference for every component: run `npm run showcase` in this repository. Each page shows the component's examples beside their source and an API table generated from the public types. An example is written as application code and imports only public entries, so it is the starting point for the same view in an application.
 
+## Declare the navigation
+
+Declare the application's destinations once in `AppShell.Navigation`, as `AppShell.NavItem` links grouped by `AppShell.NavGroup`; the shell chooses how they appear. An expanded shell docks them as a sidebar. A narrower shell lays up to five destinations, each with an icon, along a navigation bar, at the bottom edge of a compact upright shell and as a rail beside the content otherwise; more destinations, or any without an icon, open as a drawer from `AppShell.NavigationToggle`. A group with `placement="end"`, such as one holding Settings, sits at the bottom of a sidebar and last in a bar. A destination's `badge` counts what it holds, such as connected devices.
+
+`AppShell.NavHeader` and `AppShell.NavFooter` hold content that is not a destination, such as a brand or a `Status`. A sidebar or a drawer shows it and a navigation bar does not, so place there only what the application also shows where the user needs it.
+
 ## Compose a view
 
 Components expose semantic choices rather than visual ones: `variant` for action emphasis, `tone` for status, `size` of `sm`, `md`, or `lg` for controls, and text roles such as `size="label"` for typography. What each choice looks like belongs to the theme. Components accept native attributes and event handlers but no `className` or `style`, so an application's views keep the system's appearance; a needed appearance becomes a semantic variant in Cairn.
@@ -40,6 +46,8 @@ import { Badge, Button, Flex } from "@cairn/ui";
   <Button size="sm">Continue</Button>
 </Flex>;
 ```
+
+Choose feedback by how long it lasts and what it describes. `Status` shows the ongoing state of a process or service, such as a connection, and keeps its place while the state lasts. `Badge` labels content, such as a record's review state. `Callout` explains a condition, with any `Callout.Action` steps that resolve it, where the condition applies: in the content of the page or pane it affects, or in `AppShell.Banner` for a condition of the whole application, such as a lost connection. The banner region stays above every page, clear of the page bars and the navigation, while the application renders a callout in it, and the callout there spans the content's top edge; several stack. `toast` announces that something just happened and then leaves, so it never carries a state the user must still see.
 
 Regions that scroll, such as the main area of an `AppShell` with `scroll="panes"` or the panes of a `ListDetail`, scroll themselves under an overlay scrollbar, so their content keeps its width as it grows.
 

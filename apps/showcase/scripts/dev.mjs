@@ -102,6 +102,7 @@ watch(join(ui, "src"), { recursive: true }, (_, filename) => {
 await rm(output, { force: true, recursive: true });
 await mkdir(output, { recursive: true });
 await copyFile(join(appRoot, "src/index.html"), join(output, "index.html"));
+await copyFile(join(appRoot, "src/appearance.js"), join(output, "appearance.js"));
 
 const catalog = await context({
   // Viewport previews are iframes of this page. Only the top window listens, which keeps previews

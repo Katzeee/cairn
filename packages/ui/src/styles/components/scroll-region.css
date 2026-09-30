@@ -1,0 +1,65 @@
+/* A region the layout sizes scrolls its viewport under an overlay scrollbar, so its content keeps
+   the same width whether or not it overflows. The document scrolls under the platform's scrollbar,
+   whose gutter base.css reserves. */
+.cairn-ScrollRegion {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The viewport is a size container: content that fills its region, such as a ListDetail, sizes to it
+   without contributing its own height to the overflow. */
+.cairn-ScrollRegionViewport {
+  container: cairn-scroll-region / size;
+  height: 100%;
+  outline: none;
+  overscroll-behavior: contain;
+}
+
+.cairn-Scrollbar {
+  --scrollbar-inset: calc(var(--cairn-space-1) / 2);
+  --scrollbar-thickness: calc(var(--cairn-space-1) * 1.5);
+
+  z-index: calc(var(--cairn-layer-sticky) + 1);
+  display: flex;
+  padding: var(--scrollbar-inset);
+  opacity: 0;
+  transition: opacity var(--cairn-duration-panel) var(--cairn-ease-standard);
+
+  &[data-orientation="vertical"] {
+    width: calc(var(--scrollbar-thickness) + var(--scrollbar-inset) * 2);
+  }
+
+  &[data-orientation="horizontal"] {
+    flex-direction: column;
+    height: calc(var(--scrollbar-thickness) + var(--scrollbar-inset) * 2);
+  }
+
+  /* Shown while the region scrolls or the pointer is over it; it thickens under the pointer. */
+  &:is([data-hovering], [data-scrolling]) {
+    opacity: 1;
+    transition-duration: var(--cairn-duration-fast);
+  }
+
+  &:hover {
+    --scrollbar-thickness: calc(var(--cairn-space-1) * 2);
+  }
+}
+
+.cairn-ScrollbarThumb {
+  flex: 1;
+  border-radius: var(--cairn-radius-pill);
+  background-color: var(--cairn-color-border-strong);
+  transition: background-color var(--cairn-duration-fast) var(--cairn-ease-standard);
+
+  .cairn-Scrollbar:hover > & {
+    background-color: var(--cairn-color-text-disabled);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cairn-Scrollbar,
+  .cairn-ScrollbarThumb {
+    transition: none;
+  }
+}

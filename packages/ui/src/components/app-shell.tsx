@@ -15,6 +15,7 @@ import { Menu, PanelLeft } from "lucide-react";
 import { IconButton } from "./button.js";
 import { Icon, type IconGlyph } from "./icon.js";
 import type { ElementProps } from "./internal/element-props.js";
+import { ScrollRegion } from "./internal/scroll-region.js";
 import { useWindowActive } from "./internal/window-active.js";
 import type { ControlSize } from "./internal/variants.js";
 import { widthTierFor, type WidthTier as Tier } from "./internal/width-tier.js";
@@ -61,6 +62,7 @@ type ShellState = Readonly<{
   closeOverlay: () => void;
   toggle: RefObject<HTMLButtonElement | null>;
   mainId: string;
+  scroll: "page" | "panes";
 }>;
 
 const ShellContext = createContext<ShellState | null>(null);
@@ -168,6 +170,7 @@ function Root({ children, scroll = "page", windowChrome, titleBar }: AppShellRoo
         closeOverlay,
         toggle,
         mainId,
+        scroll,
       }}
     >
       <div
@@ -234,7 +237,15 @@ function Header(props: ElementProps<"header">) {
 
 function Main(props: ElementProps<"main", "id">) {
   const shell = useShell("Main");
-  return <main {...props} className="cairn-AppShellMain" id={shell.mainId} inert={shell.overlayOpen} tabIndex={-1} />;
+  if (shell.scroll === "page") {
+    return <main {...props} className="cairn-AppShellMain" id={shell.mainId} inert={shell.overlayOpen} tabIndex={-1} />;
+  }
+  const { children, ...rest } = props;
+  return (
+    <ScrollRegion render={<main {...rest} className="cairn-AppShellMain" inert={shell.overlayOpen} />} viewportId={shell.mainId}>
+      {children}
+    </ScrollRegion>
+  );
 }
 
 export type AppShellSidebarProps = Readonly<{
@@ -293,7 +304,7 @@ function Sidebar({
 
   return (
     <nav aria-label={label} className="cairn-AppShellSidebar" data-presentation={presentation} id={id} ref={element}>
-      {children}
+      <ScrollRegion contentClassName="cairn-AppShellSidebarContent">{children}</ScrollRegion>
     </nav>
   );
 }

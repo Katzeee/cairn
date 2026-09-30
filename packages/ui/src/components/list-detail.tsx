@@ -11,6 +11,7 @@ import {
   type RefObject,
 } from "react";
 
+import { ScrollRegion } from "./internal/scroll-region.js";
 import { widthTierFor } from "./internal/width-tier.js";
 
 export type ListDetailPane = "list" | "detail";
@@ -24,8 +25,8 @@ type ListDetailState = Readonly<{
   showPane: (pane: ListDetailPane) => void;
   listLabel: string | undefined;
   registerListLabel: (label: string | undefined) => void;
-  list: RefObject<HTMLElement | null>;
-  detail: RefObject<HTMLElement | null>;
+  list: RefObject<HTMLDivElement | null>;
+  detail: RefObject<HTMLDivElement | null>;
   focusedPane: RefObject<ListDetailPane | null>;
 }>;
 
@@ -57,8 +58,8 @@ export type ListDetailRootProps = Readonly<{
 // with scroll="panes".
 function Root({ children, pane: controlledPane, defaultPane = "list", onPaneChange }: ListDetailRootProps) {
   const root = useRef<HTMLDivElement>(null);
-  const list = useRef<HTMLElement>(null);
-  const detail = useRef<HTMLElement>(null);
+  const list = useRef<HTMLDivElement>(null);
+  const detail = useRef<HTMLDivElement>(null);
   const focusedPane = useRef<ListDetailPane>(null);
   const opener = useRef<HTMLElement>(null);
   const [layout, setLayout] = useState<Layout>("split");
@@ -148,21 +149,24 @@ function List({ label, children }: ListDetailListProps) {
   const rows = useMemo(() => ({ layout, showDetail: () => showPane("detail") }), [layout, showPane]);
   const shown = layout === "split" || pane === "list";
   return (
-    <section
-      aria-label={label}
-      className="cairn-ListDetailList"
-      data-shown={shown}
-      inert={!shown}
-      onFocus={() => {
-        focusedPane.current = "list";
-      }}
-      ref={list}
-      tabIndex={-1}
+    <ScrollRegion
+      render={
+        <section
+          aria-label={label}
+          className="cairn-ListDetailList"
+          data-shown={shown}
+          inert={!shown}
+          onFocus={() => {
+            focusedPane.current = "list";
+          }}
+        />
+      }
+      viewportRef={list}
     >
       <PaneBack.Provider value={null}>
         <ListPane.Provider value={rows}>{children}</ListPane.Provider>
       </PaneBack.Provider>
-    </section>
+    </ScrollRegion>
   );
 }
 
@@ -180,21 +184,24 @@ function Detail({ label = "Details", children }: ListDetailDetailProps) {
   );
   const shown = layout === "split" || pane === "detail";
   return (
-    <section
-      aria-label={label}
-      className="cairn-ListDetailDetail"
-      data-shown={shown}
-      inert={!shown}
-      onFocus={() => {
-        focusedPane.current = "detail";
-      }}
-      ref={detail}
-      tabIndex={-1}
+    <ScrollRegion
+      render={
+        <section
+          aria-label={label}
+          className="cairn-ListDetailDetail"
+          data-shown={shown}
+          inert={!shown}
+          onFocus={() => {
+            focusedPane.current = "detail";
+          }}
+        />
+      }
+      viewportRef={detail}
     >
       <ListPane.Provider value={null}>
         <PaneBack.Provider value={back}>{children}</PaneBack.Provider>
       </ListPane.Provider>
-    </section>
+    </ScrollRegion>
   );
 }
 

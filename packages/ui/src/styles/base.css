@@ -29,6 +29,17 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Base UI hides a native scrollbar behind its own through this class. Cairn ships the rule here, and
+   its components stop Base UI injecting a style element, which a host's content security policy
+   would refuse. */
+.base-ui-disable-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 body,
 [data-cairn-theme] {
   background-color: var(--cairn-color-canvas);

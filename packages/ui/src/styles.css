@@ -6,6 +6,7 @@
 @import "./styles/layout.css" layer(cairn.components);
 @import "./styles/generated/responsive.css" layer(cairn.components);
 
+@import "./styles/components/scroll-region.css" layer(cairn.components);
 @import "./styles/components/typography.css" layer(cairn.components);
 @import "./styles/components/icon.css" layer(cairn.components);
 @import "./styles/components/button.css" layer(cairn.components);

@@ -1,3 +1,4 @@
+import { CSPProvider } from "@base-ui/react/csp-provider";
 import { Select as BaseSelect } from "@base-ui/react/select";
 import { Check, ChevronDown } from "lucide-react";
 import { Children, createContext, isValidElement, useContext, type ReactNode } from "react";
@@ -78,13 +79,16 @@ function Content({ children }: SelectContentProps) {
   return (
     <>
       <span hidden ref={anchorRef} />
-      <BaseSelect.Portal container={container}>
-        <BaseSelect.Positioner alignItemWithTrigger={false} className="cairn-Positioner" sideOffset={6}>
-          <BaseSelect.Popup className="cairn-Popup" data-list="">
-            {children}
-          </BaseSelect.Popup>
-        </BaseSelect.Positioner>
-      </BaseSelect.Portal>
+      {/* base.css hides the native scrollbars, so Base UI injects no style element. */}
+      <CSPProvider disableStyleElements>
+        <BaseSelect.Portal container={container}>
+          <BaseSelect.Positioner alignItemWithTrigger={false} className="cairn-Positioner" sideOffset={6}>
+            <BaseSelect.Popup className="cairn-Popup" data-list="">
+              {children}
+            </BaseSelect.Popup>
+          </BaseSelect.Positioner>
+        </BaseSelect.Portal>
+      </CSPProvider>
     </>
   );
 }

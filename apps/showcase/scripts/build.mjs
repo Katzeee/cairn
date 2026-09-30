@@ -23,3 +23,4 @@ await build({
   tsconfig: join(appRoot, "tsconfig.json"),
 });
 await cp(join(appRoot, "src/index.html"), join(output, "index.html"));
+await cp(join(appRoot, "src/appearance.js"), join(output, "appearance.js"));

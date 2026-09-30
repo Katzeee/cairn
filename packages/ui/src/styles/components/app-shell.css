@@ -69,7 +69,7 @@
 }
 
 .cairn-AppShell[data-window-chrome] {
-  & .cairn-AppShellSidebar[data-presentation="docked"] {
+  & .cairn-AppShellSidebar[data-presentation="docked"] .cairn-AppShellSidebarContent {
     padding-top: calc(var(--cairn-titlebar-height) + var(--cairn-space-3));
   }
 
@@ -178,12 +178,10 @@
   display: flex;
   grid-area: navigation;
   flex-direction: column;
-  gap: var(--cairn-space-5);
   align-self: start;
   min-width: 0;
   height: calc(100dvh - var(--cairn-app-shell-sticky-top));
-  overflow: hidden auto;
-  padding: var(--cairn-space-5) var(--cairn-space-4);
+  overflow: hidden;
   border-right: var(--cairn-border-width) solid var(--cairn-color-border);
   background-color: var(--cairn-color-surface);
   outline: none;
@@ -197,7 +195,6 @@
     align-self: stretch;
     width: min(var(--app-shell-sidebar-width), calc(100% - var(--cairn-space-8)));
     height: auto;
-    padding-bottom: calc(var(--cairn-space-5) + var(--cairn-safe-area-bottom));
     box-shadow: var(--cairn-elevation-dialog);
     transition:
       translate var(--cairn-duration-panel) var(--cairn-ease-standard),
@@ -213,6 +210,23 @@
   &[data-presentation="overlay"] {
     transition-delay: 0s;
   }
+
+  & > .cairn-ScrollRegion {
+    flex: 1;
+  }
+}
+
+/* The sidebar's content scrolls with its padding and keeps its footer at the bottom edge. */
+.cairn-AppShellSidebarContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cairn-space-5);
+  min-height: 100%;
+  padding: var(--cairn-space-5) var(--cairn-space-4);
+
+  .cairn-AppShellSidebar:is([data-presentation="overlay"], [data-presentation="hidden"]) & {
+    padding-bottom: calc(var(--cairn-space-5) + var(--cairn-safe-area-bottom));
+  }
 }
 
 .cairn-AppShell[data-scroll="panes"] {
@@ -223,10 +237,6 @@
 
     height: 100%;
     min-height: 0;
-  }
-
-  & .cairn-AppShellMain {
-    overflow-y: auto;
   }
 
   & .cairn-AppShellSidebar[data-presentation="docked"],

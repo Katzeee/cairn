@@ -62,7 +62,7 @@ export const components = {
   Text: entry("typography", "Body text in the shared type roles, weights, and tones.", ["Text"], ["text/roles", "text/tones"]),
   Heading: entry("typography", "Semantic headings in the title roles.", ["Heading"], ["heading/roles"]),
   Link: entry("typography", "Navigation within prose and supporting copy.", ["Link"], ["link/prose"]),
-  Code: entry("typography", "Inline code within prose.", ["Code"], ["code/inline"]),
+  Code: entry("typography", "Code within prose, or lines of code and output set apart in a block.", ["Code"], ["code/inline", "code/block"]),
   Kbd: entry("typography", "Keyboard input and shortcuts.", ["Kbd"], ["kbd/shortcut"]),
 
   Button: entry("components", "Actions ranked by emphasis, in three sizes.", ["Button"], ["button/variants", "button/sizes", "button/states"]),
@@ -70,7 +70,12 @@ export const components = {
   Badge: entry("components", "Compact labels and tags on content, such as a record's review state.", ["Badge"], ["badge/tones", "badge/sizes"]),
   Status: entry("components", "The ongoing state of a process or service, such as a connection.", ["Status"], ["status/tones"]),
   Callout: entry("components", "Feedback composed from an icon, title, text, and actions; in AppShell.Banner it spans the content's top edge.", ["Callout"], ["callout/tones", responsive("callout/actions")]),
-  List: entry("components", "Rows of items to choose from; beside a detail the chosen one is marked.", ["List"], ["list/rows"]),
+  List: entry(
+    "components",
+    "Rows that open, state, or label a control. Sections group rows on one surface, such as settings or the properties of a record; beside a detail the chosen row is marked.",
+    ["List"],
+    ["list/rows", "list/settings", "list/properties"],
+  ),
   Card: entry(
     "components",
     "A surface for grouped content. A card with a link opens it from anywhere on the card; media meets its edges.",
@@ -86,7 +91,7 @@ export const components = {
   Skeleton: entry("components", "Hold the geometry of known content while it loads.", ["Skeleton"], ["skeleton/card", "skeleton/list"]),
   Field: entry("components", "Connect a label, description, and validation message to a control.", ["Field", "FieldLabel", "FieldDescription", "FieldError"], ["field/validation"]),
   TextField: entry("components", "Single-line text input with optional slots.", ["TextField"], ["text-field/sizes", "text-field/slots", "text-field/states"]),
-  TextArea: entry("components", "Multiline text input.", ["TextArea"], ["text-area/comment", "text-area/sizes", "text-area/variants", "text-area/resize", "text-area/states"]),
+  TextArea: entry("components", "Multiline text input.", ["TextArea"], ["text-area/comment", "text-area/sizes", "text-area/variants", "text-area/code", "text-area/resize", "text-area/states"]),
   Checkbox: entry("components", "Independent choices, with optional labels and descriptions.", ["Checkbox"], ["checkbox/states"]),
   RadioGroup: entry("components", "Choose exactly one option from a visible set.", ["RadioGroup"], ["radio-group/plans"]),
   Switch: entry("components", "A setting that applies immediately.", ["Switch"], ["switch/settings"]),

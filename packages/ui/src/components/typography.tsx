@@ -39,10 +39,22 @@ export function Heading({ as: Element = "h2", size = "title", weight, tone, alig
   return <Element {...props} {...typographyAttributes({ size, weight, tone, align, wrap, truncate }, "cairn-Heading")} />;
 }
 
-export type CodeProps = ElementProps<"code">;
+export type CodeProps = ElementProps<"code"> &
+  Readonly<{
+    // Lines of code or output set apart from prose, kept as written and scrolled sideways where they
+    // are wider than the block.
+    block?: boolean;
+  }>;
 
-export function Code(props: CodeProps) {
-  return <code {...props} className="cairn-Code" />;
+export function Code({ block = false, ...props }: CodeProps) {
+  if (!block) return <code {...props} className="cairn-Code" />;
+  const { "aria-label": label, children, ...rest } = props;
+  // The block scrolls, so it takes focus to be scrolled from the keyboard.
+  return (
+    <pre aria-label={label} className="cairn-CodeBlock" tabIndex={0}>
+      <code {...rest}>{children}</code>
+    </pre>
+  );
 }
 
 export type KbdProps = ElementProps<"kbd">;

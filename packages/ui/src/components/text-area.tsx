@@ -10,11 +10,13 @@ export type TextAreaProps = ElementProps<"textarea"> &
     tone?: Tone;
     invalid?: boolean;
     resize?: "none" | "vertical" | "horizontal" | "both";
+    // Sets the text in the code face, for code and other input whose columns carry meaning.
+    monospaced?: boolean;
   }>;
 
 export function TextArea({
   size = "md", variant = "surface", tone = "accent", invalid, resize = "vertical",
-  disabled, readOnly, rows = 3, ...props
+  disabled, readOnly, rows = 3, monospaced = false, ...props
 }: TextAreaProps) {
   return (
     <BaseField.Control
@@ -25,6 +27,7 @@ export function TextArea({
           className="cairn-Input cairn-TextArea"
           data-disabled={disabled || undefined}
           data-invalid={invalid || undefined}
+          data-monospaced={monospaced || undefined}
           data-readonly={readOnly || undefined}
           data-resize={resize}
           data-size={size}

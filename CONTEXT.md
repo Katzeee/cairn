@@ -62,6 +62,16 @@ _Avoid_: Navigation bar, title bar, header.
 Peer views of one subject within a page, switched in place.
 _Avoid_: Tab bar, for top-level destinations.
 
+### Content
+
+**Row**:
+One entry of a list: a title with an optional description, and at its trailing edge a value, a status, an action of its own, or the control it labels. A row that opens something acts as a whole.
+_Avoid_: Cell, list tile.
+
+**List section**:
+A titled group of rows on one surface, explained below its rows, such as a group of settings or the properties of a record.
+_Avoid_: Settings group, card, for the grouped surface.
+
 ### Actions
 
 **Action priority**:

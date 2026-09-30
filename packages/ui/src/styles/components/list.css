@@ -1,0 +1,211 @@
+/* List rows: title with optional icon, description, trailing content, and a control or chevron. */
+
+.cairn-List {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--cairn-space-1) / 2);
+  margin: 0;
+  padding: var(--cairn-space-2) var(--cairn-space-3);
+  list-style: none;
+}
+
+.cairn-ListItem {
+  min-width: 0;
+}
+
+.cairn-ListItemRow {
+  display: flex;
+  align-items: center;
+  gap: var(--cairn-space-3);
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: var(--cairn-space-2) calc(var(--cairn-space-1) * 2.5);
+  border: 0;
+  border-radius: var(--cairn-radius-item);
+  background: transparent;
+  color: var(--cairn-color-text);
+  font: inherit;
+  text-align: start;
+
+  & > .cairn-Icon {
+    flex: none;
+    color: var(--cairn-color-text-muted);
+  }
+
+  &[aria-disabled="true"],
+  &[data-disabled] {
+    opacity: var(--cairn-disabled-opacity);
+  }
+}
+
+.cairn-ListItemAction {
+  color: var(--cairn-color-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: var(--cairn-duration-fast);
+  transition-property: background-color, color;
+  transition-timing-function: var(--cairn-ease-standard);
+
+  &:hover {
+    background-color: var(--cairn-accent-subtle);
+  }
+
+  &[aria-current="true"] {
+    background-color: var(--cairn-accent-subtle-hover);
+
+    & .cairn-ListItemTitle {
+      color: var(--cairn-accent-text);
+    }
+  }
+
+  &:disabled,
+  &[aria-disabled="true"] {
+    opacity: var(--cairn-disabled-opacity);
+    cursor: default;
+  }
+}
+
+.cairn-ListItemText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cairn-ListItemTitle,
+.cairn-ListItemDescription {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cairn-ListItemTitle {
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-medium);
+  line-height: var(--cairn-text-label-line-height);
+}
+
+.cairn-ListItemDescription,
+.cairn-ListItemTrailing {
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+}
+
+.cairn-ListItemTrailing {
+  flex: none;
+  align-self: start;
+}
+
+.cairn-ListItemControl {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+@media (pointer: coarse) {
+  .cairn-ListItemAction {
+    min-height: var(--cairn-control-hit-target);
+  }
+}
+
+/* A section groups its rows on one surface, titled above and explained below. The title and
+   description label the rows, so they start where the rows' text starts; rows fill the surface's
+   width and are divided by rules that start at their text. */
+
+.cairn-ListSection {
+  --list-section-inset: var(--cairn-space-4);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--cairn-space-2);
+  min-width: 0;
+}
+
+.cairn-ListSectionTitle,
+.cairn-ListSectionDescription {
+  margin: 0;
+  padding-inline: var(--list-section-inset);
+}
+
+.cairn-ListSectionTitle {
+  color: var(--cairn-color-text);
+  font-size: var(--cairn-text-label-size);
+  font-weight: var(--cairn-weight-semibold);
+  line-height: var(--cairn-text-label-line-height);
+  letter-spacing: var(--cairn-heading-letter-spacing);
+}
+
+.cairn-ListSectionDescription {
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+  text-wrap: pretty;
+}
+
+.cairn-ListSectionRows {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: var(--cairn-border-width) solid var(--cairn-card-border-color, var(--cairn-color-border));
+  border-radius: var(--cairn-radius-card);
+  background-color: var(--cairn-card-background, var(--cairn-color-surface));
+  box-shadow: var(--cairn-card-shadow, var(--cairn-elevation-card));
+  list-style: none;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.cairn-ListItem[data-grouped] {
+  position: relative;
+
+  & + &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: var(--list-section-inset);
+    border-top: var(--cairn-border-width) solid var(--cairn-color-border);
+    content: "";
+  }
+
+  & > .cairn-ListItemRow {
+    min-height: var(--cairn-control-height-lg);
+    padding: var(--cairn-space-3) var(--list-section-inset);
+    border-radius: 0;
+  }
+
+  & .cairn-ListItemText {
+    gap: calc(var(--cairn-space-1) / 2);
+  }
+
+  /* A description in a group explains the row, so it wraps rather than truncates. */
+  & .cairn-ListItemDescription {
+    white-space: normal;
+    text-wrap: pretty;
+  }
+
+  /* A value at the trailing edge reads as content: it wraps within its share of the row and can be
+     selected and copied. */
+  & .cairn-ListItemTrailing {
+    flex: 0 1 auto;
+    align-self: center;
+    max-width: 60%;
+    color: var(--cairn-color-text-muted);
+    font-size: var(--cairn-text-label-size);
+    line-height: var(--cairn-text-label-line-height);
+    text-align: end;
+    overflow-wrap: anywhere;
+    user-select: text;
+  }
+
+  & .cairn-ListItemAction:hover {
+    background-color: var(--cairn-color-surface-muted);
+  }
+
+  & .cairn-ListItemAction > .cairn-Icon:last-child {
+    color: var(--cairn-color-text-muted);
+  }
+}

@@ -127,6 +127,31 @@
   color: var(--cairn-color-text);
 }
 
+.cairn-CodeBlock {
+  overflow-x: auto;
+  margin: 0;
+  padding: var(--cairn-space-3) var(--cairn-space-4);
+  border: var(--cairn-border-width) solid var(--cairn-color-border);
+  border-radius: var(--cairn-radius-panel);
+  background-color: var(--cairn-color-surface-muted);
+  color: var(--cairn-color-text);
+  font-family: var(--cairn-font-code);
+  font-size: var(--cairn-text-caption-size);
+  line-height: 1.6;
+  tab-size: 4;
+  white-space: pre;
+  user-select: text;
+
+  &:focus-visible {
+    outline: var(--cairn-focus-ring-width) solid var(--cairn-color-focus-ring);
+    outline-offset: var(--cairn-focus-ring-offset);
+  }
+
+  & > code {
+    font: inherit;
+  }
+}
+
 .cairn-Kbd {
   display: inline-flex;
   min-width: 1.75em;

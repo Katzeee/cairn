@@ -47,6 +47,8 @@ import { Badge, Button, Flex } from "@cairn/ui";
 </Flex>;
 ```
 
+Build a page of settings or of a record's properties from `List.Section` groups stacked in a column's `gap`. Each `List.Item` is one row: `trailing` holds a value, a status, or the row's own action, `control` holds the select or switch the row labels, and `href` or `onClick` makes the whole row lead onward. A section's `description` explains the group or the consequence of its action. Show code and output with `Code block`, which keeps lines as written and scrolls sideways.
+
 Choose feedback by how long it lasts and what it describes. `Status` shows the ongoing state of a process or service, such as a connection, and keeps its place while the state lasts. `Badge` labels content, such as a record's review state. `Callout` explains a condition, with any `Callout.Action` steps that resolve it, where the condition applies: in the content of the page or pane it affects, or in `AppShell.Banner` for a condition of the whole application, such as a lost connection. The banner region stays above every page, clear of the page bars and the navigation, while the application renders a callout in it, and the callout there spans the content's top edge; several stack. `toast` announces that something just happened and then leaves, so it never carries a state the user must still see.
 
 Regions that scroll, such as the main area of an `AppShell` with `scroll="panes"` or the panes of a `ListDetail`, scroll themselves under an overlay scrollbar, so their content keeps its width as it grows.

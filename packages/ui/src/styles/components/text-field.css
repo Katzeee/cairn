@@ -106,6 +106,13 @@
   appearance: none;
   resize: vertical;
 
+  &[data-monospaced] {
+    font-family: var(--cairn-font-code);
+    font-size: var(--cairn-text-caption-size);
+    line-height: 1.6;
+    tab-size: 4;
+  }
+
   &::placeholder {
     color: var(--cairn-color-text-muted);
     opacity: 1;

@@ -1,11 +1,7 @@
-:root,
-[data-cairn-theme] {
-  --cairn-titlebar-inset-left: var(--tauri-plugin-decoration-left-clearance, 0px);
-  --cairn-titlebar-inset-right: var(--tauri-plugin-decoration-right-clearance, 0px);
-}
-
 /* The plugin's controls are the window's own, so they sit above every layer Cairn draws. */
 :root {
+  --cairn-titlebar-inset-left: var(--tauri-plugin-decoration-left-clearance, 0px);
+  --cairn-titlebar-inset-right: var(--tauri-plugin-decoration-right-clearance, 0px);
   --tauri-plugin-decoration-titlebar-height: var(--cairn-titlebar-height);
   --tauri-plugin-decoration-z-index: var(--cairn-layer-window-controls);
 }

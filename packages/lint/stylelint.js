@@ -31,8 +31,7 @@ const tokenValues = createPlugin(tokenValuesName, (enabled, options = {}) => (ro
 });
 
 // Stylesheets read the semantic layer only: --cairn-* tokens, variables they declare themselves,
-// and the few positioning variables Base UI sets at runtime. Palette steps such as --gray-6 stay
-// behind the roles so a theme can rebind them.
+// and the few positioning variables Base UI sets at runtime.
 const semanticTokensName = "cairn/semantic-tokens";
 const semanticTokensMessages = ruleMessages(semanticTokensName, {
   rejected: (variable) => `"${variable}" is not a Cairn semantic token; use a --cairn-* role or declare it locally.`,

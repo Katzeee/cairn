@@ -105,8 +105,8 @@
     transition: background-color var(--cairn-duration-fast) var(--cairn-ease-standard);
 
     &:hover {
-      background-color: var(--cairn-accent-subtle);
-      color: var(--cairn-accent-text);
+      background-color: var(--cairn-color-hover);
+      color: var(--cairn-color-text);
     }
   }
 }
@@ -177,7 +177,7 @@
   transition: border-color var(--cairn-duration-fast) var(--cairn-ease-standard);
 
   &:where(a):hover {
-    border-color: var(--cairn-accent-border-strong);
+    border-color: var(--cairn-color-border-strong);
   }
 }
 
@@ -252,8 +252,6 @@
 /* One row of equal-height controls: the environment the example runs in, then its size. Groups wrap
    whole when the row runs out of room. */
 .cairn-CatalogViewportToolbar {
-  --viewport-control-height: calc(var(--cairn-control-height-sm) - 4px);
-
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -261,43 +259,6 @@
   padding: var(--cairn-space-2) var(--cairn-space-3);
   border-bottom: var(--cairn-border-width) solid var(--cairn-color-border);
   background-color: var(--cairn-color-surface);
-}
-
-.cairn-CatalogViewportPresets {
-  display: flex;
-  gap: 2px;
-  padding: 2px;
-  border-radius: var(--cairn-radius-control);
-  background-color: var(--cairn-color-surface-muted);
-}
-
-.cairn-CatalogViewportPreset {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--cairn-space-1);
-  height: var(--viewport-control-height);
-  padding-inline: var(--cairn-space-2);
-  border: 0;
-  border-radius: calc(var(--cairn-radius-control) - 2px);
-  background: transparent;
-  color: var(--cairn-color-text-muted);
-  font-size: var(--cairn-text-label-size);
-  font-weight: var(--cairn-weight-medium);
-  line-height: var(--viewport-control-height);
-  cursor: pointer;
-  transition:
-    background-color var(--cairn-duration-fast) var(--cairn-ease-standard),
-    color var(--cairn-duration-fast) var(--cairn-ease-standard);
-
-  &:hover {
-    color: var(--cairn-color-text);
-  }
-
-  &[aria-pressed="true"] {
-    background-color: var(--cairn-color-surface);
-    box-shadow: var(--cairn-elevation-control);
-    color: var(--cairn-accent-text);
-  }
 }
 
 .cairn-CatalogViewportPresetWidth {
@@ -625,7 +586,7 @@
     transition: border-color var(--cairn-duration-fast) var(--cairn-ease-standard);
 
     &:hover {
-      border-color: var(--cairn-accent-border-strong);
+      border-color: var(--cairn-color-border-strong);
     }
   }
 
@@ -739,51 +700,11 @@
 
   & thead th {
     white-space: normal;
-
-    & span {
-      display: block;
-      font-family: var(--cairn-font-code);
-      font-weight: var(--cairn-weight-regular);
-    }
   }
 
   & tbody th {
     font-weight: var(--cairn-weight-medium);
     text-transform: capitalize;
-  }
-}
-
-.cairn-CatalogScales {
-  display: flex;
-  flex-direction: column;
-  gap: var(--cairn-space-2);
-}
-
-.cairn-CatalogScale {
-  display: grid;
-  grid-template-columns: 5rem repeat(12, minmax(0, 1fr));
-  align-items: center;
-  gap: calc(var(--cairn-space-1) / 2);
-}
-
-.cairn-CatalogScaleName {
-  font-size: var(--cairn-text-label-size);
-  font-weight: var(--cairn-weight-medium);
-  text-transform: capitalize;
-}
-
-.cairn-CatalogScaleStep {
-  display: grid;
-  place-items: end start;
-  height: var(--cairn-space-7);
-  padding: calc(var(--cairn-space-1) / 2) var(--cairn-space-1);
-  border-radius: var(--cairn-radius-selection);
-  background: var(--swatch);
-  color: transparent;
-  font-size: var(--cairn-text-caption-size);
-
-  .cairn-CatalogScale:hover & {
-    color: var(--cairn-color-text-muted);
   }
 }
 

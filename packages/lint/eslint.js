@@ -20,7 +20,7 @@ const noRawVisualValues = {
         context.report({
           node,
           messageId: "restricted",
-          data: { message: "Read Cairn semantic tokens (--cairn-*); palette steps stay behind the roles a theme binds." },
+          data: { message: "Read Cairn semantic tokens (--cairn-*); other variables are a theme's private values." },
         });
       } else if (absoluteLengthPattern.test(value)) {
         context.report({

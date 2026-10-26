@@ -11,6 +11,7 @@ import breakpointWidths from "../../components/breakpoints.json" with { type: "j
 import { Button } from "../../components/button.js";
 import { DropdownMenu } from "../../components/dropdown-menu.js";
 import { Icon } from "../../components/icon.js";
+import { SegmentedControl } from "../../components/segmented-control.js";
 import type { ExampleViewport } from "../registry.js";
 import { hostChoices, mobileDevices, type DeviceSet } from "./devices.js";
 import {
@@ -147,44 +148,29 @@ export function ViewportPreview({
       data-viewport={viewport}
     >
       <div className="cairn-CatalogViewportToolbar">
-        <div
+        <SegmentedControl.Root
           aria-label="Breakpoints"
-          className="cairn-CatalogViewportPresets"
-          role="group"
+          onValueChange={(name) => setRequestedWidth(presets.find((preset) => preset.name === name)?.width ?? "fit")}
+          size="sm"
+          value={breakpoint ?? ""}
         >
           {presets.map((preset) => (
-            <button
-              aria-pressed={preset.name === breakpoint}
-              className="cairn-CatalogViewportPreset cairn-Focusable"
-              key={preset.name}
-              onClick={() => setRequestedWidth(preset.width)}
-              type="button"
-            >
+            <SegmentedControl.Item key={preset.name} value={preset.name}>
               {preset.name}
-              <span className="cairn-CatalogViewportPresetWidth">
-                {preset.width}
-              </span>
-            </button>
+              <span className="cairn-CatalogViewportPresetWidth">{preset.width}</span>
+            </SegmentedControl.Item>
           ))}
-        </div>
+        </SegmentedControl.Root>
         {devices === "mobile" && viewport === "screen" ? (
-          <div
+          <SegmentedControl.Root
             aria-label="Orientation"
-            className="cairn-CatalogViewportPresets"
-            role="group"
+            onValueChange={(orientation) => turn(orientation === "landscape")}
+            size="sm"
+            value={landscape ? "landscape" : "portrait"}
           >
-            {(["portrait", "landscape"] as const).map((orientation) => (
-              <button
-                aria-pressed={landscape === (orientation === "landscape")}
-                className="cairn-CatalogViewportPreset cairn-Focusable"
-                key={orientation}
-                onClick={() => turn(orientation === "landscape")}
-                type="button"
-              >
-                {orientation === "portrait" ? "Portrait" : "Landscape"}
-              </button>
-            ))}
-          </div>
+            <SegmentedControl.Item value="portrait">Portrait</SegmentedControl.Item>
+            <SegmentedControl.Item value="landscape">Landscape</SegmentedControl.Item>
+          </SegmentedControl.Root>
         ) : null}
         {requestedWidth === "fit" ? null : (
           <Button

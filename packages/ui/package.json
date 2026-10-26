@@ -19,7 +19,8 @@
     "./styles.css": "./dist/styles.css",
     "./catalog.css": "./dist/catalog.css",
     "./themes/forest.css": "./dist/themes/forest.css",
-    "./themes/slate.css": "./dist/themes/slate.css"
+    "./themes/slate.css": "./dist/themes/slate.css",
+    "./themes/ivory.css": "./dist/themes/ivory.css"
   },
   "scripts": {
     "clean": "node ../../scripts/clean-package-dist.mjs",

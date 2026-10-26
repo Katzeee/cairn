@@ -163,8 +163,8 @@ export const catalogSections: readonly CatalogSection[] = [
     id: "foundations",
     title: "Foundations",
     pages: [
-      foundation("themes", "Themes", "What a theme defines, and how forest and slate differ.", SunMoon),
-      foundation("color", "Color", "Color roles, tone roles, and the scales behind them.", Palette),
+      foundation("themes", "Themes", "What a theme defines, and how the themes differ.", SunMoon),
+      foundation("color", "Color", "Color tokens by purpose and the tone roles.", Palette),
       foundation("typography", "Typography", "Font families and semantic text roles.", Type),
       foundation("space-and-shape", "Space & shape", "Spacing, radii, borders, and control sizes.", Shapes),
       foundation("elevation-and-motion", "Elevation & motion", "Shadows by layer and transition timing.", Layers),

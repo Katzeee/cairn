@@ -92,15 +92,15 @@ export function Combobox({
               {(option: ComboboxOption) => (
                 <BaseCombobox.Item
                   className="cairn-PopupItem"
-                  data-indicator=""
+                  data-indicator="end"
                   disabled={option.disabled}
                   key={option.value}
                   value={option}
                 >
+                  <span className="cairn-PopupItemText">{option.label}</span>
                   <BaseCombobox.ItemIndicator className="cairn-PopupItemIndicator">
                     <Icon glyph={Check} size="sm" />
                   </BaseCombobox.ItemIndicator>
-                  <span className="cairn-PopupItemText">{option.label}</span>
                 </BaseCombobox.Item>
               )}
             </BaseCombobox.List>

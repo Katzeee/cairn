@@ -7,6 +7,14 @@
 }
 
 @font-face {
+  font-family: "Public Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: url("./assets/fonts/PublicSans-Variable.ttf") format("truetype");
+}
+
+@font-face {
   font-family: "JetBrains Mono";
   font-style: normal;
   font-weight: 100 800;
@@ -46,6 +54,7 @@ body,
   color: var(--cairn-color-text);
   font-family: var(--cairn-font-interface);
   font-size: var(--cairn-text-body-size);
+  font-weight: var(--cairn-weight-regular);
   line-height: var(--cairn-text-body-line-height);
 }
 

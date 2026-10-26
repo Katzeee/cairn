@@ -1,10 +1,10 @@
 .cairn-Card {
   min-width: 0;
   padding: var(--card-padding);
-  border: var(--cairn-border-width) solid var(--cairn-card-border-color, var(--cairn-color-border));
+  border: var(--cairn-border-width) solid var(--cairn-card-border-color);
   border-radius: var(--cairn-radius-card);
-  background-color: var(--cairn-card-background, var(--cairn-color-surface));
-  box-shadow: var(--cairn-card-shadow, var(--cairn-elevation-card));
+  background-color: var(--cairn-card-background);
+  box-shadow: var(--cairn-card-shadow);
   color: var(--cairn-color-text);
 
   &[data-size="sm"] {

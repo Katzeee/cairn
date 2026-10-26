@@ -1,7 +1,6 @@
 export {
   contract,
   fontNotices,
-  palettes,
   textRoles,
   themeNames,
   themes,

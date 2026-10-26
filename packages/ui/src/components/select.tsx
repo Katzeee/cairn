@@ -30,7 +30,13 @@ export type SelectTriggerProps = ElementProps<"button", "children"> &
 
 export type SelectContentProps = Readonly<{ children: ReactNode }>;
 
-export type SelectItemProps = Readonly<{ value: string; disabled?: boolean; children: ReactNode }>;
+export type SelectItemProps = Readonly<{
+  value: string;
+  disabled?: boolean;
+  /** Supporting text under the label; the trigger shows only the label. */
+  description?: ReactNode;
+  children: ReactNode;
+}>;
 
 // Base UI renders the selected label from this list before the popup ever mounts.
 function collectItems(children: ReactNode): { label: ReactNode; value: string }[] {
@@ -93,13 +99,16 @@ function Content({ children }: SelectContentProps) {
   );
 }
 
-function Item({ value, disabled, children }: SelectItemProps) {
+function Item({ value, disabled, description, children }: SelectItemProps) {
   return (
-    <BaseSelect.Item className="cairn-PopupItem" data-indicator="" disabled={disabled} value={value}>
+    <BaseSelect.Item className="cairn-PopupItem" data-indicator="end" disabled={disabled} value={value}>
+      <span className="cairn-PopupItemBody">
+        <BaseSelect.ItemText className="cairn-PopupItemText">{children}</BaseSelect.ItemText>
+        {description === undefined ? null : <span className="cairn-PopupItemDescription">{description}</span>}
+      </span>
       <BaseSelect.ItemIndicator className="cairn-PopupItemIndicator">
         <Icon glyph={Check} size="sm" />
       </BaseSelect.ItemIndicator>
-      <BaseSelect.ItemText className="cairn-PopupItemText">{children}</BaseSelect.ItemText>
     </BaseSelect.Item>
   );
 }

@@ -1,4 +1,4 @@
-import forest from "./forest.mjs";
+import forest, { forestColors } from "./forest.mjs";
 
 const unit = (steps) => `${steps * 3.5}px`;
 
@@ -6,16 +6,15 @@ const unit = (steps) => `${steps * 3.5}px`;
 export default {
   label: "Slate",
   description: "A cool, compact theme for dense and data-heavy tools.",
-  colors: {
-    accent: { light: "#24466E", dark: "#8FB8E8" },
-    gray: { light: "#5B6470", dark: "#8B96A5" },
-    background: { light: "#F4F6F8", dark: "#0E1116" },
-    info: { light: "#2F5E9E", dark: "#8FB8E8" },
-    success: forest.colors.success,
-    warning: forest.colors.warning,
-    danger: forest.colors.danger,
-    toneSteps: forest.colors.toneSteps,
-  },
+  ...forestColors({
+    background: ["#F4F6F8", "#0E1116"],
+    gray: ["#5B6470", "#8B96A5"],
+    accent: ["#24466E", "#8FB8E8"],
+    info: ["#2F5E9E", "#8FB8E8"],
+    success: ["#3F7D55", "#67D498"],
+    warning: ["#8A6116", "#F0C96E"],
+    danger: ["#B4403B", "#FF918C"],
+  }),
   tokens: {
     ...forest.tokens,
     "heading-letter-spacing": "-0.01em",
@@ -41,6 +40,9 @@ export default {
     "control-padding-sm": unit(3),
     "control-padding-md": unit(4),
     "control-padding-lg": unit(6),
+    "item-height": "34px",
+    "item-padding-inline": unit(2.5),
     "duration-standard": "120ms",
   },
+  components: forest.components,
 };

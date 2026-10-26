@@ -23,7 +23,7 @@ await build({
 });
 await build({
   ...shared,
-  entryPoints: [join(tokenThemes, "forest.css"), join(tokenThemes, "slate.css")],
+  entryPoints: [join(tokenThemes, "forest.css"), join(tokenThemes, "slate.css"), join(tokenThemes, "ivory.css")],
   outdir: join(output, "themes"),
 });
 await cp(tokenAssets, join(output, "assets"), { recursive: true });

@@ -4,20 +4,16 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import * as RadixColors from "@radix-ui/colors";
-import Color from "colorjs.io";
 
-import { generateRadixColors } from "./radix-palette-generator.mjs";
 import {
-  colorRoles,
+  colorTokenGroups,
+  colorTokens,
   componentTokens,
-  contrastRequirements,
-  statusTones,
-  toneContrastRequirements,
+  sharedTokens,
   textRoles,
   themeTokenGroups,
   themeTokens,
   toneRoles,
-  toneScales,
   tones,
 } from "../tokens/contract.mjs";
 import { themeNames, themes } from "../tokens/themes/index.mjs";
@@ -25,9 +21,9 @@ import { themeNames, themes } from "../tokens/themes/index.mjs";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceOnly = process.argv.includes("--source-only");
 const layerOrder = "@layer cairn.tokens, cairn.theme, cairn.base, cairn.components, cairn.utilities;";
-const appearances = ["light", "dark"];
 const fonts = [
   ["harmonyOsSans", "assets/fonts/HarmonyOS_Sans_SC.ttf", "assets/legal/HarmonyOS Sans/LICENSE-update.txt", "8978E05044E7089AD6A9DE38C505C8148305607983487435A916D2610700A7CA", "This product uses HarmonyOS Sans. Copyright 2021 Huawei Device Co., Ltd."],
+  ["publicSans", "assets/fonts/PublicSans-Variable.ttf", "assets/legal/Public Sans/OFL.txt", "D75A7DC1A27EB9E336D5B33F55489D2ECB5621BF694D5C43B2415BCE2CA830A8", "Public Sans. Copyright 2015 The Public Sans Project Authors."],
   ["jetBrainsMono", "assets/fonts/JetBrainsMono-Variable.ttf", "assets/legal/JetBrains Mono/OFL.txt", "3CFAFA86E28B87184D592FEF82846E8C10CB48653C62EFCDA34F082DA225EC34", "JetBrains Mono. Copyright 2020 The JetBrains Mono Project Authors."],
 ];
 
@@ -40,7 +36,7 @@ for (const [key, font, license, hash, attribution] of fonts) {
   fontNotices[key] = { attribution, license: await readFile(resolve(root, license), "utf8") };
 }
 
-const palettes = Object.fromEntries(themeNames.map((name) => [name, buildPalette(name, validate(name, themes[name]))]));
+for (const name of themeNames) validate(name, themes[name]);
 
 await writeFile(
   resolve(root, "src/generated.ts"),
@@ -51,9 +47,8 @@ await writeFile(
     "export type CairnTone = (typeof tones)[number];\n" +
     `export const textRoles = ${JSON.stringify(textRoles)} as const;\n` +
     "export type CairnTextRole = (typeof textRoles)[number];\n" +
-    `export const contract = ${JSON.stringify({ toneRoles, colorRoles, themeTokenGroups, componentTokens })} as const;\n` +
+    `export const contract = ${JSON.stringify({ colorTokenGroups, toneRoles, themeTokenGroups, componentTokens })} as const;\n` +
     `export const themes = ${JSON.stringify(themes)} as const;\n` +
-    `export const palettes = ${JSON.stringify(palettes)} as const;\n` +
     `export const fontNotices = ${JSON.stringify(fontNotices)} as const;\n`,
 );
 
@@ -65,120 +60,25 @@ if (!sourceOnly) {
 
 function validate(name, theme) {
   const problems = [];
-  const missing = themeTokens.filter((token) => typeof theme.tokens?.[token] !== "string");
-  const unknown = Object.keys(theme.tokens ?? {}).filter((token) => !themeTokens.includes(token));
-  if (missing.length > 0) problems.push(`missing tokens: ${missing.join(", ")}`);
-  if (unknown.length > 0) problems.push(`unknown tokens: ${unknown.join(", ")}`);
-  for (const key of Object.keys(theme.components ?? {})) {
-    if (!(key in componentTokens)) problems.push(`unknown component token: ${key}`);
-  }
-  for (const [role, value] of Object.entries(theme.colors?.roles ?? {})) {
-    if (!(role in colorRoles)) problems.push(`unknown color role: ${role}`);
-    if (/#|rgb|hsl|oklch|color\(/i.test(JSON.stringify(value))) problems.push(`${role} must reference palette steps`);
-  }
-  for (const [role, value] of Object.entries(theme.colors?.toneSteps ?? {})) {
-    if (!(role in toneRoles)) problems.push(`unknown tone role: ${role}`);
-    if (![value].flat().every((step) => /^(a?(?:[1-9]|1[0-2])|contrast)$/.test(step))) {
-      problems.push(`tone role ${role} must bind a scale step such as "3", "a3", or "contrast"`);
-    }
-  }
-  for (const scale of ["accent", "gray", "background"]) {
-    for (const appearance of appearances) {
-      if (!/^#[\da-f]{6}$/i.test(theme.colors?.[scale]?.[appearance] ?? "")) {
-        problems.push(`${scale}.${appearance} must be a six-digit hex seed`);
-      }
-    }
-  }
-  for (const tone of statusTones) {
-    const seed = theme.colors?.[tone];
-    const hex = (value) => /^#[\da-f]{6}$/i.test(`${value}`);
-    const valid = typeof seed === "object" ? appearances.every((appearance) => hex(seed[appearance])) : seed in RadixColors;
-    if (!valid) problems.push(`${tone} must be a Radix scale name or a { light, dark } pair of hex seeds`);
-  }
+  const isString = (value) => typeof value === "string";
+  const isColor = (value) => isString(value) || (Array.isArray(value) && value.length === 2 && value.every(isString));
+  const check = (record, expected, label, valid) => {
+    const missing = expected.filter((key) => !valid(record?.[key]));
+    const unknown = Object.keys(record ?? {}).filter((key) => !expected.includes(key));
+    if (missing.length > 0) problems.push(`missing or invalid ${label}: ${missing.join(", ")}`);
+    if (unknown.length > 0) problems.push(`unknown ${label}: ${unknown.join(", ")}`);
+  };
+  check(theme.colors, colorTokens, "color tokens", isColor);
+  check(theme.tones, tones, "tones", (value) => typeof value === "object");
+  for (const tone of tones) check(theme.tones?.[tone], Object.keys(toneRoles), `${tone} tone roles`, isColor);
+  check(theme.tokens, themeTokens, "tokens", isString);
+  check(theme.components, Object.keys(componentTokens), "component tokens", isString);
   if (problems.length > 0) throw new Error(`Theme "${name}" breaks the Cairn contract:\n  ${problems.join("\n  ")}`);
-  return theme;
-}
-
-function buildPalette(name, theme) {
-  const palette = {};
-  for (const appearance of appearances) {
-    const background = theme.colors.background[appearance];
-    const generate = (accent) =>
-      generateRadixColors({ appearance, accent, gray: theme.colors.gray[appearance], background });
-    const base = generate(theme.colors.accent[appearance]);
-    const scales = {
-      accent: base,
-      gray: { accentScale: base.grayScale, accentScaleAlpha: base.grayScaleAlpha },
-      ...Object.fromEntries(statusTones.map((tone) => [tone, generate(statusSeed(theme.colors[tone], appearance))])),
-    };
-    const values = { background: base.background };
-    for (const [scale, generated] of Object.entries(scales)) {
-      generated.accentScale.forEach((hex, index) => (values[`${scale}-${index + 1}`] = hex));
-      generated.accentScaleAlpha.forEach((hex, index) => (values[`${scale}-a${index + 1}`] = hex));
-      values[`${scale}-contrast`] = legibleOn(generated.accentScale[8]);
-    }
-    palette[appearance] = values;
-  }
-  const failures = appearances.flatMap((appearance, index) => {
-    const solid = (step) => step.replace(/^a/, "");
-    const toneStep = (tone, role) => [toneSteps(theme)[role]].flat()[index] ?? toneRoles[role].step;
-    const pairs = [
-      ...contrastRequirements,
-      ...toneContrastRequirements.flatMap(({ foreground, background, minimum, except }) =>
-        tones
-          .filter((tone) => !except.includes(tone))
-          .map((tone) => ({
-            foreground: `${toneScales[tone]}-${solid(toneStep(tone, foreground))}`,
-            background: `${toneScales[tone]}-${solid(toneStep(tone, background))}`,
-            minimum,
-          })),
-      ),
-    ];
-    return pairs
-      .map(({ foreground, background, minimum }) => ({
-        appearance,
-        pair: `${foreground} on ${background}`,
-        minimum,
-        ratio: new Color(palette[appearance][foreground]).contrast(new Color(palette[appearance][background]), "WCAG21"),
-      }))
-      .filter(({ ratio, minimum }) => ratio < minimum);
-  });
-  if (failures.length > 0) {
-    const report = failures.map((f) => `${f.appearance}: ${f.pair} is ${f.ratio.toFixed(2)}, needs ${f.minimum}`);
-    throw new Error(`Theme "${name}" is not legible:\n  ${report.join("\n  ")}`);
-  }
-  return palette;
-}
-
-function statusSeed(seed, appearance) {
-  if (typeof seed === "object") return seed[appearance];
-  return RadixColors[`${seed}${appearance === "dark" ? "Dark" : ""}`][`${seed}9`];
-}
-
-function legibleOn(step9) {
-  const base = new Color(step9);
-  const [, chroma, hue] = base.to("oklch").coords;
-  const dark = new Color("oklch", [0.22, Math.max(0.08 * chroma, 0.03), hue || 0]).to("srgb").toString({ format: "hex" });
-  const contrast = (candidate) => new Color(candidate).contrast(base, "WCAG21");
-  return contrast("#ffffff") >= 4.5 || contrast("#ffffff") >= contrast(dark) ? "#ffffff" : dark;
-}
-
-function toneSteps(theme) {
-  return theme.colors.toneSteps ?? {};
-}
-
-function toneRoleDeclarations(steps) {
-  return tones.flatMap((tone) =>
-    Object.entries(steps).map(([role, step]) => {
-      const reference = (value) => `var(--${toneScales[tone]}-${value})`;
-      const value = Array.isArray(step) ? pair(step.map(reference)) : reference(step);
-      return [`cairn-${tone}-${role}`, value];
-    }),
-  );
 }
 
 function pair(value) {
-  return Array.isArray(value) ? `light-dark(${value[0]}, ${value[1]})` : value;
+  if (!Array.isArray(value)) return value;
+  return value[0] === value[1] ? value[0] : `light-dark(${value[0]}, ${value[1]})`;
 }
 
 function declarations(entries) {
@@ -188,36 +88,7 @@ function declarations(entries) {
 function tokensCss() {
   const alpha = (kind) =>
     Object.values(RadixColors[`${kind}A`]).map((value, index) => [`${kind}-a${index + 1}`, value]);
-  const roles = [
-    ...Object.entries(colorRoles).map(([role, { value }]) => [`cairn-color-${role}`, pair(value)]),
-    ...toneRoleDeclarations(Object.fromEntries(Object.entries(toneRoles).map(([role, { step }]) => [role, step]))),
-  ];
-  const system = [
-    ["cairn-control-hit-target", "48px"],
-    ["cairn-sidebar-width", "252px"],
-    ["cairn-content-width-reading", "720px"],
-    ["cairn-content-width-document", "800px"],
-    ["cairn-content-width-standard", "1120px"],
-    ["cairn-content-width-wide", "1440px"],
-    ["cairn-container-1", "448px"],
-    ["cairn-container-2", "688px"],
-    ["cairn-container-3", "880px"],
-    ["cairn-container-4", "1136px"],
-    ["cairn-content-inset", "16px"],
-    // Stacking order across regions, lowest first. Host window controls stay above everything the
-    // page draws, as native controls do.
-    ["cairn-layer-sticky", "20"],
-    ["cairn-layer-shell", "30"],
-    ["cairn-layer-popup", "50"],
-    ["cairn-layer-toast", "60"],
-    ["cairn-layer-window-controls", "70"],
-    ...["top", "right", "bottom", "left"].map((edge) => [`cairn-safe-area-${edge}`, `env(safe-area-inset-${edge}, 0px)`]),
-    // Window Controls Overlay describes the title bar area left to the page; host adapters without it
-    // assign these three tokens from their own window chrome.
-    ["cairn-titlebar-height", "env(titlebar-area-height, 48px)"],
-    ["cairn-titlebar-inset-left", "env(titlebar-area-x, 0px)"],
-    ["cairn-titlebar-inset-right", "calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))"],
-  ];
+  const shared = Object.entries(sharedTokens).map(([token, value]) => [`cairn-${token}`, value]);
   const toneScopes = tones
     .map((tone) => `[data-tone="${tone}"] {\n${declarations(Object.keys(toneRoles).map((role) => [`cairn-tone-${role}`, `var(--cairn-${tone}-${role})`]))}\n}`)
     .join("\n");
@@ -226,13 +97,10 @@ ${layerOrder}
 @layer cairn.tokens {
 :root {
   color-scheme: light dark;
-${declarations([...alpha("black"), ...alpha("white")])}
+${declarations([...alpha("black"), ...alpha("white"), ...shared])}
 }
 [data-cairn-appearance="light"] { color-scheme: light; }
 [data-cairn-appearance="dark"] { color-scheme: dark; }
-:root, [data-cairn-theme] {
-${declarations([...roles, ...system])}
-}
 ${toneScopes}
 }
 `;
@@ -240,22 +108,17 @@ ${toneScopes}
 
 function themeCss(name) {
   const theme = themes[name];
-  const palette = palettes[name];
-  const colors = Object.keys(palette.light).map((key) => [
-    key === "background" ? "color-background" : key,
-    palette.light[key] === palette.dark[key] ? palette.light[key] : `light-dark(${palette.light[key]}, ${palette.dark[key]})`,
-  ]);
-  const roles = [
-    ...Object.entries(theme.colors.roles ?? {}).map(([role, value]) => [`cairn-color-${role}`, pair(value)]),
-    ...toneRoleDeclarations(toneSteps(theme)),
-  ];
-  const tokens = Object.entries(theme.tokens).map(([token, value]) => [`cairn-${token}`, value]);
-  const components = Object.entries(theme.components ?? {}).map(([token, value]) => [`cairn-${token}`, value]);
+  const colors = colorTokens.map((token) => [`cairn-color-${token}`, pair(theme.colors[token])]);
+  const toneColors = tones.flatMap((tone) =>
+    Object.keys(toneRoles).map((role) => [`cairn-${tone}-${role}`, pair(theme.tones[tone][role])]),
+  );
+  const tokens = themeTokens.map((token) => [`cairn-${token}`, theme.tokens[token]]);
+  const components = Object.keys(componentTokens).map((token) => [`cairn-${token}`, theme.components[token]]);
   return `/* Cairn ${theme.label} theme. Generated by @cairn/design-tokens. */
 ${layerOrder}
 @layer cairn.theme {
 :root:not([data-cairn-theme]), [data-cairn-theme="${name}"] {
-${declarations([...colors, ...roles, ...tokens, ...components])}
+${declarations([...colors, ...toneColors, ...tokens, ...components])}
 }
 }
 `;

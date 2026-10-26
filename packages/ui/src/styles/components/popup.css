@@ -10,7 +10,7 @@
   padding: var(--cairn-space-1);
   border: var(--cairn-border-width) solid var(--cairn-color-border);
   border-radius: var(--cairn-radius-panel);
-  background-color: var(--cairn-overlay-background, var(--cairn-color-overlay));
+  background-color: var(--cairn-overlay-background);
   box-shadow: var(--cairn-elevation-popover);
   color: var(--cairn-color-text);
   outline: none;
@@ -37,7 +37,7 @@
   display: flex;
   align-items: center;
   gap: var(--cairn-space-2);
-  padding: var(--cairn-space-2) calc(var(--cairn-space-1) * 2.5);
+  padding: calc((var(--cairn-item-height) - var(--cairn-text-label-line-height)) / 2) var(--cairn-item-padding-inline);
   border-radius: var(--cairn-radius-item);
   color: var(--cairn-color-text);
   font-size: var(--cairn-text-label-size);
@@ -47,14 +47,14 @@
   user-select: none;
 
   &[data-highlighted] {
-    background-color: var(--cairn-accent-subtle);
-    color: var(--cairn-accent-text);
+    background-color: var(--cairn-color-hover);
   }
 
   &[data-variant="destructive"] {
     color: var(--cairn-danger-text);
     &[data-highlighted] {
-      background-color: var(--cairn-danger-subtle);
+      background-color: var(--cairn-popup-destructive-highlight-background);
+      color: var(--cairn-popup-destructive-highlight-text);
     }
   }
 
@@ -65,6 +65,23 @@
   &[data-indicator] {
     display: grid;
     grid-template-columns: 1rem minmax(0, 1fr) auto;
+  }
+
+  /* A choice list marks the chosen option after its text, so unchosen rows keep no empty column. */
+  &[data-indicator="end"] {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    & > :first-child {
+      grid-column: 1;
+    }
+
+    & > .cairn-PopupItemIndicator {
+      grid-column: 2;
+      align-self: start;
+      height: var(--cairn-text-label-line-height);
+      align-items: center;
+      color: var(--cairn-accent-text);
+    }
   }
 }
 
@@ -81,6 +98,18 @@
   white-space: nowrap;
 }
 
+.cairn-PopupItemBody {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cairn-PopupItemDescription {
+  color: var(--cairn-color-text-muted);
+  font-size: var(--cairn-text-caption-size);
+  line-height: var(--cairn-text-caption-line-height);
+}
+
 .cairn-PopupItemTrailing {
   margin-inline-start: auto;
   padding-inline-start: var(--cairn-space-4);
@@ -94,7 +123,7 @@
 }
 
 .cairn-PopupLabel {
-  padding: var(--cairn-space-1) calc(var(--cairn-space-1) * 2.5);
+  padding: var(--cairn-space-1) var(--cairn-item-padding-inline);
   color: var(--cairn-color-text-muted);
   font-size: var(--cairn-text-caption-size);
   font-weight: var(--cairn-weight-medium);
@@ -103,12 +132,12 @@
 
 .cairn-PopupSeparator {
   height: var(--cairn-border-width);
-  margin: var(--cairn-space-1) calc(-1 * var(--cairn-space-1));
+  margin: var(--cairn-space-1) calc(var(--cairn-popup-separator-inset) - var(--cairn-space-1));
   background-color: var(--cairn-color-border);
 }
 
 .cairn-PopupEmpty {
-  padding: var(--cairn-space-2) calc(var(--cairn-space-1) * 2.5);
+  padding: var(--cairn-space-2) var(--cairn-item-padding-inline);
   color: var(--cairn-color-text-muted);
   font-size: var(--cairn-text-label-size);
 

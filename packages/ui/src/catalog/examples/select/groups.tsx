@@ -9,9 +9,13 @@ export default function SelectGroups() {
         <Select.Content>
           <Select.Group>
             <Select.Label>Digital content creation</Select.Label>
-            <Select.Item value="maya">Maya</Select.Item>
+            <Select.Item description="Autodesk, Python and MEL" value="maya">
+              Maya
+            </Select.Item>
             <Select.Item value="max">3ds Max</Select.Item>
-            <Select.Item value="blender">Blender</Select.Item>
+            <Select.Item description="Open source, Python" value="blender">
+              Blender
+            </Select.Item>
           </Select.Group>
           <Select.Separator />
           <Select.Group>

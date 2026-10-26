@@ -2,6 +2,7 @@ import "@cairn/ui/styles.css";
 import "@cairn/ui/catalog.css";
 import "@cairn/ui/themes/forest.css";
 import "@cairn/ui/themes/slate.css";
+import "@cairn/ui/themes/ivory.css";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";

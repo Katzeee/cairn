@@ -5,8 +5,8 @@
   background-color: var(--cairn-color-inverse);
   box-shadow: var(--cairn-elevation-tooltip);
   color: var(--cairn-color-on-inverse);
-  font-size: var(--cairn-text-caption-size);
-  line-height: var(--cairn-text-caption-line-height);
+  font-size: var(--cairn-tooltip-text-size);
+  line-height: var(--cairn-tooltip-text-line-height);
   transform-origin: var(--transform-origin, center);
   transition-duration: var(--cairn-duration-fast);
   transition-property: opacity, scale;

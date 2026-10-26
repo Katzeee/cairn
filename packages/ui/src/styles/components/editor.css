@@ -16,7 +16,7 @@
   inset-block: var(--cairn-space-1);
   inset-inline: -1.5px 0;
   border-radius: var(--cairn-radius-selection);
-  background-color: var(--cairn-accent-subtle-hover);
+  background-color: var(--cairn-color-selected);
   content: "";
   pointer-events: none;
 }
@@ -28,7 +28,7 @@
   position: absolute;
   inset-block: var(--cairn-space-1);
   inset-inline: -1.5px 0;
-  box-shadow: inset 0 0 0 1px var(--cairn-accent-border-strong);
+  box-shadow: inset 0 0 0 1px var(--cairn-color-focus-ring);
   border-radius: var(--cairn-radius-selection);
   content: "";
   pointer-events: none;
@@ -44,7 +44,7 @@
   position: absolute;
   inset-block: var(--cairn-space-1);
   inset-inline: -1.5px 0;
-  box-shadow: inset 0 0 0 1px var(--cairn-accent-border);
+  box-shadow: inset 0 0 0 1px var(--cairn-color-focus-ring);
   border-radius: var(--cairn-radius-selection);
   content: "";
   pointer-events: none;
@@ -102,8 +102,8 @@
 }
 
 .cairn-OutlineRow[data-dragged="true"] {
-  background-color: var(--cairn-accent-subtle-hover);
-  box-shadow: inset 0 0 0 1px var(--cairn-accent-border);
+  background-color: var(--cairn-color-selected);
+  box-shadow: inset 0 0 0 1px var(--cairn-color-focus-ring);
 }
 
 .cairn-OutlineRowBody,
@@ -248,8 +248,8 @@
   opacity: 1;
 }
 .cairn-OutlineDisclosure:hover {
-  background-color: var(--cairn-accent-subtle-hover);
-  color: var(--cairn-accent-text);
+  background-color: var(--cairn-color-hover);
+  color: var(--cairn-color-text);
 }
 .cairn-OutlineDisclosure:focus-visible,
 .cairn-OutlineBulletButton:focus-visible,
@@ -313,10 +313,13 @@
   background-color: var(--cairn-color-surface-muted);
   box-shadow: inset 0 0 0 2px var(--cairn-color-surface-muted);
 }
-.cairn-OutlineBulletMark[data-halo="accent"],
-.cairn-OutlineBulletControl:hover .cairn-OutlineBulletMark {
+.cairn-OutlineBulletMark[data-halo="accent"] {
   background-color: var(--cairn-accent-subtle-hover);
   box-shadow: inset 0 0 0 2px var(--cairn-accent-subtle-hover);
+}
+.cairn-OutlineBulletControl:hover .cairn-OutlineBulletMark {
+  background-color: var(--cairn-color-hover);
+  box-shadow: inset 0 0 0 2px var(--cairn-color-hover);
 }
 .cairn-OutlineBulletContent {
   position: relative;
@@ -363,7 +366,7 @@
 }
 
 .cairn-OutlineEmptyChild:hover {
-  background-color: var(--cairn-accent-subtle);
+  background-color: var(--cairn-color-hover);
 }
 .cairn-OutlineEmptyBullet {
   display: flex;
@@ -548,8 +551,8 @@
     background-color var(--cairn-duration-fast);
 }
 .cairn-OutlineToolbarAction:hover {
-  background-color: var(--cairn-accent-subtle-hover);
-  color: var(--cairn-accent-text);
+  background-color: var(--cairn-color-hover);
+  color: var(--cairn-color-text);
 }
 .cairn-OutlineToolbarTextAction {
   width: auto;

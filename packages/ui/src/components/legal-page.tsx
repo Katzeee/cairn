@@ -31,6 +31,13 @@ export function LegalPage({
         </pre>
       </section>
       <section className="cairn-LegalSection">
+        <h2 className="cairn-LegalSectionTitle">Public Sans Open Font License</h2>
+        <strong className="cairn-LegalAttribution">{fontNotices.publicSans.attribution}</strong>
+        <pre className="cairn-LegalLicense cairn-Focusable" tabIndex={0}>
+          {fontNotices.publicSans.license}
+        </pre>
+      </section>
+      <section className="cairn-LegalSection">
         <h2 className="cairn-LegalSectionTitle">JetBrains Mono Open Font License</h2>
         <strong className="cairn-LegalAttribution">{fontNotices.jetBrainsMono.attribution}</strong>
         <pre className="cairn-LegalLicense cairn-Focusable" tabIndex={0}>

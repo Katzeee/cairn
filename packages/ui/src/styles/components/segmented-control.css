@@ -2,8 +2,8 @@
   --segmented-height: var(--cairn-control-height-md);
 
   display: inline-flex;
-  gap: calc(var(--cairn-space-1) / 2);
-  padding: calc(var(--cairn-space-1) / 2);
+  gap: var(--cairn-segmented-control-inset);
+  padding: var(--cairn-segmented-control-inset);
   border-radius: var(--cairn-radius-control);
   background-color: var(--cairn-color-surface-muted);
 
@@ -18,16 +18,16 @@
   align-items: center;
   justify-content: center;
   gap: var(--cairn-space-1);
-  height: calc(var(--segmented-height) - var(--cairn-space-1));
+  height: calc(var(--segmented-height) - var(--cairn-segmented-control-inset) * 2);
   margin: 0;
   padding-inline: var(--cairn-space-3);
   border: 0;
-  border-radius: calc(var(--cairn-radius-control) - var(--cairn-space-1) / 2);
+  border-radius: calc(var(--cairn-radius-control) - var(--cairn-segmented-control-inset));
   background: transparent;
   color: var(--cairn-color-text-muted);
   font-family: inherit;
   font-size: var(--cairn-text-label-size);
-  font-weight: var(--cairn-weight-medium);
+  font-weight: var(--cairn-weight-control);
   line-height: var(--cairn-text-label-line-height);
   white-space: nowrap;
   cursor: pointer;
@@ -40,8 +40,8 @@
   }
 
   &[data-pressed] {
-    background-color: var(--cairn-color-surface);
-    box-shadow: var(--cairn-elevation-control);
+    background-color: var(--cairn-segmented-control-thumb-background);
+    box-shadow: var(--cairn-segmented-control-thumb-shadow);
     color: var(--cairn-color-text);
   }
 

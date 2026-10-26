@@ -94,10 +94,10 @@
 
 .cairn-Link {
   border-radius: var(--cairn-radius-selection);
-  color: var(--cairn-accent-text);
+  color: var(--cairn-color-link);
   font-weight: var(--cairn-weight-medium);
   text-decoration-line: underline;
-  text-decoration-color: var(--cairn-accent-border-strong);
+  text-decoration-color: var(--cairn-color-border-strong);
   text-decoration-thickness: from-font;
   text-underline-offset: 0.2em;
   transition: text-decoration-color var(--cairn-duration-fast) var(--cairn-ease-standard);

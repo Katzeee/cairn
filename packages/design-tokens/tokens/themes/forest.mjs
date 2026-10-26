@@ -1,32 +1,80 @@
+import { scales, tone } from "../palette.mjs";
+
 const shadow = (...layers) => layers.map((layer) => `${layer} light-dark(var(--black-a2), var(--black-a7))`).join(", ");
+
+// Forest tints stay close to the paper and pair them with deep ink-toned text.
+const tintSteps = {
+  subtle: ["a2", "a3"],
+  "subtle-hover": ["a3", "a4"],
+  "subtle-active": ["a4", "a5"],
+  border: "a5",
+  text: ["12", "11"],
+};
+
+// Builds the forest structure from one set of seeds, so related themes share every binding.
+export function forestColors(seeds) {
+  const { background, gray, accent, info, success, warning, danger } = scales(seeds);
+  const tones = {
+    accent: tone(accent, tintSteps),
+    neutral: tone(gray, tintSteps),
+    info: tone(info, tintSteps),
+    success: tone(success, tintSteps),
+    warning: tone(warning, tintSteps),
+    danger: tone(danger, tintSteps),
+  };
+  const surface = ["white", gray("2")[1]];
+  return {
+    colors: {
+      canvas: background,
+      surface,
+      "surface-muted": gray("a3"),
+      navigation: surface,
+      overlay: ["white", gray("3")[1]],
+      inverse: gray("12"),
+      backdrop: ["var(--black-a6)", "var(--black-a9)"],
+      text: gray("12"),
+      "text-muted": gray("11"),
+      "text-disabled": gray("a8"),
+      "on-inverse": gray("1"),
+      link: tones.accent.text,
+      border: gray("a5"),
+      "border-strong": gray("a7"),
+      hover: tones.accent.subtle,
+      pressed: tones.accent["subtle-hover"],
+      selected: tones.accent["subtle-hover"],
+      "selected-text": tones.accent.text,
+      "focus-ring": accent("a8"),
+      "focus-halo": accent("a4"),
+      "focus-border": accent("9"),
+      selection: accent("a5"),
+      primary: accent("9"),
+      "primary-hover": accent("10"),
+      "on-primary": accent("contrast"),
+    },
+    tones,
+  };
+}
 
 // Paper, ink, and forest green; flat stationary surfaces, shadows only on floating layers.
 export default {
   label: "Forest",
   description: "Calm paper surfaces and a deep forest accent for everyday tools.",
-  colors: {
-    accent: { light: "#244C39", dark: "#86DBAE" },
-    gray: { light: "#5F665F", dark: "#8FA099" },
-    background: { light: "#F6F7F5", dark: "#0B1110" },
-    info: { light: "#2F5E9E", dark: "#8FB8E8" },
-    success: { light: "#3F7D55", dark: "#67D498" },
-    warning: { light: "#8A6116", dark: "#F0C96E" },
-    danger: { light: "#B4403B", dark: "#FF918C" },
-    // Forest tints stay close to the paper and pair them with deep ink-toned text.
-    toneSteps: {
-      subtle: ["a2", "a3"],
-      "subtle-hover": ["a3", "a4"],
-      "subtle-active": ["a4", "a5"],
-      border: "a5",
-      text: ["12", "11"],
-    },
-  },
+  ...forestColors({
+    background: ["#F6F7F5", "#0B1110"],
+    gray: ["#5F665F", "#8FA099"],
+    accent: ["#244C39", "#86DBAE"],
+    info: ["#2F5E9E", "#8FB8E8"],
+    success: ["#3F7D55", "#67D498"],
+    warning: ["#8A6116", "#F0C96E"],
+    danger: ["#B4403B", "#FF918C"],
+  }),
   tokens: {
     "font-interface": '"HarmonyOS Sans SC", system-ui, sans-serif',
     "font-document": '"HarmonyOS Sans SC", system-ui, sans-serif',
     "font-code": '"JetBrains Mono", SFMono-Regular, Consolas, monospace',
     "weight-regular": "400",
     "weight-medium": "500",
+    "weight-control": "500",
     "weight-semibold": "600",
     "weight-bold": "700",
     "heading-letter-spacing": "-0.02em",
@@ -72,6 +120,8 @@ export default {
     "control-padding-sm": "12px",
     "control-padding-md": "16px",
     "control-padding-lg": "24px",
+    "item-height": "36px",
+    "item-padding-inline": "10px",
     "focus-ring-width": "2px",
     "focus-ring-offset": "2px",
     "disabled-opacity": "0.5",
@@ -86,5 +136,33 @@ export default {
     "duration-standard": "160ms",
     "duration-panel": "200ms",
     "ease-standard": "cubic-bezier(0.2, 0, 0, 1)",
+  },
+  components: {
+    "button-primary-background": "var(--cairn-color-primary)",
+    "button-primary-hover-background": "var(--cairn-color-primary-hover)",
+    "button-shadow": "var(--cairn-elevation-control)",
+    "button-secondary-background": "var(--cairn-color-surface-muted)",
+    "button-secondary-hover-background": "var(--cairn-neutral-subtle-active)",
+    "card-background": "var(--cairn-color-surface)",
+    "card-shadow": "var(--cairn-elevation-card)",
+    "card-border-color": "var(--cairn-color-border)",
+    "input-background": "var(--cairn-color-surface)",
+    "input-border-color": "var(--cairn-color-border-strong)",
+    "input-shadow": "var(--cairn-elevation-control)",
+    "overlay-background": "var(--cairn-color-overlay)",
+    "popup-destructive-highlight-background": "var(--cairn-danger-subtle)",
+    "popup-destructive-highlight-text": "var(--cairn-danger-text)",
+    "popup-separator-inset": "0px",
+    "segmented-control-inset": "calc(var(--cairn-space-1) / 2)",
+    "segmented-control-thumb-background": "var(--cairn-color-surface)",
+    "segmented-control-thumb-shadow": "var(--cairn-elevation-control)",
+    "switch-width": "var(--cairn-space-7)",
+    "switch-height": "var(--cairn-space-5)",
+    "switch-thumb-background": "var(--cairn-color-surface)",
+    "switch-thumb-shadow": "var(--cairn-elevation-control)",
+    "title-bar-title-color": "var(--cairn-color-text)",
+    "title-bar-title-weight": "var(--cairn-weight-medium)",
+    "tooltip-text-size": "var(--cairn-text-caption-size)",
+    "tooltip-text-line-height": "var(--cairn-text-caption-line-height)",
   },
 };

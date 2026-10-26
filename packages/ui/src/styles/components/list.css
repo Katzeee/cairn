@@ -20,7 +20,7 @@
   width: 100%;
   min-width: 0;
   margin: 0;
-  padding: var(--cairn-space-2) calc(var(--cairn-space-1) * 2.5);
+  padding: calc((var(--cairn-item-height) - var(--cairn-text-label-line-height)) / 2) var(--cairn-item-padding-inline);
   border: 0;
   border-radius: var(--cairn-radius-item);
   background: transparent;
@@ -48,14 +48,14 @@
   transition-timing-function: var(--cairn-ease-standard);
 
   &:hover {
-    background-color: var(--cairn-accent-subtle);
+    background-color: var(--cairn-color-hover);
   }
 
   &[aria-current="true"] {
-    background-color: var(--cairn-accent-subtle-hover);
+    background-color: var(--cairn-color-selected);
 
     & .cairn-ListItemTitle {
-      color: var(--cairn-accent-text);
+      color: var(--cairn-color-selected-text);
     }
   }
 
@@ -82,7 +82,7 @@
 
 .cairn-ListItemTitle {
   font-size: var(--cairn-text-label-size);
-  font-weight: var(--cairn-weight-medium);
+  font-weight: var(--cairn-weight-control);
   line-height: var(--cairn-text-label-line-height);
 }
 
@@ -148,10 +148,10 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
-  border: var(--cairn-border-width) solid var(--cairn-card-border-color, var(--cairn-color-border));
+  border: var(--cairn-border-width) solid var(--cairn-card-border-color);
   border-radius: var(--cairn-radius-card);
-  background-color: var(--cairn-card-background, var(--cairn-color-surface));
-  box-shadow: var(--cairn-card-shadow, var(--cairn-elevation-card));
+  background-color: var(--cairn-card-background);
+  box-shadow: var(--cairn-card-shadow);
   list-style: none;
 
   &:empty {

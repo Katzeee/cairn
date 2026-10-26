@@ -12,10 +12,10 @@
   min-width: 0;
   min-height: var(--input-height);
   padding-inline: var(--input-padding);
-  border: var(--cairn-border-width) solid var(--input-border, var(--cairn-color-border-strong));
+  border: var(--cairn-border-width) solid var(--input-border, var(--cairn-input-border-color));
   border-radius: var(--cairn-radius-control);
-  background-color: var(--cairn-input-background, var(--cairn-color-surface));
-  box-shadow: var(--cairn-input-shadow, var(--cairn-elevation-control));
+  background-color: var(--cairn-input-background);
+  box-shadow: var(--cairn-input-shadow);
   color: var(--cairn-color-text);
   font-size: var(--input-font-size);
   line-height: var(--input-line-height);
@@ -39,9 +39,13 @@
     --input-line-height: var(--cairn-text-body-large-line-height);
   }
 
+  &:hover {
+    --input-border: var(--cairn-color-border-strong);
+  }
+
   &:focus-within,
   &[data-popup-open] {
-    --input-border: var(--cairn-accent-solid);
+    --input-border: var(--cairn-color-focus-border);
     outline: var(--cairn-focus-ring-width) solid var(--cairn-color-focus-halo);
   }
 

@@ -21,7 +21,7 @@
   padding: var(--cairn-space-3) var(--cairn-space-4);
   border: var(--cairn-border-width) solid var(--cairn-color-border);
   border-radius: var(--cairn-radius-dialog);
-  background-color: var(--cairn-overlay-background, var(--cairn-color-overlay));
+  background-color: var(--cairn-overlay-background);
   box-shadow: var(--cairn-elevation-toast);
   color: var(--cairn-color-text);
   pointer-events: auto;

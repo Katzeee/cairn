@@ -9,14 +9,14 @@
   padding: var(--cairn-space-1);
   border: var(--cairn-border-width) solid var(--cairn-color-border);
   border-radius: var(--cairn-radius-panel);
-  background-color: var(--cairn-overlay-background, var(--cairn-color-overlay));
+  background-color: var(--cairn-overlay-background);
   box-shadow: var(--cairn-elevation-popover);
   color: var(--cairn-color-text);
 }
 
 .cairn-SuggestionHeading {
   flex-shrink: 0;
-  padding: var(--cairn-space-1) calc(var(--cairn-space-1) * 2.5);
+  padding: var(--cairn-space-1) var(--cairn-item-padding-inline);
   color: var(--cairn-color-text-muted);
   font-size: var(--cairn-text-caption-size);
   font-weight: var(--cairn-weight-medium);
@@ -29,7 +29,7 @@
 }
 
 .cairn-SuggestionEmpty {
-  padding: var(--cairn-space-2) calc(var(--cairn-space-1) * 2.5);
+  padding: var(--cairn-space-2) var(--cairn-item-padding-inline);
   color: var(--cairn-color-text-muted);
   font-size: var(--cairn-text-label-size);
 }
@@ -66,7 +66,7 @@
 }
 
 .cairn-SuggestionLabel {
-  font-weight: var(--cairn-weight-medium);
+  font-weight: var(--cairn-weight-control);
 }
 
 .cairn-SuggestionDescription {

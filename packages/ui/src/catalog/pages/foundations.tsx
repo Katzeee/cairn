@@ -11,9 +11,11 @@ import { CatalogSection, PageHeader } from "../docs/page-header.js";
 type ThemeProps = Readonly<{ theme: CairnThemeName }>;
 type TokenName = keyof (typeof themes)[CairnThemeName]["tokens"];
 
-// eslint-disable-next-line cairn/no-raw-visual-values -- the foundation pages display palette primitives themselves
+// eslint-disable-next-line cairn/no-raw-visual-values -- the foundation pages display color tokens by name
 const variable = (name: string) => ({ "--swatch": `var(--${name})` }) as CSSProperties;
 const token = (theme: CairnThemeName, name: TokenName) => themes[theme].tokens[name];
+const colorValue = (value: string | readonly string[]) => [value].flat().join(" / ");
+const definingColors = ["canvas", "navigation", "text", "primary", "link", "hover", "selected", "focus-ring"] as const;
 const groupTokens = (group: keyof typeof contract.themeTokenGroups) =>
   Object.entries(contract.themeTokenGroups[group].tokens) as [TokenName, string][];
 
@@ -110,16 +112,14 @@ export function ThemesPage() {
               </tr>
             </thead>
             <tbody>
-              {(["accent", "gray", "background"] as const).map((seed) => (
-                <tr key={seed}>
+              {definingColors.map((color) => (
+                <tr key={color}>
                   <th scope="row">
-                    <code>{seed} seed</code>
+                    <code>--cairn-color-{color}</code>
                   </th>
                   {themeNames.map((name) => (
                     <td key={name}>
-                      <code>
-                        {themes[name].colors[seed].light} / {themes[name].colors[seed].dark}
-                      </code>
+                      <code>{colorValue(themes[name].colors[color])}</code>
                     </td>
                   ))}
                 </tr>
@@ -141,15 +141,31 @@ export function ThemesPage() {
         </div>
       </CatalogSection>
       <CatalogSection
-        description="The contract every theme fills in. The build rejects a theme that leaves any token out or fails a contrast check."
+        description={
+          <>
+            The contract every theme fills in. The build rejects a theme that leaves any token out;{" "}
+            <code>npm run check:contrast</code> reports text that falls below its contrast target.
+          </>
+        }
         title="Anatomy of a theme"
       >
         <div className="cairn-CatalogCardGrid">
+          {Object.entries(contract.colorTokenGroups).map(([id, group]) => (
+            <div className="cairn-CatalogNavCard" key={id}>
+              <span className="cairn-CatalogNavCardTitle">
+                {group.title} <span className="cairn-CatalogMuted">· {Object.keys(group.tokens).length}</span>
+              </span>
+              <span className="cairn-CatalogNavCardMeta">{group.description}</span>
+            </div>
+          ))}
           <div className="cairn-CatalogNavCard">
-            <span className="cairn-CatalogNavCardTitle">Color seeds</span>
-            <span className="cairn-CatalogNavCardMeta">
-              Accent, gray, background, and four status seeds expand into 12-step Radix scales.
+            <span className="cairn-CatalogNavCardTitle">
+              Tones{" "}
+              <span className="cairn-CatalogMuted">
+                · {tones.length} × {Object.keys(contract.toneRoles).length}
+              </span>
             </span>
+            <span className="cairn-CatalogNavCardMeta">Accent, neutral, and status colors for tinted components.</span>
           </div>
           {Object.entries(contract.themeTokenGroups).map(([id, group]) => (
             <div className="cairn-CatalogNavCard" key={id}>
@@ -165,35 +181,31 @@ export function ThemesPage() {
   );
 }
 
-const scales = ["accent", "gray", "info", "success", "warning", "danger"] as const;
-const steps = Array.from({ length: 12 }, (_, index) => index + 1);
+type ColorToken = keyof (typeof themes)[CairnThemeName]["colors"];
 
 export function ColorPage({ theme }: ThemeProps) {
   const roleNames = Object.keys(contract.toneRoles) as (keyof typeof contract.toneRoles)[];
-  const toneSteps = (themes[theme].colors as { toneSteps?: Record<string, string | readonly string[]> }).toneSteps ?? {};
-  const binding = (role: keyof typeof contract.toneRoles) => [toneSteps[role] ?? contract.toneRoles[role].step].flat().join(" / ");
   return (
     <>
       <PageHeader
-        description="Components use color through roles. Each role binds one step of a 12-step Radix scale, so every theme has the same set of colors no matter how many components use them."
+        description="Components use color through tokens named by purpose. A theme assigns every token in both appearances, so it can keep large areas neutral and spend its accent only where state needs it."
         eyebrow="Foundations"
         title="Color"
       />
-      <CatalogSection
-        description="Surfaces, text, borders, and focus. Values follow the theme and appearance selected in the sidebar."
-        title="Neutral roles"
-      >
-        <div className="cairn-CatalogSwatchList">
-          {Object.entries(contract.colorRoles).map(([role, { use, value }]) => (
-            <div className="cairn-CatalogSwatchRow" key={role}>
-              <span className="cairn-CatalogSwatch" style={variable(`cairn-color-${role}`)} />
-              <code>--cairn-color-{role}</code>
-              <span className="cairn-CatalogMuted">{use}</span>
-              <code className="cairn-CatalogMuted">{[value].flat().join(" / ")}</code>
-            </div>
-          ))}
-        </div>
-      </CatalogSection>
+      {Object.entries(contract.colorTokenGroups).map(([id, group]) => (
+        <CatalogSection description={group.description} key={id} title={group.title}>
+          <div className="cairn-CatalogSwatchList">
+            {(Object.entries(group.tokens) as [ColorToken, string][]).map(([name, use]) => (
+              <div className="cairn-CatalogSwatchRow" key={name}>
+                <span className="cairn-CatalogSwatch" style={variable(`cairn-color-${name}`)} />
+                <code>--cairn-color-{name}</code>
+                <span className="cairn-CatalogMuted">{use}</span>
+                <code className="cairn-CatalogMuted">{colorValue(themes[theme].colors[name])}</code>
+              </div>
+            ))}
+          </div>
+        </CatalogSection>
+      ))}
       <CatalogSection
         description={
           <>
@@ -209,9 +221,8 @@ export function ColorPage({ theme }: ThemeProps) {
               <tr>
                 <th scope="col">Tone</th>
                 {roleNames.map((role) => (
-                  <th key={role} scope="col" title={contract.toneRoles[role].use}>
+                  <th key={role} scope="col" title={contract.toneRoles[role]}>
                     {role}
-                    <span className="cairn-CatalogMuted">{binding(role)}</span>
                   </th>
                 ))}
               </tr>
@@ -234,23 +245,6 @@ export function ColorPage({ theme }: ThemeProps) {
               ))}
             </tbody>
           </table>
-        </div>
-      </CatalogSection>
-      <CatalogSection
-        description="The primitives behind the roles, generated from the theme's seeds. Components never reference a step directly."
-        title="Scales"
-      >
-        <div className="cairn-CatalogScales">
-          {scales.map((scale) => (
-            <div className="cairn-CatalogScale" key={scale}>
-              <span className="cairn-CatalogScaleName">{scale}</span>
-              {steps.map((step) => (
-                <span className="cairn-CatalogScaleStep" key={step} style={variable(`${scale}-${step}`)} title={`--${scale}-${step}`}>
-                  {step}
-                </span>
-              ))}
-            </div>
-          ))}
         </div>
       </CatalogSection>
     </>

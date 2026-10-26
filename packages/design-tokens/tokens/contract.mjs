@@ -1,46 +1,69 @@
 // The semantic contract between themes and components. Components read only the
-// tokens declared here; every theme must assign every theme token.
+// tokens declared here; every theme assigns every color, tone, and theme token.
 
-export const tones = ["accent", "neutral", "info", "success", "warning", "danger"];
-export const statusTones = ["info", "success", "warning", "danger"];
-export const toneScales = { accent: "accent", neutral: "gray", info: "info", success: "success", warning: "warning", danger: "danger" };
+const group = (title, description, tokens) => ({ title, description, tokens });
 
-// Each tone exposes the same roles, each bound to one step of its Radix scale.
-export const toneRoles = {
-  solid: { step: "9", use: "Filled backgrounds of primary actions and indicators." },
-  "solid-hover": { step: "10", use: "Hovered filled backgrounds." },
-  "on-solid": { step: "contrast", use: "Text and icons on a filled background." },
-  subtle: { step: "a3", use: "Tinted backgrounds of soft badges, callouts, and hover states." },
-  "subtle-hover": { step: "a4", use: "Hovered tinted backgrounds." },
-  "subtle-active": { step: "a5", use: "Pressed or selected tinted backgrounds." },
-  border: { step: "a6", use: "Borders of tinted surfaces." },
-  "border-strong": { step: "a8", use: "Borders that must stand out from tinted surfaces." },
-  text: { step: "a11", use: "Tinted text with accessible contrast on the page." },
-  "text-strong": { step: "12", use: "High-contrast tinted text." },
+// Read as --cairn-color-<token>. A theme assigns each one a CSS color or a [light, dark] pair.
+export const colorTokenGroups = {
+  layers: group("Layers", "Backgrounds from the page up to modal layers.", {
+    canvas: "The page behind every surface.",
+    surface: "Cards, inputs, and stationary panels.",
+    "surface-muted": "Recessed areas and secondary buttons inside a surface.",
+    navigation: "The app shell's navigation region.",
+    overlay: "Menus, popovers, dialogs, and toasts.",
+    inverse: "Inverted surfaces such as tooltips.",
+    backdrop: "The scrim behind modal layers.",
+  }),
+  content: group("Text and borders", "Text levels, links, and boundaries.", {
+    text: "Primary text.",
+    "text-muted": "Supporting text, placeholders, and idle icons.",
+    "text-disabled": "Text of unavailable content.",
+    "on-inverse": "Text on inverted surfaces.",
+    link: "Inline links and their underline.",
+    border: "Quiet boundaries between surfaces.",
+    "border-strong": "Boundaries of editable controls.",
+  }),
+  interaction: group(
+    "Interaction",
+    "Feedback on items without a fill of their own: ghost buttons, navigation, list rows, menu items, and editor rows.",
+    {
+      hover: "Background of a hovered or highlighted item.",
+      pressed: "Background of a pressed item.",
+      selected: "Background of the current or selected item.",
+      "selected-text": "Text and icons of the current or selected item.",
+    },
+  ),
+  focus: group("Focus and selection", "Keyboard focus, selection frames, and selected text.", {
+    "focus-ring": "Keyboard focus outlines and frames around selected editor content.",
+    "focus-halo": "The soft ring around a focused text control.",
+    "focus-border": "Border of a focused text control.",
+    selection: "Selected text.",
+  }),
+  primary: group("Primary action", "The one most important action in a view.", {
+    primary: "Fill of primary buttons.",
+    "primary-hover": "Hovered fill of primary buttons.",
+    "on-primary": "Text and icons on primary buttons.",
+  }),
 };
 
-// Neutral roles map to palette primitives; a pair is [light, dark].
-export const colorRoles = {
-  canvas: { value: "var(--color-background)", use: "The page behind every surface." },
-  surface: { value: ["white", "var(--gray-2)"], use: "Cards, inputs, and stationary panels." },
-  "surface-muted": { value: "var(--gray-a3)", use: "Recessed or secondary surfaces." },
-  overlay: { value: ["white", "var(--gray-3)"], use: "Menus, popovers, dialogs, and toasts." },
-  text: { value: "var(--gray-12)", use: "Primary text." },
-  "text-muted": { value: "var(--gray-11)", use: "Supporting text, placeholders, and idle icons." },
-  "text-disabled": { value: "var(--gray-a8)", use: "Text of unavailable content." },
-  border: { value: "var(--gray-a5)", use: "Quiet boundaries between surfaces." },
-  "border-strong": { value: "var(--gray-a7)", use: "Boundaries of editable controls." },
-  inverse: { value: "var(--gray-12)", use: "Inverted surfaces such as tooltips." },
-  "on-inverse": { value: "var(--gray-1)", use: "Text on inverted surfaces." },
-  backdrop: { value: ["var(--black-a6)", "var(--black-a9)"], use: "The scrim behind modal layers." },
-  selection: { value: "var(--accent-a5)", use: "Selected text and selected editor content." },
-  "focus-ring": { value: "var(--accent-a8)", use: "Keyboard focus outlines." },
-  "focus-halo": { value: "var(--accent-a4)", use: "The soft ring around a focused text control." },
+export const colorTokens = Object.values(colorTokenGroups).flatMap((entry) => Object.keys(entry.tokens));
+
+// Read as --cairn-<tone>-<role>. The accent tone marks state and brand: checked controls, the active
+// tab, progress, and counts. Hover, selection, links, and primary buttons have their own color tokens.
+export const tones = ["accent", "neutral", "info", "success", "warning", "danger"];
+export const toneRoles = {
+  solid: "Filled indicators and destructive buttons.",
+  "solid-hover": "Hovered filled backgrounds.",
+  "on-solid": "Text and icons on a filled background.",
+  subtle: "Tinted backgrounds of badges and callouts.",
+  "subtle-hover": "Hovered tinted backgrounds.",
+  "subtle-active": "Pressed tinted backgrounds.",
+  border: "Borders of tinted surfaces.",
+  "border-strong": "Borders that must stand out from tinted surfaces.",
+  text: "Tinted text with accessible contrast on the page.",
 };
 
 export const textRoles = ["caption", "label", "body", "body-large", "document", "title-small", "title", "page-title", "display"];
-
-const group = (title, description, tokens) => ({ title, description, tokens });
 
 export const themeTokenGroups = {
   typography: group("Typography", "Font families, weights, and the size and line height of each text role.", {
@@ -48,7 +71,8 @@ export const themeTokenGroups = {
     "font-document": "Long-form document text.",
     "font-code": "Code and keyboard input.",
     "weight-regular": "Body text.",
-    "weight-medium": "Labels and controls.",
+    "weight-medium": "Labels, primary actions, and emphasis.",
+    "weight-control": "Text of controls and selectable rows: buttons, segments, tabs, navigation items, choices, and list rows.",
     "weight-semibold": "Headings and emphasis.",
     "weight-bold": "Strong emphasis.",
     "heading-letter-spacing": "Tracking applied to headings.",
@@ -75,13 +99,15 @@ export const themeTokenGroups = {
     "radius-pill": "Badges, switches, and progress tracks.",
     "border-width": "Hairline borders.",
   }),
-  control: group("Controls", "Heights and horizontal padding of the three control sizes.", {
+  control: group("Controls", "Heights and horizontal padding of the three control sizes and of rows in menus and lists.", {
     "control-height-sm": "Compact controls.",
     "control-height-md": "Default controls.",
     "control-height-lg": "Prominent controls.",
     "control-padding-sm": "Inline padding of compact controls.",
     "control-padding-md": "Inline padding of default controls.",
     "control-padding-lg": "Inline padding of prominent controls.",
+    "item-height": "Single-line rows in menus, select lists, suggestion lists, and lists.",
+    "item-padding-inline": "Inline padding of those rows, their group labels, and empty messages.",
     "focus-ring-width": "Width of the keyboard focus outline.",
     "focus-ring-offset": "Gap between a control and its focus outline.",
     "disabled-opacity": "Opacity of unavailable controls.",
@@ -105,29 +131,61 @@ export const themeTokenGroups = {
 
 export const themeTokens = Object.values(themeTokenGroups).flatMap((entry) => Object.keys(entry.tokens));
 
-// Optional per-component hooks. Component CSS reads each hook with its semantic default,
-// so a theme can go more specific without components changing.
+// Component tokens for decisions that differ between themes in one component. Every theme assigns
+// every one, often by naming the semantic token it shares.
 export const componentTokens = {
   "button-primary-background": "Primary button fill; may be a gradient.",
   "button-primary-hover-background": "Hovered primary button fill.",
-  "button-shadow": "Shadow of every button; defaults to control elevation.",
+  "button-shadow": "Shadow of every button.",
+  "button-secondary-background": "Secondary button fill.",
+  "button-secondary-hover-background": "Hovered secondary button fill.",
   "card-background": "Card fill.",
-  "card-shadow": "Card shadow; defaults to card elevation.",
+  "card-shadow": "Card shadow.",
   "card-border-color": "Card border color.",
   "input-background": "Fill of text fields, text areas, selects, and comboboxes.",
-  "input-shadow": "Shadow of editable controls; defaults to control elevation.",
+  "input-border-color": "Border of those editable controls at rest.",
+  "input-shadow": "Shadow of editable controls.",
   "overlay-background": "Fill of menus, popovers, dialogs, and toasts.",
+  "popup-destructive-highlight-background": "Fill of a highlighted destructive menu item.",
+  "popup-destructive-highlight-text": "Text of a highlighted destructive menu item.",
+  "popup-separator-inset": "Inline inset of menu separators from the panel edge.",
+  "segmented-control-inset": "Gap between a segmented control's track and its segments, and between segments.",
+  "segmented-control-thumb-background": "Fill of the selected segment.",
+  "segmented-control-thumb-shadow": "Shadow or ring of the selected segment.",
+  "switch-width": "Width of a switch track.",
+  "switch-height": "Height of a switch track.",
+  "switch-thumb-background": "Fill of the switch thumb.",
+  "switch-thumb-shadow": "Shadow of the switch thumb.",
+  "title-bar-title-color": "Color of the window title.",
+  "title-bar-title-weight": "Font weight of the window title.",
+  "tooltip-text-size": "Tooltip font size.",
+  "tooltip-text-line-height": "Tooltip line height.",
 };
 
-// Pairs that must stay legible in every theme and appearance, checked on solid scale steps.
-export const contrastRequirements = [
-  { foreground: "gray-12", background: "background", minimum: 7 },
-  { foreground: "gray-11", background: "background", minimum: 4.5 },
-  { foreground: "gray-11", background: "gray-2", minimum: 4.5 },
-];
-// Tone role pairs checked with the steps each theme binds. Neutral solid is a mid-gray
-// indicator color; no component places text on it.
-export const toneContrastRequirements = [
-  { foreground: "on-solid", background: "solid", minimum: 4.5, except: ["neutral"] },
-  { foreground: "text", background: "subtle", minimum: 4.5, except: [] },
-];
+// Layout constants with the same value in every theme.
+export const sharedTokens = {
+  "control-hit-target": "48px",
+  "sidebar-width": "252px",
+  "content-width-reading": "720px",
+  "content-width-document": "800px",
+  "content-width-standard": "1120px",
+  "content-width-wide": "1440px",
+  "container-1": "448px",
+  "container-2": "688px",
+  "container-3": "880px",
+  "container-4": "1136px",
+  "content-inset": "16px",
+  // Stacking order across regions, lowest first. Host window controls stay above everything the
+  // page draws, as native controls do.
+  "layer-sticky": "20",
+  "layer-shell": "30",
+  "layer-popup": "50",
+  "layer-toast": "60",
+  "layer-window-controls": "70",
+  ...Object.fromEntries(["top", "right", "bottom", "left"].map((edge) => [`safe-area-${edge}`, `env(safe-area-inset-${edge}, 0px)`])),
+  // Window Controls Overlay describes the title bar area left to the page; host adapters without it
+  // assign these three tokens from their own window chrome.
+  "titlebar-height": "env(titlebar-area-height, 48px)",
+  "titlebar-inset-left": "env(titlebar-area-x, 0px)",
+  "titlebar-inset-right": "calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))",
+};

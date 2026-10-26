@@ -31,7 +31,7 @@
 
 .cairn-ChoiceTitle {
   font-size: var(--cairn-text-label-size);
-  font-weight: var(--cairn-weight-medium);
+  font-weight: var(--cairn-weight-control);
   line-height: var(--cairn-text-label-line-height);
 }
 
@@ -52,7 +52,7 @@
   padding: 0;
   border: var(--cairn-border-width) solid var(--cairn-color-border-strong);
   appearance: none;
-  background-color: var(--cairn-input-background, var(--cairn-color-surface));
+  background-color: var(--cairn-input-background);
   color: var(--cairn-accent-on-solid);
   cursor: pointer;
   transition-duration: var(--cairn-duration-fast);
@@ -121,8 +121,8 @@
 }
 
 .cairn-Switch {
-  --switch-width: var(--cairn-space-7);
-  --switch-height: var(--cairn-space-5);
+  --switch-width: var(--cairn-switch-width);
+  --switch-height: var(--cairn-switch-height);
   --switch-inset: 2px;
 
   display: inline-flex;
@@ -155,8 +155,8 @@
   width: calc(var(--switch-height) - var(--switch-inset) * 2);
   height: calc(var(--switch-height) - var(--switch-inset) * 2);
   border-radius: var(--cairn-radius-pill);
-  background-color: var(--cairn-color-surface);
-  box-shadow: var(--cairn-elevation-control);
+  background-color: var(--cairn-switch-thumb-background);
+  box-shadow: var(--cairn-switch-thumb-shadow);
   transition: translate var(--cairn-duration-standard) var(--cairn-ease-standard);
 
   &[data-checked] {

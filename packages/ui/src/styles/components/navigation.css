@@ -10,13 +10,13 @@
   cursor: pointer;
 
   &:hover {
-    background-color: var(--cairn-accent-subtle);
+    background-color: var(--cairn-color-hover);
     color: var(--cairn-color-text);
   }
 
   &[aria-current="page"] {
-    background-color: var(--cairn-accent-subtle-hover);
-    color: var(--cairn-accent-text);
+    background-color: var(--cairn-color-selected);
+    color: var(--cairn-color-selected-text);
   }
 }
 
@@ -24,7 +24,7 @@
   gap: var(--cairn-space-2);
   padding: calc(var(--cairn-space-1) * 1.5) calc(var(--cairn-space-1) * 2.5);
   font-size: var(--cairn-text-label-size);
-  font-weight: var(--cairn-weight-medium);
+  font-weight: var(--cairn-weight-control);
   line-height: var(--cairn-text-label-line-height);
 }
 
@@ -91,8 +91,8 @@
   transition-property: background-color, color;
 
   &:hover {
-    background-color: var(--cairn-accent-subtle);
-    color: var(--cairn-accent-text);
+    background-color: var(--cairn-color-hover);
+    color: var(--cairn-color-text);
   }
 }
 

@@ -61,7 +61,7 @@ Cairn delivers every style through its stylesheets and injects no inline style o
 
 ## Check an application
 
-Run `@cairn/lint` in the application. Its ESLint config rejects imports of Base UI, Tiptap, and Cairn's internal paths, raw color and absolute length literals, and references to palette steps. Its Stylelint config requires `--cairn-*` semantic tokens for colors and lengths and rejects selectors that target Cairn internals. An exception is disabled per line with a reason after `--`, and a disable that no longer suppresses anything is itself an error.
+Run `@cairn/lint` in the application. Its ESLint config rejects imports of Base UI, Tiptap, and Cairn's internal paths, raw color and absolute length literals, and variables other than `--cairn-*`. Its Stylelint config requires `--cairn-*` semantic tokens for colors and lengths and rejects selectors that target Cairn internals. An exception is disabled per line with a reason after `--`, and a disable that no longer suppresses anything is itself an error.
 
 ```js
 // eslint.config.mjs
@@ -81,4 +81,4 @@ export { default } from "@cairn/lint/stylelint";
 
 ## Distribute the fonts
 
-Cairn bundles HarmonyOS Sans SC and JetBrains Mono. An application that distributes them retains their attribution and license text in its legal surface; `LegalPage` renders both. The [notices](../NOTICE.md) list the sources.
+Cairn bundles HarmonyOS Sans SC, Public Sans, and JetBrains Mono. An application that distributes them retains their attribution and license text in its legal surface; `LegalPage` renders all three. The [notices](../NOTICE.md) list the sources.

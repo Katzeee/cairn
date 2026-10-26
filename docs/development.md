@@ -6,7 +6,7 @@ This guide describes how Cairn is built. The rules a change must follow, for com
 
 The repository is an npm workspace:
 
-- `packages/design-tokens` owns the token contract, the themes, the palette generator, and the font assets; its [guide](../packages/design-tokens/README.md) covers theme definitions and generated CSS.
+- `packages/design-tokens` owns the token contract, the themes, the palette helper, and the font assets; its [guide](../packages/design-tokens/README.md) covers theme definitions and generated CSS.
 - `packages/ui` owns the React components, their stylesheets, and the catalog.
 - `packages/lint` owns the rules that applications and Cairn's own stylesheets run.
 - `packages/hosts/*` each adapt one host's window chrome to Cairn's contracts.
@@ -16,12 +16,12 @@ The repository is an npm workspace:
 
 Cairn is built in four layers, and each layer reads only the one below it.
 
-1. **Palette.** Each theme names a few seed colors: accent, gray, background, and four status tones. The build expands every seed into a 12-step Radix scale with alpha steps against the theme's own background.
-2. **Semantic tokens.** The contract in `packages/design-tokens/tokens/contract.mjs` defines what components may read: color roles such as `--cairn-color-surface`, tone roles such as `--cairn-danger-subtle`, and theme tokens for typography, space, shape, controls, elevation, and motion. Color roles bind scale steps, so a theme has the same set of colors no matter how many components use them.
-3. **Component hooks.** A few components expose optional `--cairn-<component>-*` hooks, such as `--cairn-button-primary-background` or `--cairn-card-shadow`. Each hook falls back to its semantic token.
-4. **Themes.** A theme assigns every theme token, may rebind tone roles to other steps of the same scales, and may set component hooks. Forest keeps stationary surfaces flat, raises only floating layers, and uses 32, 40, and 48 pixel controls; another theme can give cards large shadows without any component changing.
+1. **Palette.** A theme's own colors, private to the theme. It may write them by hand or expand seed colors into 12-step Radix scales with `packages/design-tokens/tokens/palette.mjs`. Components never see the palette.
+2. **Semantic tokens.** The contract in `packages/design-tokens/tokens/contract.mjs` defines what components may read: color tokens named by purpose such as `--cairn-color-surface` or `--cairn-color-hover`, tone roles such as `--cairn-danger-subtle`, and theme tokens for typography, space, shape, controls, elevation, and motion.
+3. **Component tokens.** A few components read `--cairn-<component>-*` tokens for decisions that differ between themes in that component alone, such as `--cairn-button-primary-background` or `--cairn-card-shadow`. A theme often assigns one by naming the semantic token it shares.
+4. **Themes.** A theme assigns every color token, tone role, theme token, and component token. Forest keeps stationary surfaces flat, raises only floating layers, and uses 32, 40, and 48 pixel controls; another theme can give cards large shadows without any component changing.
 
-The build rejects a theme that leaves a token out, assigns an unknown one, or fails a contrast check.
+The build rejects a theme that leaves a token out or assigns an unknown one. `npm run check:contrast --workspace @cairn/design-tokens` reports text that falls below its contrast target.
 
 ## Catalog
 

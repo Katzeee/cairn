@@ -10,13 +10,15 @@
     },
     "./tokens.css": "./dist/tokens.css",
     "./themes/forest.css": "./dist/themes/forest.css",
-    "./themes/slate.css": "./dist/themes/slate.css"
+    "./themes/slate.css": "./dist/themes/slate.css",
+    "./themes/ivory.css": "./dist/themes/ivory.css"
   },
   "scripts": {
     "clean": "node ../../scripts/clean-package-dist.mjs",
     "prebuild": "npm run clean",
     "build": "node scripts/generate.mjs && tsc",
     "test": "node --test scripts/generate.test.mjs",
+    "check:contrast": "node scripts/check-contrast.mjs",
     "typecheck": "node scripts/generate.mjs --source-only && tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

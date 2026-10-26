@@ -184,7 +184,7 @@
   height: calc(100dvh - var(--cairn-app-shell-sticky-top));
   overflow: hidden;
   border-right: var(--cairn-border-width) solid var(--cairn-color-border);
-  background-color: var(--cairn-color-surface);
+  background-color: var(--cairn-color-navigation);
   outline: none;
 
   &:is([data-presentation="overlay"], [data-presentation="hidden"]) {

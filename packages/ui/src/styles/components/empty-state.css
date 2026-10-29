@@ -21,8 +21,8 @@
   height: var(--cairn-space-9);
   margin-bottom: var(--cairn-space-2);
   border-radius: var(--cairn-radius-pill);
-  background-color: var(--cairn-color-surface-muted);
-  color: var(--cairn-color-text-muted);
+  background-color: var(--cairn-empty-state-icon-background);
+  color: var(--cairn-empty-state-icon-color);
 }
 
 .cairn-EmptyStateTitle {

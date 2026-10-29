@@ -21,7 +21,7 @@ Cairn is built in four layers, and each layer reads only the one below it.
 3. **Component tokens.** A few components read `--cairn-<component>-*` tokens for decisions that differ between themes in that component alone, such as `--cairn-button-primary-background` or `--cairn-card-shadow`. A theme often assigns one by naming the semantic token it shares.
 4. **Themes.** A theme assigns every color token, tone role, theme token, and component token. Forest keeps stationary surfaces flat, raises only floating layers, and uses 32, 40, and 48 pixel controls; another theme can give cards large shadows without any component changing.
 
-The build rejects a theme that leaves a token out or assigns an unknown one. `npm run check:contrast --workspace @cairn/design-tokens` reports text that falls below its contrast target.
+The build rejects a theme that leaves a token out or assigns an unknown one.
 
 ## Catalog
 

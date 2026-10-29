@@ -50,6 +50,9 @@ export function forestColors(seeds) {
       primary: accent("9"),
       "primary-hover": accent("10"),
       "on-primary": accent("contrast"),
+      brand: tones.accent.text,
+      "brand-solid": tones.accent.solid,
+      "on-brand": tones.accent["on-solid"],
     },
     tones,
   };
@@ -146,6 +149,8 @@ export default {
     "card-background": "var(--cairn-color-surface)",
     "card-shadow": "var(--cairn-elevation-card)",
     "card-border-color": "var(--cairn-color-border)",
+    "empty-state-icon-background": "var(--cairn-color-surface-muted)",
+    "empty-state-icon-color": "var(--cairn-color-text-muted)",
     "input-background": "var(--cairn-color-surface)",
     "input-border-color": "var(--cairn-color-border-strong)",
     "input-shadow": "var(--cairn-elevation-control)",

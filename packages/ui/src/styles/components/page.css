@@ -1,6 +1,5 @@
 .cairn-LegalEyebrow {
   margin: 0 0 var(--cairn-space-2);
-  color: var(--cairn-accent-text);
   font-size: var(--cairn-text-caption-size);
   font-weight: var(--cairn-weight-semibold);
   line-height: var(--cairn-text-caption-line-height);

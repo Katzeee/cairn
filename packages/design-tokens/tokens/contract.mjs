@@ -44,12 +44,17 @@ export const colorTokenGroups = {
     "primary-hover": "Hovered fill of primary buttons.",
     "on-primary": "Text and icons on primary buttons.",
   }),
+  brand: group("Brand", "The product's own color, kept apart from state.", {
+    brand: "Brand text such as eyebrows, legible on the page and surfaces.",
+    "brand-solid": "Filled brand marks.",
+    "on-brand": "Text and icons on filled brand marks.",
+  }),
 };
 
 export const colorTokens = Object.values(colorTokenGroups).flatMap((entry) => Object.keys(entry.tokens));
 
-// Read as --cairn-<tone>-<role>. The accent tone marks state and brand: checked controls, the active
-// tab, progress, and counts. Hover, selection, links, and primary buttons have their own color tokens.
+// Read as --cairn-<tone>-<role>. The accent tone marks state: checked controls, the active tab,
+// progress, and counts. Hover, selection, links, primary buttons, and brand have their own color tokens.
 export const tones = ["accent", "neutral", "info", "success", "warning", "danger"];
 export const toneRoles = {
   solid: "Filled indicators and destructive buttons.",
@@ -142,6 +147,8 @@ export const componentTokens = {
   "card-background": "Card fill.",
   "card-shadow": "Card shadow.",
   "card-border-color": "Card border color.",
+  "empty-state-icon-background": "Fill behind an empty state's icon.",
+  "empty-state-icon-color": "Color of an empty state's icon.",
   "input-background": "Fill of text fields, text areas, selects, and comboboxes.",
   "input-border-color": "Border of those editable controls at rest.",
   "input-shadow": "Shadow of editable controls.",

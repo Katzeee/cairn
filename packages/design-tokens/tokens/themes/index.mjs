@@ -1,6 +1,6 @@
 import forest from "./forest.mjs";
-import ivory from "./ivory.mjs";
+import patina from "./patina.mjs";
 import slate from "./slate.mjs";
 
-export const themes = { forest, slate, ivory };
+export const themes = { forest, slate, patina };
 export const themeNames = Object.keys(themes);

@@ -3,10 +3,11 @@ import forest from "./forest.mjs";
 
 const black = (light, dark) => `light-dark(var(--black-a${light}), var(--black-a${dark}))`;
 
-const { background, gray, blue, info, success, warning, danger } = scales({
+const { background, gray, blue, verdigris, info, success, warning, danger } = scales({
   background: ["#F9F9F7", "#151515"],
   gray: ["#7B7B7B", "#979797"],
   blue: ["#2A78D6", "#2A78D6"],
+  verdigris: ["#297163", "#43897A"],
   info: ["#184F95", "#9EC5F4"],
   success: ["#006300", "#0CA30C"],
   warning: ["#734500", "#C98500"],
@@ -15,11 +16,11 @@ const { background, gray, blue, info, success, warning, danger } = scales({
 const ink = ["#131313", "#F9F9F7"];
 const paper = ["#FFFFFF", "#20201F"];
 
-// Neutral paper with ink actions; blue marks state, links, and focus. Serif long-form text
-// and soft floating layers.
+// Neutral paper with ink actions and a verdigris brand; a conventional blue marks state, links,
+// and focus. Serif long-form text and soft floating layers.
 export default {
-  label: "Ivory",
-  description: "Neutral paper, ink actions, and serif reading text for conversational tools.",
+  label: "Patina",
+  description: "Neutral paper, ink actions, a verdigris brand, and serif reading text for conversational tools.",
   colors: {
     canvas: background,
     surface: paper,
@@ -46,6 +47,9 @@ export default {
     primary: ink,
     "primary-hover": ["#2E2E2E", "#E4E4E1"],
     "on-primary": ["#FFFFFF", "#131313"],
+    brand: verdigris("11"),
+    "brand-solid": verdigris("9"),
+    "on-brand": "#FFFFFF",
   },
   tones: {
     accent: { ...tone(blue), "on-solid": "#FFFFFF", text: ["#184F95", "#6DA7EC"] },
@@ -58,7 +62,7 @@ export default {
   tokens: {
     ...forest.tokens,
     "font-interface": '"Public Sans", "HarmonyOS Sans SC", system-ui, sans-serif',
-    "font-code": 'ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace',
+    "font-code": '"JetBrains Mono", SFMono-Regular, Consolas, monospace',
     "font-document": 'Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif',
     "weight-regular": "380",
     "weight-medium": "550",
@@ -107,6 +111,8 @@ export default {
     ...forest.components,
     "button-secondary-background": "light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.1))",
     "button-secondary-hover-background": "light-dark(rgb(0 0 0 / 0.14), rgb(255 255 255 / 0.14))",
+    "empty-state-icon-background": "color-mix(in oklab, var(--cairn-color-brand) 12%, transparent)",
+    "empty-state-icon-color": "var(--cairn-color-brand)",
     "input-background": "light-dark(rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.05))",
     "input-border-color": "var(--cairn-color-border)",
     "input-shadow": "none",

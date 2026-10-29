@@ -143,8 +143,7 @@ export function ThemesPage() {
       <CatalogSection
         description={
           <>
-            The contract every theme fills in. The build rejects a theme that leaves any token out;{" "}
-            <code>npm run check:contrast</code> reports text that falls below its contrast target.
+            The contract every theme fills in. The build rejects a theme that leaves any token out.
           </>
         }
         title="Anatomy of a theme"
